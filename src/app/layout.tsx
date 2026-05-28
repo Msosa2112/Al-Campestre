@@ -14,8 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className="antialiased min-h-screen flex flex-col relative">
-        {/* Blobs de fondo líquido */}
+      <body className="antialiased min-h-screen flex flex-col relative bg-[#FAF9F5] text-[#2B2521]">
+        {/* Blobs de fondo líquido premium (tonos arena y terracota suave) */}
         <div className="bg-liquid-blob-1" />
         <div className="bg-liquid-blob-2" />
         

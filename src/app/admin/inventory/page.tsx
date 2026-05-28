@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { getProducts, saveProduct, addProductStock, Product } from '@/lib/dbMock';
-import { Scan, Plus, Check, ImageIcon, AlertCircle, Sparkles } from 'lucide-react';
+import { Scan, Plus, ImageIcon, AlertCircle, Sparkles } from 'lucide-react';
 
 export default function AdminInventory() {
   const [products, setProducts] = useState<Product[]>([]);
   const [scannedBarcode, setScannedBarcode] = useState('');
   
-  // Scanning Simulation States
+  // States for Scanning Simulation
   const [isScanning, setIsScanning] = useState(false);
   const [scanMessage, setScanMessage] = useState('');
   
@@ -142,43 +142,43 @@ export default function AdminInventory() {
       {/* Barcode scanner simulator */}
       <div className="lg:col-span-1 flex flex-col gap-4">
         <div className="glass-panel p-5 flex flex-col gap-4">
-          <h2 className="text-lg font-bold text-emerald-950 flex items-center gap-2">
-            <Scan size={18} className="text-emerald-600" />
+          <h2 className="text-lg font-extrabold text-[#2B2521] flex items-center gap-2">
+            <Scan size={18} className="text-[#8C6239]" />
             Escáner de Inventario Móvil
           </h2>
-          <p className="text-xs text-emerald-950/60 leading-relaxed">
+          <p className="text-xs text-[#2B2521]/60 leading-relaxed">
             Escanea códigos de barras para sumar existencias. Si el producto no existe, creará uno nuevo automáticamente.
           </p>
 
-          {/* Camera Frame Mockup */}
-          <div className="h-56 bg-emerald-950 rounded-2xl relative overflow-hidden flex flex-col items-center justify-center border-2 border-emerald-500/20">
+          {/* Camera Frame Mockup (Mitad superior de la pantalla en móvil) */}
+          <div className="h-48 md:h-56 bg-[#2B2521] rounded-2xl relative overflow-hidden flex flex-col items-center justify-center border-2 border-[#D95D39]/20 shadow-inner">
             {isScanning ? (
               <div className="text-center flex flex-col items-center gap-3 px-6 animate-pulse">
                 <span className="text-3xl">📷</span>
                 <p className="text-xs font-bold text-white tracking-wider">{scanMessage}</p>
-                <div className="w-12 h-1 bg-emerald-500 rounded-full animate-bounce mt-1" />
+                <div className="w-12 h-1 bg-[#D95D39] rounded-full animate-bounce mt-1" />
               </div>
             ) : (
               <div className="text-center flex flex-col items-center gap-2 px-6">
-                <span className="text-4xl text-emerald-500">📷</span>
-                <p className="text-xs text-emerald-300/80 font-bold">Cámara de escaneo inactiva</p>
-                <p className="text-[10px] text-emerald-400/50 mt-1 max-w-[180px]">Utiliza el simulador de abajo para disparar la lectura de códigos</p>
+                <span className="text-4xl text-[#D95D39]">📷</span>
+                <p className="text-xs text-white font-bold">Cámara de escaneo inactiva</p>
+                <p className="text-[10px] text-white/50 mt-1 max-w-[180px]">Utiliza el simulador de abajo para disparar la lectura de códigos</p>
               </div>
             )}
 
-            {/* Simulated green laser scanning line */}
+            {/* Simulated red/terracota laser scanning line */}
             {isScanning && (
-              <div className="absolute left-0 right-0 h-0.5 bg-emerald-400 shadow-md shadow-emerald-500/80 animate-bounce" style={{ top: '50%' }} />
+              <div className="absolute left-0 right-0 h-0.5 bg-[#D95D39] shadow-md shadow-[#D95D39]/80 animate-bounce" style={{ top: '50%' }} />
             )}
           </div>
 
           {/* Trigger scan dropdown simulator */}
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-bold text-emerald-950/70">Disparar Escaneo (Simulación de Códigos):</label>
+            <label className="text-xs font-bold text-[#2B2521]/70">Disparar Escaneo (Simulación de Códigos):</label>
             <select
               onChange={e => handleSimulatedScan(e.target.value)}
               defaultValue=""
-              className="glass-input text-xs"
+              className="glass-input text-xs font-bold cursor-pointer"
               disabled={isScanning}
             >
               <option value="" disabled>-- Selecciona un código de barras --</option>
@@ -195,30 +195,30 @@ export default function AdminInventory() {
           </div>
 
           {scannedBarcode && (
-            <div className="bg-emerald-50 p-3 rounded-2xl text-xs border border-emerald-500/15 flex items-center justify-between">
+            <div className="bg-[#FAF9F5] p-3 rounded-2xl text-xs border border-[#8C6239]/15 flex items-center justify-between shadow-sm">
               <div>
-                <span className="font-semibold text-emerald-950/60 block">Último Código Leído:</span>
-                <span className="font-mono font-bold text-emerald-900">{scannedBarcode}</span>
+                <span className="font-semibold text-[#2B2521]/60 block">Último Código Leído:</span>
+                <span className="font-mono font-bold text-[#8C6239]">{scannedBarcode}</span>
               </div>
-              <span className="bg-emerald-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold">Leído</span>
+              <span className="bg-[#D95D39] text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold">Leído</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Form or stock visual listing */}
+      {/* Form or stock visual listing (Mitad inferior de la pantalla en móvil) */}
       <div className="lg:col-span-2 flex flex-col gap-4">
         
         {isNewProductForm ? (
           <div className="glass-panel p-6 flex flex-col gap-4 bg-white/90">
-            <div className="flex justify-between items-center pb-2 border-b border-emerald-500/10">
-              <h2 className="text-lg font-bold text-emerald-950 flex items-center gap-1.5">
-                <Plus size={18} className="text-emerald-600" />
+            <div className="flex justify-between items-center pb-2 border-b border-[#8C6239]/10">
+              <h2 className="text-lg font-extrabold text-[#2B2521] flex items-center gap-1.5">
+                <Plus size={18} className="text-[#8C6239]" />
                 Registrar Nuevo Producto
               </h2>
               <button
                 onClick={() => setIsNewProductForm(false)}
-                className="text-xs font-bold text-emerald-950/60 hover:text-emerald-950"
+                className="text-xs font-bold text-[#2B2521]/60 hover:text-[#2B2521]"
               >
                 Cancelar
               </button>
@@ -228,7 +228,7 @@ export default function AdminInventory() {
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Nombre del Producto</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Nombre del Producto</label>
                   <input
                     type="text"
                     required
@@ -239,19 +239,19 @@ export default function AdminInventory() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Código de Barras</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Código de Barras</label>
                   <input
                     type="text"
                     required
                     readOnly
                     value={formData.barcode}
-                    className="glass-input text-sm bg-emerald-950/5 font-mono font-bold"
+                    className="glass-input text-sm bg-gray-50 font-mono font-bold text-[#8C6239]"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-emerald-950/70">Descripción</label>
+                <label className="text-xs font-bold text-[#2B2521]/70">Descripción</label>
                 <textarea
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -262,7 +262,7 @@ export default function AdminInventory() {
 
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Precio ($ USD)</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Precio ($ USD)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -274,7 +274,7 @@ export default function AdminInventory() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Stock Inicial</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Stock Inicial</label>
                   <input
                     type="number"
                     required
@@ -284,11 +284,11 @@ export default function AdminInventory() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Categoría</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Categoría</label>
                   <select
                     value={formData.category}
                     onChange={e => setFormData({ ...formData, category: e.target.value })}
-                    className="glass-input text-sm"
+                    className="glass-input text-sm font-bold"
                   >
                     <option value="Granos">Granos</option>
                     <option value="Carnes">Carnes</option>
@@ -299,20 +299,20 @@ export default function AdminInventory() {
               </div>
 
               {/* Photo Background removal option */}
-              <div className="bg-emerald-500/5 p-4 rounded-2xl border border-emerald-500/10 flex flex-col gap-3">
+              <div className="bg-[#D95D39]/5 p-4 rounded-2xl border border-[#D95D39]/10 flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-                    <ImageIcon size={14} className="text-emerald-600" />
+                  <h3 className="text-xs font-bold text-[#2B2521] flex items-center gap-1.5">
+                    <ImageIcon size={14} className="text-[#8C6239]" />
                     Fotografía del Producto
                   </h3>
-                  <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-bold text-emerald-800">
+                  <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-bold text-[#8C6239]">
                     <input
                       type="checkbox"
                       checked={formData.cleanBackground}
                       onChange={e => setFormData({ ...formData, cleanBackground: e.target.checked })}
-                      className="rounded text-emerald-600 focus:ring-emerald-500"
+                      className="rounded text-[#D95D39] focus:ring-[#D95D39]"
                     />
-                    <Sparkles size={10} className="text-emerald-600" />
+                    <Sparkles size={10} className="text-[#D95D39]" />
                     Limpiar fondo (remove.bg API)
                   </label>
                 </div>
@@ -322,15 +322,15 @@ export default function AdminInventory() {
                     type="file"
                     accept="image/*"
                     onChange={handlePhotoUpload}
-                    className="text-xs text-emerald-950/70 file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-500/10 file:text-emerald-700 hover:file:bg-emerald-500/20"
+                    className="text-xs text-[#2B2521]/70 file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#D95D39]/10 file:text-[#D95D39] hover:file:bg-[#D95D39]/20"
                   />
 
                   {photoPreview && (
-                    <div className="w-16 h-16 rounded-xl border border-emerald-500/20 overflow-hidden bg-white flex items-center justify-center relative">
+                    <div className="w-16 h-16 rounded-xl border border-[#8C6239]/20 overflow-hidden bg-white flex items-center justify-center relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={photoPreview} alt="Vista previa" className="w-full h-full object-cover" />
                       {isClearingBg && (
-                        <div className="absolute inset-0 bg-emerald-950/40 flex items-center justify-center text-[10px] text-white font-bold animate-pulse">
+                        <div className="absolute inset-0 bg-[#2B2521]/40 flex items-center justify-center text-[10px] text-white font-bold animate-pulse">
                           Recortando...
                         </div>
                       )}
@@ -341,7 +341,7 @@ export default function AdminInventory() {
 
               <button
                 type="submit"
-                className="glass-button-primary py-2.5 mt-2 text-sm font-bold"
+                className="glass-button-primary py-2.5 mt-2 text-sm font-bold cursor-pointer"
               >
                 Guardar Producto
               </button>
@@ -350,13 +350,13 @@ export default function AdminInventory() {
           </div>
         ) : (
           <div className="glass-panel p-5">
-            <h2 className="text-lg font-bold text-emerald-950 mb-4">Listado de Inventario de Restaurant</h2>
+            <h2 className="text-lg font-bold text-[#2B2521] mb-4">Listado de Inventario de Restaurant</h2>
             
-            {/* Vista Escritorio: Tabla */}
+            {/* Vista Escritorio: Tabla clásica */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-sm border-collapse">
                 <thead>
-                  <tr className="border-b border-emerald-500/10 text-emerald-950/60 font-semibold">
+                  <tr className="border-b border-[#8C6239]/10 text-[#2B2521]/60 font-bold">
                     <th className="py-2.5">Código de Barras</th>
                     <th className="py-2.5">Producto</th>
                     <th className="py-2.5">Categoría</th>
@@ -364,13 +364,13 @@ export default function AdminInventory() {
                     <th className="py-2.5">Stock Disponible</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-emerald-500/5">
+                <tbody className="divide-y divide-[#2B2521]/5">
                   {products.map(p => (
                     <tr key={p.id} className="hover:bg-white/20 transition-colors">
-                      <td className="py-3 font-mono text-xs text-emerald-950">{p.barcode}</td>
-                      <td className="py-3 font-bold text-emerald-900">{p.name}</td>
-                      <td className="py-3 text-emerald-950/60 font-medium">{p.category}</td>
-                      <td className="py-3 font-extrabold text-emerald-950">${p.price.toFixed(2)}</td>
+                      <td className="py-3 font-mono text-xs text-[#2B2521]">{p.barcode}</td>
+                      <td className="py-3 font-bold text-[#8C6239]">{p.name}</td>
+                      <td className="py-3 text-[#2B2521]/60 font-medium">{p.category}</td>
+                      <td className="py-3 font-extrabold text-[#2B2521]">${p.price.toFixed(2)}</td>
                       <td className="py-3">
                         <span className={`px-2 py-0.5 rounded text-xs font-bold ${
                           p.stock > 10 
@@ -388,19 +388,19 @@ export default function AdminInventory() {
               </table>
             </div>
 
-            {/* Vista Móvil: Lista de Tarjetas */}
-            <div className="block md:hidden flex flex-col gap-3">
+            {/* Vista Móvil: Lista de Tarjetas Desplazable (UX Vertical Mitad Inferior) */}
+            <div className="block md:hidden flex flex-col gap-3 max-h-[350px] overflow-y-auto pr-1">
               {products.map(p => (
-                <div key={p.id} className="p-3 bg-white/40 border border-white/60 rounded-2xl flex flex-col gap-1 text-xs">
-                  <div className="flex justify-between items-center pb-1 border-b border-emerald-500/5">
-                    <span className="font-bold text-emerald-900">{p.name}</span>
-                    <span className="font-extrabold text-emerald-950">${p.price.toFixed(2)}</span>
+                <div key={p.id} className="p-3 bg-white/40 border border-[#8C6239]/10 rounded-2xl flex flex-col gap-1 text-xs">
+                  <div className="flex justify-between items-center pb-1 border-b border-[#2B2521]/5">
+                    <span className="font-bold text-[#8C6239]">{p.name}</span>
+                    <span className="font-extrabold text-[#2B2521]">${p.price.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between items-center text-[10px] text-emerald-950/60 mt-1">
+                  <div className="flex justify-between items-center text-[10px] text-[#2B2521]/60 mt-1">
                     <span>Cod: <span className="font-mono">{p.barcode}</span></span>
                     <span>Categoría: {p.category}</span>
                   </div>
-                  <div className="text-right mt-1">
+                  <div className="text-right mt-1.5">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       p.stock > 10 
                         ? 'bg-green-50 text-green-700 border border-green-200' 

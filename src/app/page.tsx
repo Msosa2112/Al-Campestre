@@ -161,16 +161,16 @@ export default function Storefront() {
     <div className="flex-1 flex flex-col gap-6">
       
       {/* Hero Bienvenida Tradicional */}
-      <div className="glass-panel p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden relative border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-teal-500/5">
+      <div className="glass-panel p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden relative border-[#D95D39]/10 bg-gradient-to-br from-[#D95D39]/5 to-[#8C6239]/5">
         <div className="flex-1 flex flex-col gap-2">
-          <h1 className="text-xl md:text-3xl font-extrabold text-emerald-950 tracking-tight leading-tight">
+          <h1 className="text-xl md:text-3xl font-extrabold text-[#2B2521] tracking-tight leading-tight">
             Envía Alimentos Frescos y Abarrotes directos a Cuba
           </h1>
-          <p className="text-emerald-950/70 text-xs md:text-sm max-w-2xl leading-relaxed">
+          <p className="text-[#2B2521]/70 text-xs md:text-sm max-w-2xl leading-relaxed">
             Compra combos de carnes, granos y abarrotes desde EE.UU. con entrega garantizada en la puerta de tus familiares. Selecciona tu familiar recibidor, añade productos al carrito y finaliza con pago rápido en 1-clic con Stripe.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 bg-white/40 border border-white/60 px-3.5 py-2 rounded-2xl">
+        <div className="flex items-center gap-2 text-xs font-bold text-[#8C6239] bg-white/40 border border-white/60 px-3.5 py-2 rounded-2xl">
           <span>🕒 Entrega en 24-48h</span>
         </div>
       </div>
@@ -178,10 +178,10 @@ export default function Storefront() {
       {/* Botón flotante secundario para el Asistente de IA (Comercio Conversacional) */}
       <Link
         href="/chat"
-        className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-emerald-400 to-teal-500 text-emerald-950 px-4 py-3.5 rounded-full shadow-xl border border-white/60 hover:scale-105 transition-transform duration-200 flex items-center gap-2 font-bold text-xs"
+        className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white px-5 py-3.5 rounded-full shadow-xl border border-white/30 hover:scale-105 transition-transform duration-200 flex items-center gap-2 font-bold text-xs"
         title="Ordenar usando Inteligencia Artificial"
       >
-        <Sparkles size={14} className="animate-pulse" />
+        <Sparkles size={14} className="animate-pulse text-[#FAF9F5]" />
         <span>¿Pedir con Asistente IA?</span>
       </Link>
 
@@ -192,13 +192,13 @@ export default function Storefront() {
         <div className="lg:col-span-1 flex flex-col gap-4">
           <div className="glass-panel p-5 flex flex-col gap-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold text-emerald-950 flex items-center gap-2">
-                <User size={18} className="text-emerald-600" />
+              <h2 className="text-lg font-bold text-[#2B2521] flex items-center gap-2">
+                <User size={18} className="text-[#8C6239]" />
                 ¿Quién Recibe en Cuba?
               </h2>
               <button 
                 onClick={() => setShowOnboarding(true)}
-                className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 p-1.5 rounded-xl transition"
+                className="bg-[#D95D39]/10 hover:bg-[#D95D39]/20 text-[#D95D39] p-1.5 rounded-xl transition cursor-pointer"
                 title="Agregar Familiar"
               >
                 <Plus size={16} />
@@ -206,11 +206,11 @@ export default function Storefront() {
             </div>
 
             {families.length === 0 ? (
-              <div className="text-center py-6 bg-white/30 rounded-2xl border border-dashed border-emerald-500/20">
-                <p className="text-xs text-emerald-900/60 mb-3">No tienes familiares guardados aún.</p>
+              <div className="text-center py-6 bg-white/30 rounded-2xl border border-dashed border-[#8C6239]/20">
+                <p className="text-xs text-[#2B2521]/60 mb-3">No tienes familiares guardados aún.</p>
                 <button
                   onClick={() => setShowOnboarding(true)}
-                  className="glass-button text-xs px-4 py-2 font-bold"
+                  className="glass-button text-xs px-4 py-2 font-bold cursor-pointer"
                 >
                   Registrar Primer Recibidor
                 </button>
@@ -223,17 +223,17 @@ export default function Storefront() {
                     onClick={() => setSelectedFamilyId(fam.id)}
                     className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                       selectedFamilyId === fam.id
-                        ? 'bg-emerald-500/10 border-emerald-500 shadow-sm'
+                        ? 'bg-[#D95D39]/10 border-[#D95D39] shadow-sm'
                         : 'bg-white/40 border-white/55 hover:bg-white/70'
                     }`}
                   >
                     <div>
-                      <p className="text-sm font-bold text-emerald-950">{fam.nickname}</p>
-                      <p className="text-xs text-emerald-950/60 truncate max-w-[180px]">{fam.full_name}</p>
-                      <p className="text-xs text-emerald-900/50 mt-1">{fam.municipality}, {fam.province}</p>
+                      <p className="text-sm font-bold text-[#2B2521]">{fam.nickname}</p>
+                      <p className="text-xs text-[#2B2521]/60 truncate max-w-[180px]">{fam.full_name}</p>
+                      <p className="text-xs text-[#2B2521]/50 mt-1">{fam.municipality}, {fam.province}</p>
                     </div>
                     {selectedFamilyId === fam.id && (
-                      <span className="bg-emerald-500 text-white p-1 rounded-full text-xs">
+                      <span className="bg-[#D95D39] text-white p-1 rounded-full text-xs">
                         <Check size={12} className="stroke-[3]" />
                       </span>
                     )}
@@ -243,14 +243,14 @@ export default function Storefront() {
             )}
 
             {activeFamily && (
-              <div className="bg-white/60 p-3.5 rounded-2xl text-xs flex flex-col gap-2 border border-emerald-500/10">
-                <p className="font-bold text-emerald-900/80 mb-1">Detalles de Entrega:</p>
-                <p className="flex items-start gap-1.5 text-emerald-950">
-                  <MapPin size={12} className="mt-0.5 text-emerald-600 flex-shrink-0" />
+              <div className="bg-white/60 p-3.5 rounded-2xl text-xs flex flex-col gap-2 border border-[#8C6239]/10">
+                <p className="font-bold text-[#8C6239] mb-1">Detalles de Entrega:</p>
+                <p className="flex items-start gap-1.5 text-[#2B2521]">
+                  <MapPin size={12} className="mt-0.5 text-[#8C6239] flex-shrink-0" />
                   <span>{activeFamily.address}, {activeFamily.municipality}, {activeFamily.province}</span>
                 </p>
-                <p className="flex items-center gap-1.5 text-emerald-950">
-                  <Phone size={12} className="text-emerald-600 flex-shrink-0" />
+                <p className="flex items-center gap-1.5 text-[#2B2521]">
+                  <Phone size={12} className="text-[#8C6239] flex-shrink-0" />
                   <span>{activeFamily.phone}</span>
                 </p>
               </div>
@@ -263,15 +263,15 @@ export default function Storefront() {
           
           {/* Header & Cart Button */}
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-emerald-950">Catálogo de Productos</h2>
+            <h2 className="text-xl font-extrabold text-[#2B2521]">Catálogo de Productos</h2>
             <button
               onClick={() => setIsCartOpen(true)}
-              className="glass-button px-4 py-2 flex items-center gap-2 relative border-emerald-500/20"
+              className="glass-button px-4 py-2.5 flex items-center gap-2 relative border-[#8C6239]/15 text-[#8C6239] cursor-pointer"
             >
-              <ShoppingCart size={16} className="text-emerald-700" />
-              <span className="font-semibold text-sm">Mi Carrito</span>
+              <ShoppingCart size={16} />
+              <span className="font-bold text-sm">Mi Carrito</span>
               {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
+                <span className="absolute -top-2 -right-2 bg-[#D95D39] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
                   {cart.reduce((sum, i) => sum + i.quantity, 0)}
                 </span>
               )}
@@ -281,7 +281,7 @@ export default function Storefront() {
           {/* Más Vendidos (Best Sellers Section) - Only shown on "Todos" category */}
           {selectedCategory === 'Todos' && (
             <div className="flex flex-col gap-3">
-              <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-1">
+              <h3 className="text-sm font-extrabold text-[#8C6239] flex items-center gap-1.5">
                 <span>🔥</span> Productos Más Vendidos
               </h3>
               
@@ -293,12 +293,12 @@ export default function Storefront() {
                     const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                     return (
-                      <div key={`best-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border-emerald-500/30 bg-emerald-500/5">
-                        <span className="absolute top-2 left-2 bg-amber-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full z-10 shadow-sm animate-pulse">
+                      <div key={`best-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border-[#8C6239]/10 bg-[#FAF9F5]/40">
+                        <span className="absolute top-2 left-2 bg-[#D95D39] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full z-10 shadow-sm animate-pulse">
                           🔥 MÁS VENDIDO
                         </span>
                         
-                        <div className="h-32 w-full overflow-hidden bg-emerald-950/5 relative">
+                        <div className="h-32 w-full overflow-hidden bg-[#8C6239]/5 relative">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 
                             src={product.image_url} 
@@ -307,18 +307,18 @@ export default function Storefront() {
                           />
                         </div>
 
-                        <div className="p-3 flex-1 flex flex-col justify-between gap-3">
+                        <div className="p-3.5 flex-1 flex flex-col justify-between gap-3">
                           <div>
-                            <h4 className="font-bold text-sm text-emerald-950 leading-tight">{product.name}</h4>
-                            <p className="text-[10px] text-emerald-950/60 line-clamp-1 mt-0.5">{product.description}</p>
+                            <h4 className="font-bold text-sm text-[#2B2521] leading-tight">{product.name}</h4>
+                            <p className="text-[10px] text-[#2B2521]/60 line-clamp-1 mt-0.5">{product.description}</p>
                           </div>
                           
                           <div className="flex justify-between items-center">
-                            <span className="text-sm font-extrabold text-emerald-950">${product.price.toFixed(2)}</span>
+                            <span className="text-sm font-extrabold text-[#2B2521]">${product.price.toFixed(2)}</span>
                             <button
                               onClick={() => addToCart(product)}
                               disabled={remainingStock <= 0}
-                              className="glass-button-primary px-3 py-1.5 text-[10px] font-bold"
+                              className="glass-button-primary px-3.5 py-1.5 text-[10px] font-bold cursor-pointer"
                             >
                               Agregar
                             </button>
@@ -333,16 +333,16 @@ export default function Storefront() {
 
           {/* Categories Selector Pills */}
           <div className="flex flex-col gap-2">
-            <h3 className="text-xs font-bold text-emerald-950/70">Categorías de Envíos:</h3>
+            <h3 className="text-xs font-bold text-[#2B2521]/70 uppercase tracking-wider">Categorías de Envíos:</h3>
             <div className="glass-track flex items-center p-1 w-fit max-w-full overflow-x-auto whitespace-nowrap scrollbar-none">
               {['Todos', 'Carnes', 'Granos', 'Lácteos', 'Abarrotes'].map(cat => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     selectedCategory === cat
                       ? 'glass-button-segmented-active'
-                      : 'text-emerald-950/60 hover:text-emerald-950 px-4'
+                      : 'text-[#2B2521]/60 hover:text-[#2B2521] px-4'
                   }`}
                 >
                   {cat}
@@ -364,32 +364,32 @@ export default function Storefront() {
                 return (
                   <div key={product.id} className="glass-card flex flex-col overflow-hidden relative">
                     {/* Image wrapper */}
-                    <div className="h-44 w-full overflow-hidden bg-emerald-950/5 relative">
+                    <div className="h-44 w-full overflow-hidden bg-[#8C6239]/5 relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img 
                         src={product.image_url} 
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
-                      <span className="absolute top-2 right-2 bg-white/80 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-emerald-800 border border-white">
+                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-[#8C6239] border border-white">
                         {product.category}
                       </span>
                     </div>
 
                     <div className="p-4 flex-1 flex flex-col justify-between gap-4">
                       <div className="flex flex-col gap-1">
-                        <h3 className="font-bold text-base text-emerald-950 leading-tight">{product.name}</h3>
-                        <p className="text-xs text-emerald-950/60 line-clamp-2 leading-relaxed">{product.description}</p>
+                        <h3 className="font-bold text-base text-[#2B2521] leading-tight">{product.name}</h3>
+                        <p className="text-xs text-[#2B2521]/60 line-clamp-2 leading-relaxed">{product.description}</p>
                       </div>
 
                       <div className="flex flex-col gap-2">
                         <div className="flex justify-between items-baseline">
-                          <span className="text-xl font-extrabold text-emerald-950">${product.price.toFixed(2)}</span>
+                          <span className="text-xl font-extrabold text-[#2B2521]">${product.price.toFixed(2)}</span>
                           <span className={`text-xs font-semibold ${
                             remainingStock > 10 
-                              ? 'text-emerald-700' 
+                              ? 'text-green-600' 
                               : remainingStock > 0 
-                              ? 'text-amber-600 animate-pulse' 
+                              ? 'text-[#D95D39] animate-pulse' 
                               : 'text-red-500'
                           }`}>
                             {remainingStock > 0 ? `Stock: ${remainingStock} disp.` : 'Agotado'}
@@ -399,10 +399,10 @@ export default function Storefront() {
                         <button
                           onClick={() => addToCart(product)}
                           disabled={remainingStock <= 0}
-                          className={`w-full py-2.5 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all ${
+                          className={`w-full py-2.5 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                             remainingStock > 0
-                              ? 'glass-button-primary cursor-pointer'
-                              : 'bg-emerald-950/5 border border-emerald-950/10 text-emerald-950/40 cursor-not-allowed'
+                              ? 'glass-button-primary'
+                              : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
                           }`}
                         >
                           <Plus size={14} />
@@ -415,8 +415,8 @@ export default function Storefront() {
               })}
           </div>
 
-          {/* Vista Móvil: Fila Compacta (Previene scroll infinito con miles de productos) */}
-          <div className="block md:hidden flex flex-col gap-2.5">
+          {/* Vista Móvil: Diseño de 1 Sola Columna con Imágenes Grandes y Stock Destacado */}
+          <div className="grid grid-cols-1 gap-5 md:hidden">
             {products
               .filter(p => selectedCategory === 'Todos' || p.category === selectedCategory)
               .map(product => {
@@ -424,57 +424,47 @@ export default function Storefront() {
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                 return (
-                  <div 
-                    key={`mob-${product.id}`} 
-                    className="glass-card flex items-center justify-between p-2.5 rounded-2xl gap-3 text-xs"
-                  >
-                    {/* Small left thumbnail */}
-                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-emerald-950/5 flex-shrink-0">
+                  <div key={`mob-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border border-[#8C6239]/10">
+                    <div className="h-48 w-full overflow-hidden bg-[#8C6239]/5 relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img 
                         src={product.image_url} 
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
+                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#8C6239] border border-white">
+                        {product.category}
+                      </span>
                     </div>
 
-                    {/* Middle details */}
-                    <div className="flex-1 min-w-0 flex flex-col justify-center">
-                      <div className="flex justify-between items-baseline gap-2">
-                        <h4 className="font-bold text-emerald-950 truncate leading-tight">{product.name}</h4>
-                        <span className="text-[10px] font-bold text-emerald-950 flex-shrink-0">${product.price.toFixed(2)}</span>
+                    <div className="p-4 flex flex-col gap-3">
+                      <div>
+                        <div className="flex justify-between items-baseline gap-2">
+                          <h4 className="font-extrabold text-base text-[#2B2521] leading-tight">{product.name}</h4>
+                          <span className="text-base font-extrabold text-[#D95D39]">${product.price.toFixed(2)}</span>
+                        </div>
+                        <p className="text-xs text-[#2B2521]/60 leading-relaxed mt-1">{product.description}</p>
                       </div>
                       
-                      <div className="flex justify-between items-center mt-1.5">
-                        <span className="text-[9px] bg-white/80 backdrop-blur-md px-1.5 py-0.5 rounded-md font-semibold text-emerald-800 border border-emerald-500/10">
-                          {product.category}
+                      <div className="flex justify-between items-center pt-2.5 border-t border-[#2B2521]/5">
+                        <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                          remainingStock > 10 
+                            ? 'bg-green-50 text-green-700 border border-green-200' 
+                            : remainingStock > 0 
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse' 
+                            : 'bg-red-50 text-red-700 border border-red-200'
+                        }`}>
+                          {remainingStock > 0 ? `Quedan ${remainingStock} libras` : 'Agotado'}
                         </span>
                         
-                        <span className={`text-[9px] font-bold ${
-                          remainingStock > 10 
-                            ? 'text-emerald-700' 
-                            : remainingStock > 0 
-                            ? 'text-amber-600 animate-pulse' 
-                            : 'text-red-500'
-                        }`}>
-                          {remainingStock > 0 ? `Stock: ${remainingStock} disp.` : 'Agotado'}
-                        </span>
+                        <button
+                          onClick={() => addToCart(product)}
+                          disabled={remainingStock <= 0}
+                          className="glass-button-primary px-5 py-2.5 text-xs font-bold cursor-pointer"
+                        >
+                          {remainingStock > 0 ? 'Añadir' : 'Agotado'}
+                        </button>
                       </div>
-                    </div>
-
-                    {/* Right compact Add Button */}
-                    <div className="flex-shrink-0 pl-1">
-                      <button
-                        onClick={() => addToCart(product)}
-                        disabled={remainingStock <= 0}
-                        className={`px-3.5 py-2 text-[10px] font-extrabold rounded-xl transition ${
-                          remainingStock > 0
-                            ? 'glass-button-primary cursor-pointer'
-                            : 'bg-emerald-950/5 text-emerald-950/30 border border-emerald-950/10 cursor-not-allowed'
-                        }`}
-                      >
-                        {remainingStock > 0 ? 'Añadir' : 'Agotado'}
-                      </button>
                     </div>
                   </div>
                 );
@@ -487,13 +477,13 @@ export default function Storefront() {
       {/* Orders Tracking List */}
       {orders.length > 0 && (
         <div className="glass-panel p-5 mt-4">
-          <h2 className="text-lg font-bold text-emerald-950 mb-4">Seguimiento de tus Órdenes (Tiempo Real)</h2>
+          <h2 className="text-lg font-extrabold text-[#2B2521] mb-4">Progreso del Pedido</h2>
           
           {/* Vista Escritorio: Tabla */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-emerald-500/10 text-emerald-950/60 font-semibold">
+                <tr className="border-b border-[#8C6239]/10 text-[#2B2521]/60 font-bold">
                   <th className="py-2.5">Código Pedido</th>
                   <th className="py-2.5">Destinatario</th>
                   <th className="py-2.5">Monto Total</th>
@@ -502,12 +492,12 @@ export default function Storefront() {
                   <th className="py-2.5">Notas logísticas</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-emerald-500/5">
+              <tbody className="divide-y divide-[#2B2521]/5">
                 {orders.map(order => (
                   <tr key={order.id} className="hover:bg-white/20 transition-colors">
-                    <td className="py-3 font-mono font-bold text-emerald-950">{order.id}</td>
-                    <td className="py-3 text-emerald-900 font-medium">{order.family_name}</td>
-                    <td className="py-3 font-bold text-emerald-950">${order.total_amount.toFixed(2)}</td>
+                    <td className="py-3 font-mono font-bold text-[#2B2521]">{order.id}</td>
+                    <td className="py-3 text-[#2B2521] font-semibold">{order.family_name}</td>
+                    <td className="py-3 font-extrabold text-[#2B2521]">${order.total_amount.toFixed(2)}</td>
                     <td className="py-3">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold inline-block ${
                         order.status === 'delivered' 
@@ -516,7 +506,7 @@ export default function Storefront() {
                           ? 'bg-blue-100 text-blue-700 border border-blue-200 animate-pulse' 
                           : order.status === 'incident' 
                           ? 'bg-red-100 text-red-700 border border-red-200'
-                          : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                          : 'bg-[#FAF9F5] text-[#8C6239] border border-[#8C6239]/20'
                       }`}>
                         {order.status === 'pending' && 'Pendiente'}
                         {order.status === 'paid' && 'Pagado (1-Clic)'}
@@ -536,8 +526,8 @@ export default function Storefront() {
                         </span>
                       )}
                     </td>
-                    <td className="py-3 text-emerald-900/70">{order.delivery_name || 'Pendiente de despacho'}</td>
-                    <td className="py-3 text-xs text-emerald-900/60 max-w-[200px] truncate" title={order.notes || order.incident_reason}>
+                    <td className="py-3 text-[#2B2521]/70">{order.delivery_name || 'Pendiente de despacho'}</td>
+                    <td className="py-3 text-xs text-[#2B2521]/60 max-w-[200px] truncate" title={order.notes || order.incident_reason}>
                       {order.incident_reason ? `Fallo: ${order.incident_reason}` : (order.notes || 'Ninguna')}
                     </td>
                   </tr>
@@ -546,70 +536,125 @@ export default function Storefront() {
             </table>
           </div>
 
-          {/* Vista Móvil: Tarjetas */}
-          <div className="block md:hidden flex flex-col gap-3">
-            {orders.map(order => (
-              <div key={order.id} className="p-4 bg-white/40 border border-white/60 rounded-2xl flex flex-col gap-2 text-xs">
-                <div className="flex justify-between items-center pb-1.5 border-b border-emerald-500/5">
-                  <span className="font-mono font-bold text-sm text-emerald-950">{order.id}</span>
-                  <span className="text-emerald-950 font-bold">${order.total_amount.toFixed(2)}</span>
-                </div>
-                <div className="flex flex-col gap-1 text-[#142f1f]/80">
-                  <p><span className="font-semibold text-emerald-950">Destinatario:</span> {order.family_name}</p>
-                  <p className="truncate"><span className="font-semibold text-emerald-950">Dirección:</span> {order.family_address}</p>
-                  <p><span className="font-semibold text-emerald-950">Repartidor:</span> {order.delivery_name || 'Pendiente'}</p>
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-2 mt-1 border-t border-emerald-500/5 pt-2">
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    order.status === 'delivered' 
-                      ? 'bg-green-100 text-green-700 border border-green-200' 
-                      : order.status === 'in_transit' 
-                      ? 'bg-blue-100 text-blue-700 border border-blue-200 animate-pulse' 
-                      : order.status === 'incident' 
-                      ? 'bg-red-100 text-red-700 border border-red-200'
-                      : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
-                  }`}>
-                    {order.status === 'pending' && 'Pendiente'}
-                    {order.status === 'paid' && 'Pagado'}
-                    {order.status === 'assigned' && 'Asignado'}
-                    {order.status === 'in_transit' && 'En Tránsito'}
-                    {order.status === 'delivered' && 'Entregado'}
-                    {order.status === 'incident' && 'Incidencia'}
-                  </span>
-                  <div className="flex gap-1.5">
-                    {order.refunded && (
-                      <span className="px-1.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[9px] font-extrabold rounded">
-                        Reembolso Stripe
-                      </span>
-                    )}
-                    {order.store_credit_issued && (
-                      <span className="px-1.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-extrabold rounded">
-                        +${order.store_credit_issued} Crédito
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Vista Móvil: Línea de Tiempo Vertical de Hitos Asíncronos */}
+          <div className="grid grid-cols-1 gap-5 md:hidden">
+            {orders.map(order => {
+              // Hito activo (0 a 3)
+              let step = 0;
+              if (order.status === 'assigned') step = 1;
+              else if (order.status === 'in_transit') step = 2;
+              else if (order.status === 'delivered' || order.status === 'incident') step = 3;
 
+              const steps = [
+                { title: 'Pedido Recibido', desc: 'Pago procesado por Stripe', index: 0 },
+                { title: 'En Preparación', desc: 'Validando productos en almacén', index: 1 },
+                { title: 'En Camino a Cuba', desc: 'Repartidor en tránsito', index: 2 },
+                { title: 'Entregado con Éxito', desc: order.status === 'incident' ? `Fallo: ${order.incident_reason}` : 'Entregado a tu familiar', index: 3 }
+              ];
+
+              return (
+                <div key={order.id} className="premium-card p-5 bg-white shadow-md flex flex-col gap-4 border border-[#8C6239]/10">
+                  <div className="flex justify-between items-center pb-2 border-b border-[#2B2521]/5">
+                    <div>
+                      <span className="text-[9px] font-bold text-[#8C6239] uppercase tracking-wider block">Código Pedido</span>
+                      <span className="font-mono font-extrabold text-sm text-[#2B2521]">{order.id}</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[9px] font-bold text-[#8C6239] uppercase tracking-wider block">Total Pagado</span>
+                      <span className="text-sm font-extrabold text-[#D95D39]">${order.total_amount.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1 text-[11px] text-[#2B2521]/80">
+                    <p><span className="font-semibold text-[#2B2521]">Recibe:</span> {order.family_name}</p>
+                    <p className="truncate"><span className="font-semibold text-[#2B2521]">Dirección:</span> {order.family_address}</p>
+                    {order.delivery_name && <p><span className="font-semibold text-[#2B2521]">Repartidor:</span> {order.delivery_name}</p>}
+                  </div>
+
+                  {/* Timeline Vertical */}
+                  <div className="flex flex-col gap-4 mt-2 pl-1">
+                    {steps.map((s) => {
+                      const isCompleted = step >= s.index;
+                      const isIncident = order.status === 'incident' && s.index === 3;
+                      const isLast = s.index === 3;
+
+                      return (
+                        <div key={s.index} className="flex gap-3 relative">
+                          {/* Línea conectora */}
+                          {!isLast && (
+                            <div className={`absolute left-[11px] top-6 w-[2.5px] h-8 ${
+                              step > s.index ? 'bg-[#D95D39]' : 'bg-gray-200'
+                            }`} />
+                          )}
+
+                          {/* Nodo del Timeline */}
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold z-10 ${
+                            isIncident
+                              ? 'bg-red-500 text-white shadow-md shadow-red-500/25 border border-red-600'
+                              : isCompleted 
+                              ? 'bg-[#D95D39] text-white shadow-md shadow-[#D95D39]/25 border border-[#D95D39]' 
+                              : 'bg-gray-100 text-gray-400 border border-gray-200'
+                          }`}>
+                            {isIncident ? '✕' : isCompleted ? '✓' : s.index + 1}
+                          </div>
+
+                          {/* Info del paso */}
+                          <div className="flex flex-col justify-center">
+                            <span className={`text-xs font-bold leading-tight ${
+                              isIncident
+                                ? 'text-red-600'
+                                : isCompleted 
+                                ? 'text-[#2B2521]' 
+                                : 'text-gray-400'
+                            }`}>
+                              {s.title}
+                            </span>
+                            <span className="text-[10px] text-gray-500 mt-0.5 leading-none">
+                              {s.desc}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Incidentes o Reembolsos */}
+                  {(order.refunded || order.store_credit_issued) && (
+                    <div className="mt-1 pt-2.5 border-t border-[#2B2521]/5 flex gap-2">
+                      {order.refunded && (
+                        <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[9px] font-extrabold rounded">
+                          Reembolso Stripe
+                        </span>
+                      )}
+                      {order.store_credit_issued && (
+                        <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-extrabold rounded">
+                          +${order.store_credit_issued} Crédito
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
       {/* MODAL: Onboarding Familiar */}
       {showOnboarding && (
-        <div className="fixed inset-0 bg-emerald-950/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel w-full max-w-lg p-6 bg-white/90 shadow-2xl relative">
+        <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="glass-panel w-full max-w-lg p-6 bg-white/95 shadow-2xl relative">
             <button 
               onClick={() => setShowOnboarding(false)}
-              className="absolute top-4 right-4 text-emerald-950/60 hover:text-emerald-950"
+              className="absolute top-4 right-4 text-[#2B2521]/60 hover:text-[#2B2521] cursor-pointer"
             >
               <X size={20} />
             </button>
-            <h3 className="text-xl font-bold text-emerald-950 flex items-center gap-2 mb-2">
+            <h3 className="text-xl font-bold text-[#2B2521] flex items-center gap-2 mb-2">
               👨‍👩‍👧‍👦 Registrar Familiar Recibidor en Cuba
             </h3>
-            <p className="text-xs text-emerald-950/60 mb-4">
+            <p className="text-xs text-[#2B2521]/60 mb-4">
               Agrega los datos de envío de tu familiar en Cuba. Esto se guardará como recibidor predeterminado.
             </p>
 
@@ -618,7 +663,7 @@ export default function Storefront() {
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Apodo Familiar (Ej. Mamá, Abuela)</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Apodo Familiar (Ej. Mamá, Abuela)</label>
                   <input
                     type="text"
                     required
@@ -629,7 +674,7 @@ export default function Storefront() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Nombre Completo del Recibidor</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Nombre Completo del Recibidor</label>
                   <input
                     type="text"
                     required
@@ -643,7 +688,7 @@ export default function Storefront() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Provincia</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Provincia</label>
                   <select
                     value={province}
                     onChange={e => setProvince(e.target.value)}
@@ -655,7 +700,7 @@ export default function Storefront() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-emerald-950/70">Municipio</label>
+                  <label className="text-xs font-bold text-[#2B2521]/70">Municipio</label>
                   {province === 'La Habana' && (
                     <select value={municipality} onChange={e => setMunicipality(e.target.value)} className="glass-input text-sm">
                       <option value="Plaza de la Revolución">Plaza de la Revolución</option>
@@ -681,7 +726,7 @@ export default function Storefront() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-emerald-950/70">Dirección Exacta (Calle, Número, e/ Calles)</label>
+                <label className="text-xs font-bold text-[#2B2521]/70">Dirección Exacta (Calle, Número, e/ Calles)</label>
                 <input
                   type="text"
                   required
@@ -693,7 +738,7 @@ export default function Storefront() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-emerald-950/70">Teléfono Celular en Cuba (WhatsApp preferente)</label>
+                <label className="text-xs font-bold text-[#2B2521]/70">Teléfono Celular en Cuba (WhatsApp preferente)</label>
                 <input
                   type="text"
                   required
@@ -706,7 +751,7 @@ export default function Storefront() {
 
               <button
                 type="submit"
-                className="glass-button-primary py-2.5 mt-2 text-sm font-bold flex items-center justify-center gap-1.5"
+                className="glass-button-primary py-2.5 mt-2 text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 Guardar y Activar Familiar
               </button>
@@ -717,32 +762,32 @@ export default function Storefront() {
 
       {/* MODAL: Checkout Exitoso (Simulación Stripe) */}
       {checkoutSuccess && (
-        <div className="fixed inset-0 bg-emerald-950/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl text-center flex flex-col items-center gap-4 border-emerald-500/30">
-            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl shadow-inner">
+        <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl text-center flex flex-col items-center gap-4 border-[#D95D39]/30">
+            <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-3xl shadow-inner border border-green-200">
               ✓
             </div>
             
             <div>
-              <h3 className="text-xl font-extrabold text-emerald-950">¡Pago Exitoso en 1-Clic!</h3>
-              <p className="text-xs text-emerald-950/60 mt-1">Procesado con Stripe Checkout para LLC en EE.UU.</p>
+              <h3 className="text-xl font-extrabold text-[#2B2521]">¡Pago Exitoso en 1-Clic!</h3>
+              <p className="text-xs text-[#2B2521]/60 mt-1">Procesado con Stripe Checkout para LLC en EE.UU.</p>
             </div>
 
-            <div className="bg-emerald-50/50 w-full p-4 rounded-2xl text-left border border-emerald-500/10 text-xs flex flex-col gap-1.5">
-              <p className="text-emerald-900/60 font-semibold">Resumen del Pedido:</p>
-              <p className="text-emerald-950 font-bold text-sm">Código: {checkoutSuccess.id}</p>
-              <p className="text-emerald-950"><span className="font-semibold">Recibe:</span> {checkoutSuccess.family_name}</p>
-              <p className="text-emerald-950"><span className="font-semibold">Destino:</span> {checkoutSuccess.family_address}</p>
-              <p className="text-emerald-950 font-extrabold text-emerald-800 text-right text-sm mt-1">Total Pagado: ${checkoutSuccess.total_amount.toFixed(2)}</p>
+            <div className="bg-[#FAF9F5] w-full p-4 rounded-2xl text-left border border-[#8C6239]/10 text-xs flex flex-col gap-1.5">
+              <p className="text-[#8C6239] font-bold">Resumen del Pedido:</p>
+              <p className="text-[#2B2521] font-bold text-sm">Código: {checkoutSuccess.id}</p>
+              <p className="text-[#2B2521]"><span className="font-semibold">Recibe:</span> {checkoutSuccess.family_name}</p>
+              <p className="text-[#2B2521]"><span className="font-semibold">Destino:</span> {checkoutSuccess.family_address}</p>
+              <p className="text-[#D95D39] font-extrabold text-right text-sm mt-1">Total Pagado: ${checkoutSuccess.total_amount.toFixed(2)}</p>
             </div>
 
-            <p className="text-xs text-emerald-950/60 leading-relaxed bg-emerald-500/5 p-3 rounded-xl">
-              📦 <span className="font-bold text-emerald-900">Validación de Inventario:</span> El stock ha sido descontado estrictamente en tiempo real en la base de datos de Restaurant Al Campestre.
+            <p className="text-xs text-[#2B2521]/60 leading-relaxed bg-[#D95D39]/5 p-3 rounded-xl border border-[#D95D39]/10">
+              📦 <span className="font-bold text-[#8C6239]">Validación de Inventario:</span> El stock ha sido descontado estrictamente en tiempo real en la base de datos de Restaurant Al Campestre.
             </p>
 
             <button
               onClick={() => setCheckoutSuccess(null)}
-              className="glass-button-primary w-full py-2.5 text-sm font-bold"
+              className="glass-button-primary w-full py-2.5 text-sm font-bold cursor-pointer"
             >
               Entendido / Seguir Comprando
             </button>
@@ -752,19 +797,19 @@ export default function Storefront() {
 
       {/* Cart Sidebar Panel */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-40 bg-emerald-950/20 backdrop-blur-xs flex justify-end animate-fadeIn">
-          <div className="w-full max-w-md h-full bg-white/95 backdrop-blur-md border-l border-white/55 shadow-2xl p-6 flex flex-col justify-between">
+        <div className="fixed inset-0 z-40 bg-[#2B2521]/20 backdrop-blur-xs flex justify-end animate-fadeIn">
+          <div className="w-full max-w-md h-full bg-white/95 backdrop-blur-md border-l border-[#8C6239]/10 shadow-2xl p-6 flex flex-col justify-between">
             
             {/* Header */}
             <div>
-              <div className="flex justify-between items-center pb-4 border-b border-emerald-500/10">
-                <h3 className="text-lg font-bold text-emerald-950 flex items-center gap-2">
-                  <ShoppingCart size={18} className="text-emerald-600" />
+              <div className="flex justify-between items-center pb-4 border-b border-[#8C6239]/10">
+                <h3 className="text-lg font-bold text-[#2B2521] flex items-center gap-2">
+                  <ShoppingCart size={18} className="text-[#8C6239]" />
                   Detalle del Carrito
                 </h3>
                 <button 
                   onClick={() => setIsCartOpen(false)}
-                  className="text-emerald-950/60 hover:text-emerald-950 p-1 rounded-full hover:bg-emerald-500/10 transition"
+                  className="text-[#2B2521]/60 hover:text-[#2B2521] p-1 rounded-full hover:bg-[#8C6239]/10 transition cursor-pointer"
                 >
                   <X size={20} />
                 </button>
@@ -774,36 +819,36 @@ export default function Storefront() {
               {cart.length === 0 ? (
                 <div className="text-center py-20">
                   <p className="text-3xl mb-3">🛒</p>
-                  <p className="text-sm font-semibold text-emerald-900/60">Tu carrito está vacío.</p>
+                  <p className="text-sm font-semibold text-[#8C6239]/60">Tu carrito está vacío.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3 py-4 max-h-[60vh] overflow-y-auto pr-1">
                   {cart.map(item => (
-                    <div key={item.product.id} className="p-3 bg-white/40 border border-white/60 rounded-2xl flex justify-between items-center gap-4">
+                    <div key={item.product.id} className="p-3 bg-[#FAF9F5]/40 border border-[#8C6239]/10 rounded-2xl flex justify-between items-center gap-4">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-emerald-950 truncate">{item.product.name}</p>
-                        <p className="text-xs text-emerald-950/60 font-semibold">${item.product.price.toFixed(2)} / libra</p>
+                        <p className="text-sm font-bold text-[#2B2521] truncate">{item.product.name}</p>
+                        <p className="text-xs text-[#2B2521]/60 font-semibold">${item.product.price.toFixed(2)} / libra</p>
                       </div>
                       
                       {/* Quantity selector */}
-                      <div className="flex items-center gap-2.5 bg-white/80 px-2 py-1 rounded-xl border border-emerald-500/15">
+                      <div className="flex items-center gap-2.5 bg-white/80 px-2 py-1 rounded-xl border border-[#8C6239]/15">
                         <button 
                           onClick={() => updateCartQty(item.product.id, -1)}
-                          className="font-bold text-emerald-950 hover:text-emerald-600 px-1"
+                          className="font-bold text-[#2B2521] hover:text-[#D95D39] px-1 cursor-pointer"
                         >
                           -
                         </button>
-                        <span className="text-xs font-bold text-emerald-950 min-w-4 text-center">{item.quantity}</span>
+                        <span className="text-xs font-bold text-[#2B2521] min-w-4 text-center">{item.quantity}</span>
                         <button 
                           onClick={() => updateCartQty(item.product.id, 1)}
-                          className="font-bold text-emerald-950 hover:text-emerald-600 px-1"
+                          className="font-bold text-[#2B2521] hover:text-[#D95D39] px-1 cursor-pointer"
                         >
                           +
                         </button>
                       </div>
                       
                       <div className="text-right">
-                        <span className="text-sm font-extrabold text-emerald-950">${(item.product.price * item.quantity).toFixed(2)}</span>
+                        <span className="text-sm font-extrabold text-[#2B2521]">${(item.product.price * item.quantity).toFixed(2)}</span>
                       </div>
                     </div>
                   ))}
@@ -813,26 +858,26 @@ export default function Storefront() {
 
             {/* Footer / Stripe Checkout */}
             {cart.length > 0 && (
-              <div className="border-t border-emerald-500/10 pt-4 flex flex-col gap-3">
+              <div className="border-t border-[#8C6239]/10 pt-4 flex flex-col gap-3">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-sm font-bold text-emerald-950/70">Subtotal:</span>
-                  <span className="text-2xl font-extrabold text-emerald-950">${totalCartPrice.toFixed(2)}</span>
+                  <span className="text-sm font-bold text-[#2B2521]/70">Subtotal:</span>
+                  <span className="text-2xl font-extrabold text-[#2B2521]">${totalCartPrice.toFixed(2)}</span>
                 </div>
 
                 {checkoutError && (
                   <p className="text-xs font-bold text-red-500 bg-red-50 p-2.5 rounded-xl">{checkoutError}</p>
                 )}
 
-                <div className="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-500/10 text-xs flex flex-col gap-2">
-                  <p className="font-bold text-emerald-900/80">💳 Método de Pago (Stripe 1-Clic)</p>
-                  <div className="flex justify-between text-emerald-950/70 font-semibold">
+                <div className="bg-[#FAF9F5] p-3 rounded-2xl border border-[#8C6239]/10 text-xs flex flex-col gap-2">
+                  <p className="font-bold text-[#8C6239]">💳 Método de Pago (Stripe 1-Clic)</p>
+                  <div className="flex justify-between text-[#2B2521]/70 font-semibold">
                     <span>Tarjeta Guardada:</span>
                     <span>Visa terminada en •••• 4242</span>
                   </div>
                   {activeFamily ? (
-                    <div className="flex justify-between text-emerald-950/70 font-semibold truncate">
+                    <div className="flex justify-between text-[#2B2521]/70 font-semibold truncate">
                       <span>Destinatario en Cuba:</span>
-                      <span className="font-bold text-emerald-800">{activeFamily.nickname}</span>
+                      <span className="font-bold text-[#8C6239]">{activeFamily.nickname}</span>
                     </div>
                   ) : (
                     <button
@@ -840,7 +885,7 @@ export default function Storefront() {
                         setIsCartOpen(false);
                         setShowOnboarding(true);
                       }}
-                      className="text-emerald-600 font-bold hover:underline text-left"
+                      className="text-[#D95D39] font-bold hover:underline text-left cursor-pointer"
                     >
                       ⚠️ Asignar recibidor en Cuba
                     </button>
@@ -850,10 +895,10 @@ export default function Storefront() {
                 <button
                   onClick={handleCheckout}
                   disabled={!selectedFamilyId}
-                  className={`w-full py-3 font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all ${
+                  className={`w-full py-3.5 font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all ${
                     selectedFamilyId
                       ? 'glass-button-primary cursor-pointer'
-                      : 'bg-emerald-950/5 text-emerald-950/40 border border-emerald-950/10 cursor-not-allowed'
+                      : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
                   }`}
                 >
                   <CreditCard size={16} />
