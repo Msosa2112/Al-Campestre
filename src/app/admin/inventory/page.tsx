@@ -30,7 +30,15 @@ export default function AdminInventory() {
   const [isClearingBg, setIsClearingBg] = useState(false);
 
   useEffect(() => {
-    setProducts(getProducts());
+    const loadProductsData = async () => {
+      try {
+        const prods = await getProducts();
+        setProducts(prods);
+      } catch (err) {
+        console.error('Error loading products:', err);
+      }
+    };
+    loadProductsData();
   }, []);
 
   const handleSimulatedScan = (barcode: string) => {
@@ -48,14 +56,15 @@ export default function AdminInventory() {
     }, 1000);
   };
 
-  const processScannedBarcode = (barcode: string) => {
+  const processScannedBarcode = async (barcode: string) => {
     const existing = products.find(p => p.barcode === barcode);
     
     if (existing) {
       // Exist: sum 10 items or increment stock
-      const result = addProductStock(barcode, 10);
+      const result = await addProductStock(barcode, 10);
       if (result.success && result.product) {
-        setProducts(getProducts());
+        const updated = await getProducts();
+        setProducts(updated);
         alert(`¡Producto Existente! Se sumaron +10 unidades de stock a "${result.product.name}". Nuevo stock: ${result.product.stock}`);
       }
     } else {
@@ -108,7 +117,7 @@ export default function AdminInventory() {
     }
   };
 
-  const handleSaveProduct = (e: React.FormEvent) => {
+  const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     const priceNum = parseFloat(formData.price);
     const stockNum = parseInt(formData.stock);
@@ -129,8 +138,8 @@ export default function AdminInventory() {
       category: formData.category
     };
 
-    saveProduct(newProd);
-    setProducts(getProducts());
+    const updated = await saveProduct(newProd);
+    setProducts(updated);
     setIsNewProductForm(false);
     setScannedBarcode('');
     alert(`¡Producto "${newProd.name}" registrado con éxito!`);

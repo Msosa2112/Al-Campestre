@@ -16,10 +16,18 @@ export default function AdminDispatch() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [activeTab, setActiveTab] = useState<'disponibles' | 'en_ruta' | 'en_retorno'>('disponibles');
 
-  const loadData = () => {
-    checkDriverReturnStatus();
-    setOrders(getOrders());
-    setDrivers(getDrivers());
+  const loadData = async () => {
+    try {
+      await checkDriverReturnStatus();
+      const [ords, drvs] = await Promise.all([
+        getOrders(),
+        getDrivers()
+      ]);
+      setOrders(ords);
+      setDrivers(drvs);
+    } catch (err) {
+      console.error('Error loading data:', err);
+    }
   };
 
   useEffect(() => {
@@ -28,11 +36,11 @@ export default function AdminDispatch() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleAssignDriver = (orderId: string, driverId: string) => {
+  const handleAssignDriver = async (orderId: string, driverId: string) => {
     if (!driverId) return;
-    const success = assignOrderToDriver(orderId, driverId);
+    const success = await assignOrderToDriver(orderId, driverId);
     if (success) {
-      loadData();
+      await loadData();
       alert(`¡Pedido ${orderId} despachado con éxito! Repartidor asignado.`);
     } else {
       alert('No se pudo asignar el repartidor.');

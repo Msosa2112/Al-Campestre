@@ -31,12 +31,22 @@ export default function ChatCommerce() {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setProducts(getProducts());
-    const fams = getFamilies();
-    setFamilies(fams);
-    if (fams.length > 0) {
-      setSelectedFamily(fams[0]); // default
-    }
+    const initChatData = async () => {
+      try {
+        const [prods, fams] = await Promise.all([
+          getProducts(),
+          getFamilies()
+        ]);
+        setProducts(prods);
+        setFamilies(fams);
+        if (fams.length > 0) {
+          setSelectedFamily(fams[0]); // default
+        }
+      } catch (err) {
+        console.error('Error loading chat data:', err);
+      }
+    };
+    initChatData();
 
     setMessages([
       {
@@ -180,7 +190,7 @@ export default function ChatCommerce() {
     }]);
   };
 
-  const handleProposalCheckout = () => {
+  const handleProposalCheckout = async () => {
     if (!selectedFamily) {
       setCheckoutError('Por favor registra o selecciona un familiar recibidor.');
       return;
@@ -196,7 +206,7 @@ export default function ChatCommerce() {
       quantity: item.quantity
     }));
 
-    const result = createOrderWithStockCheck(items, selectedFamily.id, 'Miguel Ángel (Miami)');
+    const result = await createOrderWithStockCheck(items, selectedFamily.id, 'Miguel Ángel (Miami)');
 
     if (result.success && result.order) {
       setOrderCreated(result.order);

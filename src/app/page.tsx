@@ -39,16 +39,22 @@ export default function Storefront() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutError, setCheckoutError] = useState('');
 
-  const loadData = () => {
-    const prods = getProducts();
-    const fams = getFamilies();
-    const ords = getOrders();
-    setProducts(prods);
-    setFamilies(fams);
-    setOrders(ords.filter(o => o.client_name === 'Miguel Ángel (Miami)'));
-    
-    if (fams.length > 0 && !selectedFamilyId) {
-      setSelectedFamilyId(fams[0].id);
+  const loadData = async () => {
+    try {
+      const [prods, fams, ords] = await Promise.all([
+        getProducts(),
+        getFamilies(),
+        getOrders()
+      ]);
+      setProducts(prods);
+      setFamilies(fams);
+      setOrders(ords.filter(o => o.client_name === 'Miguel Ángel (Miami)'));
+      
+      if (fams.length > 0 && !selectedFamilyId) {
+        setSelectedFamilyId(fams[0].id);
+      }
+    } catch (err) {
+      console.error('Error loading data:', err);
     }
   };
 
@@ -57,9 +63,9 @@ export default function Storefront() {
     // Refresh interval for live order status updates
     const interval = setInterval(loadData, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedFamilyId]);
 
-  const handleAddFamily = (e: React.FormEvent) => {
+  const handleAddFamily = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nickname || !fullName || !address || !phone) {
       setFamilyError('Por favor complete todos los campos requeridos.');
@@ -76,7 +82,7 @@ export default function Storefront() {
       phone
     };
 
-    const updated = saveFamily(newFam);
+    const updated = await saveFamily(newFam);
     setFamilies(updated);
     setSelectedFamilyId(newFam.id);
     setShowOnboarding(false);
@@ -127,7 +133,7 @@ export default function Storefront() {
     });
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!selectedFamilyId) {
       setShowOnboarding(true);
       return;
@@ -142,7 +148,7 @@ export default function Storefront() {
       quantity: item.quantity
     }));
 
-    const result = createOrderWithStockCheck(itemsForOrder, selectedFamilyId, 'Miguel Ángel (Miami)');
+    const result = await createOrderWithStockCheck(itemsForOrder, selectedFamilyId, 'Miguel Ángel (Miami)');
 
     if (result.success && result.order) {
       setCheckoutSuccess(result.order);
@@ -178,7 +184,7 @@ export default function Storefront() {
       {/* Botón flotante secundario para el Asistente de IA (Comercio Conversacional) */}
       <Link
         href="/chat"
-        className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white px-5 py-3.5 rounded-full shadow-xl border border-white/30 hover:scale-105 transition-transform duration-200 flex items-center gap-2 font-bold text-xs"
+        className={`fixed ${cart.length > 0 && !isCartOpen ? 'bottom-24' : 'bottom-6'} right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white px-5 py-3.5 rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center gap-2 font-bold text-xs`}
         title="Ordenar usando Inteligencia Artificial"
       >
         <Sparkles size={14} className="animate-pulse text-[#FAF9F5]" />
@@ -906,8 +912,25 @@ export default function Storefront() {
                 </button>
               </div>
             )}
-
           </div>
+        </div>
+      )}
+
+      {/* Barra de Carrito Fija en Móvil (solo si hay items y el carrito no está abierto) */}
+      {cart.length > 0 && !isCartOpen && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 p-4 flex justify-between items-center shadow-lg animate-slide-up md:hidden">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-[#8C6239] uppercase tracking-wider">Tu Carrito</span>
+            <span className="text-base font-extrabold text-[#2B2521]">${totalCartPrice.toFixed(2)}</span>
+            <span className="text-[10px] text-[#2B2521]/60 font-semibold">{cart.reduce((sum, i) => sum + i.quantity, 0)} lbs en total</span>
+          </div>
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="glass-button-primary px-5 py-3 text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md"
+          >
+            <ShoppingCart size={14} />
+            Ver Carrito & Pagar
+          </button>
         </div>
       )}
 

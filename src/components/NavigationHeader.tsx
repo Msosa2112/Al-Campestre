@@ -35,7 +35,7 @@ export default function NavigationHeader() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="glass-panel px-5 py-3.5 mb-6 flex justify-between items-center sticky top-4 z-50">
+    <header className="glass-panel w-full sticky top-0 left-0 right-0 z-50 rounded-none border-t-0 border-x-0 px-4 py-3 mb-0 flex justify-between items-center sm:my-4 sm:mx-auto sm:max-w-7xl sm:px-6 sm:py-4 sm:rounded-3xl sm:border sm:mb-6">
       
       {/* Brand logo (aligned with logo brand colors) */}
       <Link href="/" className="flex items-center gap-3 group">

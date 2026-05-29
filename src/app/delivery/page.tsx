@@ -7,6 +7,7 @@ import {
   updateDeliveryMilestone, 
   Order, 
   Driver,
+  getProducts,
 } from '@/lib/dbMock';
 import { Truck, Check, AlertCircle, Scan, MessageCircle, RefreshCw, Lock, LogOut } from 'lucide-react';
 
@@ -36,11 +37,17 @@ export default function DeliveryApp() {
   const [incidentReason, setIncidentReason] = useState('');
   const [whatsappToast, setWhatsappToast] = useState<string | null>(null);
 
-  const loadData = () => {
-    const drvs = getDrivers();
-    const ords = getOrders();
-    setDrivers(drvs);
-    setOrders(ords);
+  const loadData = async () => {
+    try {
+      const [drvs, ords] = await Promise.all([
+        getDrivers(),
+        getOrders()
+      ]);
+      setDrivers(drvs);
+      setOrders(ords);
+    } catch (err) {
+      console.error('Error loading data:', err);
+    }
   };
 
   useEffect(() => {
@@ -131,11 +138,11 @@ export default function DeliveryApp() {
   };
 
   // Simulación de escaneo de códigos de barra
-  const handleSimulatePickingScan = (barcode: string) => {
+  const handleSimulatePickingScan = async (barcode: string) => {
     if (!activeOrder || !barcode) return;
     setAlertMessage(null);
 
-    const products = JSON.parse(localStorage.getItem('campestre_products') || '[]');
+    const products = await getProducts();
     const scannedProduct = products.find((p: { barcode: string }) => p.barcode === barcode);
 
     if (!scannedProduct) {
@@ -189,37 +196,37 @@ export default function DeliveryApp() {
     }
   };
 
-  const handleStartRoute = () => {
+  const handleStartRoute = async () => {
     if (!activeOrder) return;
-    const result = updateDeliveryMilestone(activeOrder.id, 'in_transit');
+    const result = await updateDeliveryMilestone(activeOrder.id, 'in_transit');
     if (result.success) {
-      loadData();
+      await loadData();
       if (result.whatsappNotificationSimulated) {
         triggerWhatsappToast(result.whatsappNotificationSimulated);
       }
     }
   };
 
-  const handleDeliverOrder = () => {
+  const handleDeliverOrder = async () => {
     if (!activeOrder) return;
-    const result = updateDeliveryMilestone(activeOrder.id, 'delivered');
+    const result = await updateDeliveryMilestone(activeOrder.id, 'delivered');
     if (result.success) {
-      loadData();
+      await loadData();
       if (result.whatsappNotificationSimulated) {
         triggerWhatsappToast(result.whatsappNotificationSimulated);
       }
     }
   };
 
-  const handleReportIncident = (e: React.FormEvent) => {
+  const handleReportIncident = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activeOrder || !incidentReason.trim()) return;
 
-    const result = updateDeliveryMilestone(activeOrder.id, 'incident', undefined, incidentReason);
+    const result = await updateDeliveryMilestone(activeOrder.id, 'incident', undefined, incidentReason);
     if (result.success) {
       setShowIncidentModal(false);
       setIncidentReason('');
-      loadData();
+      await loadData();
       alert('Incidencia guardada. El pedido ha sido reportado en base.');
     }
   };

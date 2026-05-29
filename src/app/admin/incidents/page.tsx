@@ -11,8 +11,13 @@ export default function AdminIncidents() {
   const [amount, setAmount] = useState('');
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  const loadOrders = () => {
-    setOrders(getOrders());
+  const loadOrders = async () => {
+    try {
+      const ords = await getOrders();
+      setOrders(ords);
+    } catch (err) {
+      console.error('Error loading orders:', err);
+    }
   };
 
   useEffect(() => {
@@ -24,7 +29,7 @@ export default function AdminIncidents() {
   // Filter orders with incidents or active issues
   const incidentOrders = orders.filter(o => o.status === 'incident' || o.incident_reason);
 
-  const handleProcessRefund = (e: React.FormEvent) => {
+  const handleProcessRefund = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedOrder || !amount) return;
 
@@ -34,7 +39,7 @@ export default function AdminIncidents() {
       return;
     }
 
-    const result = issueRefund(selectedOrder.id, parsedAmount, refundMode);
+    const result = await issueRefund(selectedOrder.id, parsedAmount, refundMode);
 
     if (result.success) {
       setActionSuccess(
@@ -44,7 +49,7 @@ export default function AdminIncidents() {
       );
       setSelectedOrder(null);
       setAmount('');
-      loadOrders();
+      await loadOrders();
     } else {
       alert('Ocurrió un error al emitir la compensación.');
     }

@@ -19,9 +19,10 @@ export default function RootLayout({
         <div className="bg-liquid-blob-1" />
         <div className="bg-liquid-blob-2" />
         
+        <NavigationHeader />
+        
         {/* Contenedor principal */}
         <main className="flex-1 flex flex-col z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <NavigationHeader />
           <div className="flex-1 flex flex-col">
             {children}
           </div>
