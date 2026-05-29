@@ -51,28 +51,7 @@ export default function NavigationHeader() {
   };
 
   return (
-    <header className="sticky top-3 left-0 right-0 z-50 w-full px-4 py-3 flex justify-between items-center bg-white/95 backdrop-blur-md border-b border-[#2D6A4F]/10 sm:top-4 sm:w-[calc(100%-4rem)] lg:w-[calc(100%-6rem)] xl:max-w-7xl sm:mx-auto sm:bg-white sm:shadow-[0_8px_30px_rgb(0,0,0,0.02)] sm:px-8 sm:py-4 sm:rounded-t-none sm:rounded-b-3xl sm:border-t-0 sm:border-x sm:border-b sm:border-[#2D6A4F]/10 sm:mb-6 transition-all duration-300">
-      {/* Esquina cóncava izquierda para unir con el marco superior (visible solo en pantallas grandes) */}
-      <svg
-        className="absolute top-0 right-full h-6 w-6 text-white fill-current pointer-events-none hidden sm:block"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M24 24V0H0C10.7452 0 24 10.7452 24 24Z" fill="white" />
-        <path d="M0 0C10.7452 0 24 10.7452 24 24" stroke="rgba(45,106,79,0.1)" strokeWidth="1" fill="none" />
-      </svg>
-
-      {/* Esquina cóncava derecha para unir con el marco superior (visible solo en pantallas grandes) */}
-      <svg
-        className="absolute top-0 left-full h-6 w-6 text-white fill-current pointer-events-none hidden sm:block"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M0 24V0H24C13.2548 0 0 13.2548 0 24Z" fill="white" />
-        <path d="M24 0C13.2548 0 0 13.2548 0 24" stroke="rgba(45,106,79,0.1)" strokeWidth="1" fill="none" />
-      </svg>
+    <header className="glass-panel w-full sticky top-3 sm:top-5 left-0 right-0 z-50 rounded-none border-t-0 border-x-0 px-4 py-3 mb-0 flex justify-between items-center sm:my-4 sm:mx-auto sm:max-w-7xl sm:px-6 sm:py-4 sm:rounded-3xl sm:border sm:mb-6">
       
       {/* Brand logo (aligned with logo brand colors) */}
       <Link href="/" className="flex items-center gap-3 group">
