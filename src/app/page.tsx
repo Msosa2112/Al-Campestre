@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   getProducts, 
   getFamilies, 
@@ -11,7 +11,7 @@ import {
   Product, 
   Order 
 } from '@/lib/dbMock';
-import { Plus, User, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X, Search, ChevronDown, ClipboardList } from 'lucide-react';
+import { Plus, User, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X, Search, ChevronDown, ClipboardList, Send } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Storefront() {
@@ -35,6 +35,19 @@ export default function Storefront() {
   // Modals
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkoutSuccess, setCheckoutSuccess] = useState<Order | null>(null);
+  
+  // Chatbot Widget State
+  const [isAiWidgetOpen, setIsAiWidgetOpen] = useState(false);
+  const [aiMessages, setAiMessages] = useState<{ id: string; sender: 'user' | 'bot'; text: string }[]>([
+    {
+      id: 'msg-welcome',
+      sender: 'bot',
+      text: '¡Hola! Soy tu asistente de compras con IA. Escríbeme qué quieres enviar a Cuba (ej. "mándale 5 libras de lomo a mi mamá") y lo añadiré a tu carrito en tiempo real.'
+    }
+  ]);
+  const [aiInput, setAiInput] = useState('');
+  const [aiIsTyping, setAiIsTyping] = useState(false);
+  const widgetEndRef = useRef<HTMLDivElement>(null);
   
   // New Family Form
   const [nickname, setNickname] = useState('');
@@ -88,6 +101,12 @@ export default function Storefront() {
     const interval = setInterval(loadData, 3000);
     return () => clearInterval(interval);
   }, [selectedFamilyId]);
+
+  useEffect(() => {
+    if (isAiWidgetOpen) {
+      widgetEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [aiMessages, aiIsTyping, isAiWidgetOpen]);
 
   const handleAddFamily = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,6 +205,116 @@ export default function Storefront() {
 
   const totalCartPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
+  const handleSendAiMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiInput.trim()) return;
+
+    const userMsg = {
+      id: `msg-${Date.now()}`,
+      sender: 'user' as const,
+      text: aiInput
+    };
+
+    setAiMessages(prev => [...prev, userMsg]);
+    const query = aiInput.toLowerCase();
+    setAiInput('');
+    setAiIsTyping(true);
+
+    setTimeout(() => {
+      setAiIsTyping(false);
+      
+      // 1. Match family
+      let matchedFamily = families.find(f => f.id === selectedFamilyId) || null;
+      for (const fam of families) {
+        const nick = fam.nickname.toLowerCase();
+        const name = fam.full_name.toLowerCase();
+        if (query.includes(nick) || query.includes(name.split(' ')[0]) || (query.includes('mamá') && nick.includes('mamá')) || (query.includes('abuela') && nick.includes('abuela'))) {
+          matchedFamily = fam;
+          break;
+        }
+      }
+
+      if (matchedFamily && matchedFamily.id !== selectedFamilyId) {
+        setSelectedFamilyId(matchedFamily.id);
+      }
+
+      // 2. Parse products (updated to match Supabase seed IDs)
+      const dictionary = [
+        { keys: ['cerdo', 'puerco', 'lomo', 'carne'], id: 'prod-meat-2' },
+        { keys: ['arroz', 'grano'], id: 'prod-grain-2' },
+        { keys: ['frijoles', 'caraotas', 'judias', 'negros'], id: 'prod-grain-1' },
+        { keys: ['aceite', 'girasol', 'cocina'], id: 'prod-grocery-1' },
+        { keys: ['leche', 'polvo'], id: 'prod-dairy-4' },
+        { keys: ['pollo', 'gallina', 'muslos'], id: 'prod-meat-3' }
+      ];
+
+      let matchedAny = false;
+      const addedItems: { product: Product; quantity: number }[] = [];
+
+      const regex = /(\d+)\s*(?:libras|libra|kg|kilogramos|kilos|kilo|paquetes|paquete|botellas|botella|unidades|unidad|bolsas|bolsa|de)?\s+([a-záéíóúñ\s]+?)(?=\d+|$|,|y\s+\d+|a\s+mi|\.)/gi;
+      let match;
+      const cleanQuery = query.replace(/a mi (mamá|abuela|tia|hermano|papa)/g, '');
+
+      while ((match = regex.exec(cleanQuery)) !== null) {
+        const quantity = parseInt(match[1]);
+        const productTerm = match[2].trim().toLowerCase();
+        const matchedDict = dictionary.find(item => item.keys.some(key => productTerm.includes(key)));
+
+        if (matchedDict) {
+          const prod = products.find(p => p.id === matchedDict.id);
+          if (prod) {
+            matchedAny = true;
+            addedItems.push({ product: prod, quantity });
+          }
+        }
+      }
+
+      if (!matchedAny) {
+        dictionary.forEach(item => {
+          if (item.keys.some(key => query.includes(key))) {
+            const prod = products.find(p => p.id === item.id);
+            if (prod) {
+              matchedAny = true;
+              addedItems.push({ product: prod, quantity: 2 });
+            }
+          }
+        });
+      }
+
+      if (matchedAny) {
+        setCart(prev => {
+          let updated = [...prev];
+          addedItems.forEach(ai => {
+            const idx = updated.findIndex(item => item.product.id === ai.product.id);
+            if (idx >= 0) {
+              const newQty = Math.min(ai.product.stock, updated[idx].quantity + ai.quantity);
+              updated[idx] = { ...updated[idx], quantity: newQty };
+            } else {
+              updated.push({ product: ai.product, quantity: Math.min(ai.product.stock, ai.quantity) });
+            }
+          });
+          return updated;
+        });
+
+        setIsCartOpen(true);
+
+        const listStr = addedItems.map(ai => `${ai.quantity} lbs de ${ai.product.name}`).join(', ');
+        setAiMessages(prev => [...prev, {
+          id: `msg-${Date.now()}`,
+          sender: 'bot',
+          text: `✅ ¡Entendido! He añadido al carrito: **${listStr}**.\n\nDestinatario: **${matchedFamily ? matchedFamily.nickname : 'tu familiar seleccionado'}**.\n\nYa puedes revisar tu carrito a la derecha y pagar.`
+        }]);
+      } else {
+        setAiMessages(prev => [...prev, {
+          id: `msg-${Date.now()}`,
+          sender: 'bot',
+          text: 'No logré entender qué productos deseas agregar. Prueba escribiendo:\n"Mándale 5 libras de carne de cerdo a mi mamá"'
+        }]);
+      }
+
+    }, 1000);
+  };
+
   return (
     <div className="flex-1 flex flex-col gap-6 pb-20 md:pb-0">
       
@@ -252,9 +381,9 @@ export default function Storefront() {
       </div>
 
       {/* Botón flotante secundario para el Asistente de IA (Comercio Conversacional) */}
-      <Link
-        href="/chat"
-        className={`fixed right-4 sm:right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center justify-center sm:justify-start gap-2 font-bold text-xs w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-3.5 ${
+      <button
+        onClick={() => setIsAiWidgetOpen(prev => !prev)}
+        className={`fixed right-4 sm:right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center justify-center sm:justify-start gap-2 font-bold text-xs w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-3.5 cursor-pointer ${
           cart.length > 0 && !isCartOpen 
             ? 'bottom-[140px] md:bottom-6' 
             : 'bottom-[80px] md:bottom-6'
@@ -263,7 +392,7 @@ export default function Storefront() {
       >
         <Sparkles size={18} className="animate-pulse text-[#FAF9F5] shrink-0" />
         <span className="hidden sm:inline">¿Pedir con Asistente IA?</span>
-      </Link>
+      </button>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -1144,7 +1273,7 @@ export default function Storefront() {
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 h-16 flex justify-around items-center md:hidden">
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors"
+          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors animate-fadeIn"
         >
           <Home size={20} />
           <span className="text-[10px] font-bold mt-1">Inicio</span>
@@ -1162,15 +1291,15 @@ export default function Storefront() {
           <Search size={20} />
           <span className="text-[10px] font-bold mt-1">Buscar</span>
         </button>
-        <Link 
-          href="/chat"
-          className="flex flex-col items-center justify-center text-[#D95D39] hover:scale-105 transition-transform"
+        <button 
+          onClick={() => setIsAiWidgetOpen(prev => !prev)}
+          className="flex flex-col items-center justify-center text-[#D95D39] hover:scale-105 transition-transform cursor-pointer"
         >
           <div className="bg-gradient-to-r from-[#D95D39] to-[#C24C2A] p-2 rounded-full text-white shadow-md">
             <Sparkles size={20} className="animate-pulse" />
           </div>
           <span className="text-[10px] font-extrabold mt-0.5">Asistente IA</span>
-        </Link>
+        </button>
         <button 
           onClick={() => {
             const ordersSection = document.getElementById('orders-tracking');
@@ -1203,6 +1332,83 @@ export default function Storefront() {
           <span className="text-[10px] font-bold mt-1">Perfiles</span>
         </button>
       </div>
+
+      {/* CHATBOT EMERGENTE: Widget de IA */}
+      {isAiWidgetOpen && (
+        <div 
+          className={`fixed right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[360px] h-[450px] bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-[#D95D39]/20 flex flex-col justify-between overflow-hidden animate-slide-up ${
+            cart.length > 0 && !isCartOpen 
+              ? 'bottom-[148px] md:bottom-[72px]' 
+              : 'bottom-[84px] md:bottom-[72px]'
+          }`}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white p-4 flex justify-between items-center shadow-md">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🤖</span>
+              <div>
+                <h4 className="font-extrabold text-xs">Asistente Al Campestre</h4>
+                <p className="text-[9px] text-white/80 font-semibold">Te ayuda a armar tu envío con IA</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsAiWidgetOpen(false)}
+              className="text-white/80 hover:text-white p-1.5 rounded-full hover:bg-white/10 transition cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Messages area */}
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+            {aiMessages.map(msg => (
+              <div 
+                key={msg.id}
+                className={`flex gap-2 max-w-[85%] ${msg.sender === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`}
+              >
+                <div className={`p-2.5 rounded-2xl text-xs leading-relaxed whitespace-pre-line shadow-inner ${
+                  msg.sender === 'user' 
+                    ? 'bg-[#D95D39] text-white rounded-tr-none' 
+                    : 'bg-[#FAF9F5] text-[#2B2521] border border-[#8C6239]/10 rounded-tl-none'
+                }`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+
+            {aiIsTyping && (
+              <div className="flex gap-2 self-start max-w-[85%]">
+                <div className="p-3 rounded-2xl bg-[#FAF9F5] text-[#2B2521] border border-[#8C6239]/10 rounded-tl-none flex gap-1 items-center">
+                  <span className="w-1.5 h-1.5 bg-[#D95D39] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 bg-[#D95D39] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 bg-[#D95D39] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            )}
+            
+            <div ref={widgetEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <form onSubmit={handleSendAiMessage} className="p-3 border-t border-[#8C6239]/10 bg-[#FAF9F5]/40 flex gap-2">
+            <input
+              type="text"
+              value={aiInput}
+              onChange={e => setAiInput(e.target.value)}
+              placeholder="Ej: Mándale 5 lbs de cerdo a mamá..."
+              className="flex-1 glass-input focus:bg-white text-xs py-2 px-3"
+              disabled={aiIsTyping}
+            />
+            <button
+              type="submit"
+              disabled={aiIsTyping || !aiInput.trim()}
+              className="glass-button-primary px-3 py-2 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <Send size={14} />
+            </button>
+          </form>
+        </div>
+      )}
 
     </div>
   );
