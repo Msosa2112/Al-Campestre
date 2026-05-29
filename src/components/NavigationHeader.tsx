@@ -51,10 +51,10 @@ export default function NavigationHeader() {
   };
 
   return (
-    <header className="glass-panel w-full sticky top-3 sm:top-5 left-0 right-0 z-50 rounded-none border-t-0 border-x-0 px-4 py-3 mb-0 flex justify-between items-center sm:my-4 sm:mx-auto sm:max-w-7xl sm:px-6 sm:py-4 sm:rounded-3xl sm:border sm:mb-6">
+    <header className="sticky top-3 sm:top-5 left-0 right-0 z-50 flex justify-between items-center bg-transparent border-0 p-0 m-0 shadow-none h-0 overflow-visible sm:glass-panel sm:w-full sm:px-4 sm:py-3 sm:mb-0 sm:my-4 sm:mx-auto sm:max-w-7xl sm:px-6 sm:py-4 sm:rounded-3xl sm:border sm:mb-6 transition-all duration-300">
       
       {/* Brand logo (aligned with logo brand colors) */}
-      <Link href="/" className="flex items-center gap-3 group">
+      <Link href="/" className="hidden sm:flex items-center gap-3 group">
         <div className="bg-gradient-to-br from-[#2D6A4F] to-[#1B4332] text-white p-2.5 rounded-2xl border border-white/40 shadow-sm group-hover:scale-105 transition-transform duration-200">
           <Utensils size={20} className="stroke-[2.5]" />
         </div>
@@ -69,7 +69,7 @@ export default function NavigationHeader() {
       </Link>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-2">
+      <div className="hidden sm:flex items-center gap-2">
         <button
           onClick={handleToggleAi}
           className="glass-button p-2.5 rounded-xl border-[#2D6A4F]/15 text-[#2D6A4F] hover:bg-[#2D6A4F]/10 transition-colors flex items-center gap-1.5 cursor-pointer"

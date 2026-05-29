@@ -90,29 +90,11 @@ export default function BottomNavigation() {
 
   return (
     <>
-      {/* Estilos para las máscaras de fusión (Melted Effect) */}
-      <style dangerouslySetInnerHTML={{__html: `
-        /* MAGIA DE LA FUSIÓN: Máscaras radiales para crear curvas invertidas */
-        .fusion-bottom-left {
-          -webkit-mask-image: radial-gradient(circle at top left, transparent 7.5px, black 8px);
-          mask-image: radial-gradient(circle at top left, transparent 7.5px, black 8px);
-        }
-        .fusion-bottom-right {
-          -webkit-mask-image: radial-gradient(circle at top right, transparent 7.5px, black 8px);
-          mask-image: radial-gradient(circle at top right, transparent 7.5px, black 8px);
-        }
-      `}} />
-
-      {/* Wrapper fijo al fondo de la pantalla real */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-3 sm:pb-4">
-        {/* Contenedor principal de la nav bar.
-          pointer-events-auto permite hacer click. 
-        */}
-        <div className="w-[290px] h-[58px] bg-white rounded-t-[1.15rem] flex justify-between items-center px-2 relative shadow-[0_-10px_25px_rgba(0,0,0,0.06)] border-x border-t border-[#2D6A4F]/10 pointer-events-auto">
+      {/* Wrapper fijo al fondo de la pantalla real (flotante) */}
+      <div className="fixed bottom-5 left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
+        {/* Contenedor principal de la nav bar estilo Liquid Glass y bordes redondeados (Pill shape) */}
+        <div className="w-full max-w-[340px] h-[58px] bg-white/70 backdrop-blur-lg border border-[#2D6A4F]/12 rounded-full flex justify-between items-center px-3 relative shadow-[0_10px_30px_rgba(45,106,79,0.12)] pointer-events-auto">
             
-          {/* Esquinas cóncavas inferiores (Fusión de 8px contra el borde del dispositivo) */}
-          <div className="absolute bottom-0 -left-2 w-2 h-2 bg-white fusion-bottom-left pointer-events-none"></div>
-          <div className="absolute bottom-0 -right-2 w-2 h-2 bg-white fusion-bottom-right pointer-events-none"></div>
 
           {NAV_ITEMS.map((item) => {
             const isActive = activeTab === item.id;
@@ -154,7 +136,7 @@ export default function BottomNavigation() {
                     {isActive && (
                       <motion.div 
                         layoutId="activeTabIndicator"
-                        className="absolute inset-0 rounded-full bg-[#EAF5EF] -z-10 scale-125"
+                        className="absolute inset-0 rounded-full bg-[#2D6A4F]/10 -z-10 scale-125"
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                       />
                     )}

@@ -16,6 +16,8 @@ import Link from 'next/link';
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { GooeyInput } from "@/components/ui/gooey-input";
 import { CustomSelect } from "@/components/ui/custom-select";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+
 
 const provinceOptions = [
   { value: "La Habana", label: "La Habana" },
@@ -640,55 +642,88 @@ export default function Storefront() {
 
           {/* Más Vendidos (Best Sellers Section) - Only shown on "Todos" category when not searching */}
           {selectedCategory === 'Todos' && searchQuery === '' && (
-            <div className="flex flex-col gap-3">
-              <h3 className="text-sm font-extrabold text-[#40916C] flex items-center gap-1.5">
-                <TrendingUp size={16} className="text-[#2D6A4F]" /> Productos Más Vendidos
-              </h3>
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full flex flex-col gap-3"
+            >
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-extrabold text-[#40916C] flex items-center gap-1.5">
+                  <TrendingUp size={16} className="text-[#2D6A4F]" /> Productos Más Vendidos
+                </h3>
+                <div className="flex gap-2">
+                  <CarouselPrevious className="static translate-y-0 translate-x-0 h-8 w-8" />
+                  <CarouselNext className="static translate-y-0 translate-x-0 h-8 w-8" />
+                </div>
+              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <CarouselContent className="-ml-4">
                 {products
-                  .filter(p => ['prod-1', 'prod-4', 'prod-9'].includes(p.id))
+                  .filter(p => ['prod-meat-1', 'prod-meat-4', 'prod-grocery-2', 'prod-dairy-1', 'prod-grain-1', 'prod-1', 'prod-4', 'prod-9'].includes(p.id))
                   .map(product => {
                     const inCartItem = cart.find(i => i.product.id === product.id);
                     const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                     return (
-                      <div key={`best-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border-[#40916C]/10 bg-[#FFFFFF]/40">
-                        <span className="absolute top-2 left-2 bg-[#2D6A4F] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full z-10 shadow-sm animate-pulse">
-                          MÁS VENDIDO
-                        </span>
-                        
-                        <div className="h-32 w-full overflow-hidden bg-[#40916C]/5 relative">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img 
-                            src={product.image_url} 
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                      <CarouselItem key={`best-${product.id}`} className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3">
+                        <div className="uiverse-card h-full min-h-[280px]">
+                          <div className="uiverse-card__shine" />
+                          <div className="uiverse-card__glow" />
+                          <div className="uiverse-card__content">
+                            <span className={`uiverse-card__badge ${remainingStock <= 0 ? 'bg-red-600 shadow-red-200' : ''}`}>
+                              {remainingStock <= 0 ? 'Agotado' : 'MÁS VENDIDO'}
+                            </span>
+                            
+                            <div className="uiverse-card__image">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img 
+                                src={product.image_url} 
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
 
-                        <div className="p-3.5 flex-1 flex flex-col justify-between gap-3">
-                          <div>
-                            <h4 className="font-bold text-sm text-[#1A2421] leading-tight">{product.name}</h4>
-                            <p className="text-[10px] text-[#1A2421]/60 line-clamp-1 mt-0.5">{product.description}</p>
-                          </div>
-                          
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm font-extrabold text-[#1A2421]">${product.price.toFixed(2)}</span>
-                            <InteractiveHoverButton
-                              onClick={() => addToCart(product)}
-                              disabled={remainingStock <= 0}
-                              className="text-[10px]"
-                            >
-                              Agregar
-                            </InteractiveHoverButton>
+                            <div className="uiverse-card__text">
+                              <h4 className="uiverse-card__title" title={product.name}>
+                                {product.name}
+                              </h4>
+                              <p className="uiverse-card__description" title={product.description}>
+                                {product.description}
+                              </p>
+                            </div>
+                            
+                            <div className="uiverse-card__footer">
+                              <span className="uiverse-card__price flex flex-col">
+                                <span>${product.price.toFixed(2)}</span>
+                                <span className={`text-[9px] font-bold mt-0.5 ${
+                                  remainingStock > 10 
+                                    ? 'text-green-600/70' 
+                                    : remainingStock > 0 
+                                    ? 'text-amber-600 animate-pulse' 
+                                    : 'text-red-500/70'
+                                }`}>
+                                  {remainingStock > 0 ? `Quedan ${remainingStock} lb` : 'Agotado'}
+                                </span>
+                              </span>
+                              
+                              <button 
+                                onClick={() => addToCart(product)}
+                                disabled={remainingStock <= 0}
+                                className="uiverse-card__button"
+                                title="Añadir al carrito"
+                              >
+                                <Plus size={16} />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </CarouselItem>
                     );
                   })}
-              </div>
-            </div>
+              </CarouselContent>
+            </Carousel>
           )}
 
           {/* Categories Selector Pills */}
@@ -727,47 +762,54 @@ export default function Storefront() {
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                 return (
-                  <div key={product.id} className="glass-card flex flex-col overflow-hidden relative">
-                    {/* Image wrapper */}
-                    <div className="h-44 w-full overflow-hidden bg-[#40916C]/5 relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img 
-                        src={product.image_url} 
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-[#40916C] border border-white">
-                        {product.category}
+                  <div key={product.id} className="uiverse-card h-full min-h-[300px]">
+                    <div className="uiverse-card__shine" />
+                    <div className="uiverse-card__glow" />
+                    <div className="uiverse-card__content">
+                      <span className={`uiverse-card__badge ${remainingStock <= 0 ? 'bg-red-600 shadow-red-200' : ''}`}>
+                        {remainingStock <= 0 ? 'Agotado' : product.category}
                       </span>
-                    </div>
-
-                    <div className="p-4 flex-1 flex flex-col justify-between gap-4">
-                      <div className="flex flex-col gap-1">
-                        <h3 className="font-bold text-base text-[#1A2421] leading-tight">{product.name}</h3>
-                        <p className="text-xs text-[#1A2421]/60 line-clamp-2 leading-relaxed">{product.description}</p>
+                      
+                      <div className="uiverse-card__image">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src={product.image_url} 
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
 
-                      <div className="flex flex-col gap-2">
-                        <div className="flex justify-between items-baseline">
-                          <span className="text-xl font-extrabold text-[#1A2421]">${product.price.toFixed(2)}</span>
-                          <span className={`text-xs font-semibold ${
+                      <div className="uiverse-card__text">
+                        <h4 className="uiverse-card__title" title={product.name}>
+                          {product.name}
+                        </h4>
+                        <p className="uiverse-card__description" title={product.description}>
+                          {product.description}
+                        </p>
+                      </div>
+                      
+                      <div className="uiverse-card__footer">
+                        <span className="uiverse-card__price flex flex-col">
+                          <span>${product.price.toFixed(2)}</span>
+                          <span className={`text-[9px] font-bold mt-0.5 ${
                             remainingStock > 10 
-                              ? 'text-green-600' 
+                              ? 'text-green-600/70' 
                               : remainingStock > 0 
-                              ? 'text-[#2D6A4F] animate-pulse' 
-                              : 'text-red-500'
+                              ? 'text-amber-600 animate-pulse' 
+                              : 'text-red-500/70'
                           }`}>
                             {remainingStock > 0 ? `Stock: ${remainingStock} disp.` : 'Agotado'}
                           </span>
-                        </div>
-
-                        <InteractiveHoverButton
+                        </span>
+                        
+                        <button 
                           onClick={() => addToCart(product)}
                           disabled={remainingStock <= 0}
-                          className="w-full text-xs"
+                          className="uiverse-card__button"
+                          title="Añadir al carrito"
                         >
-                          {remainingStock > 0 ? "Agregar al Carrito" : "Agotado"}
-                        </InteractiveHoverButton>
+                          <Plus size={16} />
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -775,8 +817,8 @@ export default function Storefront() {
               })}
           </div>
 
-          {/* Vista Móvil: Diseño de 1 Sola Columna con Imágenes Grandes y Stock Destacado */}
-          <div className="grid grid-cols-1 gap-5 md:hidden">
+          {/* Vista Móvil: Diseño Estrecho de 2 Columnas para mejor aprovechamiento del ancho */}
+          <div className="grid grid-cols-2 gap-3 md:hidden">
             {products
               .filter(p => {
                 const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
@@ -789,46 +831,54 @@ export default function Storefront() {
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                 return (
-                  <div key={`mob-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border border-[#40916C]/10">
-                    <div className="h-48 w-full overflow-hidden bg-[#40916C]/5 relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img 
-                        src={product.image_url} 
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#40916C] border border-white">
-                        {product.category}
+                  <div key={`mob-${product.id}`} className="uiverse-card h-full min-h-[260px]">
+                    <div className="uiverse-card__shine" />
+                    <div className="uiverse-card__glow" />
+                    <div className="uiverse-card__content">
+                      <span className={`uiverse-card__badge ${remainingStock <= 0 ? 'bg-red-600 shadow-red-200' : ''}`}>
+                        {remainingStock <= 0 ? 'Agotado' : product.category}
                       </span>
-                    </div>
+                      
+                      <div className="uiverse-card__image h-[100px]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src={product.image_url} 
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
 
-                    <div className="p-4 flex flex-col gap-3">
-                      <div>
-                        <div className="flex justify-between items-baseline gap-2">
-                          <h4 className="font-extrabold text-base text-[#1A2421] leading-tight">{product.name}</h4>
-                          <span className="text-base font-extrabold text-[#2D6A4F]">${product.price.toFixed(2)}</span>
-                        </div>
-                        <p className="text-xs text-[#1A2421]/60 leading-relaxed mt-1">{product.description}</p>
+                      <div className="uiverse-card__text">
+                        <h4 className="uiverse-card__title" title={product.name}>
+                          {product.name}
+                        </h4>
+                        <p className="uiverse-card__description" title={product.description}>
+                          {product.description}
+                        </p>
                       </div>
                       
-                      <div className="flex justify-between items-center pt-2.5 border-t border-[#1A2421]/5">
-                        <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                          remainingStock > 10 
-                            ? 'bg-green-50 text-green-700 border border-green-200' 
-                            : remainingStock > 0 
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse' 
-                            : 'bg-red-50 text-red-700 border border-red-200'
-                        }`}>
-                          {remainingStock > 0 ? `Quedan ${remainingStock} libras` : 'Agotado'}
+                      <div className="uiverse-card__footer">
+                        <span className="uiverse-card__price flex flex-col">
+                          <span>${product.price.toFixed(2)}</span>
+                          <span className={`text-[9px] font-bold mt-0.5 ${
+                            remainingStock > 10 
+                              ? 'text-green-600/70' 
+                              : remainingStock > 0 
+                              ? 'text-amber-600 animate-pulse' 
+                              : 'text-red-500/70'
+                          }`}>
+                            {remainingStock > 0 ? `${remainingStock} lb` : 'Agotado'}
+                          </span>
                         </span>
                         
-                        <InteractiveHoverButton
+                        <button 
                           onClick={() => addToCart(product)}
                           disabled={remainingStock <= 0}
-                          className="text-xs"
+                          className="uiverse-card__button"
+                          title="Añadir al carrito"
                         >
-                          {remainingStock > 0 ? 'Añadir' : 'Agotado'}
-                        </InteractiveHoverButton>
+                          <Plus size={16} />
+                        </button>
                       </div>
                     </div>
                   </div>
