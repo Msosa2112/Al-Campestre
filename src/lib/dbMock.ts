@@ -74,8 +74,105 @@ export const getReturnTimeForZone = (municipality: string): number => {
   return times[municipality] || 45; // Default 45 minutes
 };
 
-export const initializeDb = () => {
-  // No-op for real Supabase database
+const defaultProducts: Product[] = [
+  {
+    id: 'prod-meat-1',
+    name: 'Combo de Res Premium',
+    description: '10 lbs de pulpa de res limpia y seleccionada para asar o guisar.',
+    price: 45.00,
+    stock: 25,
+    barcode: '740100512001',
+    image_url: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-2',
+    name: 'Lomo de Cerdo Criollo',
+    description: 'Lomo de cerdo fresco y tierno, corte especial para bistec o asados.',
+    price: 22.50,
+    stock: 35,
+    barcode: '740100512002',
+    image_url: 'https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-3',
+    name: 'Pechuga de Pollo deshuesada',
+    description: 'Pechugas de pollo frescas deshuesadas, congeladas en origen.',
+    price: 18.00,
+    stock: 45,
+    barcode: '740100512003',
+    image_url: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-grain-1',
+    name: 'Frijoles Negros Importados',
+    description: 'Frijol negro de primera calidad, cocción rápida y sabor tradicional.',
+    price: 3.50,
+    stock: 120,
+    barcode: '740100512004',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-2',
+    name: 'Arroz Blanco Grano Largo',
+    description: 'Arroz blanco super extra grano largo de cocción suelta.',
+    price: 2.80,
+    stock: 180,
+    barcode: '740100512005',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-dairy-1',
+    name: 'Queso Blanco Criollo',
+    description: 'Queso blanco semiduro artesanal, ideal para freír o comer fresco.',
+    price: 7.50,
+    stock: 30,
+    barcode: '740100512006',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-2',
+    name: 'Leche Condensada Nestlé',
+    description: 'Leche condensada azucarada en lata de 397g para postres y café.',
+    price: 3.20,
+    stock: 65,
+    barcode: '740100512007',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-grocery-1',
+    name: 'Aceite de Girasol 1L',
+    description: 'Aceite vegetal refinado de girasol 100% puro para cocinar.',
+    price: 5.50,
+    stock: 90,
+    barcode: '740100512008',
+    image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-2',
+    name: 'Café La Llave 284g',
+    description: 'Café expreso molido cubano de tueste oscuro y sabor intenso.',
+    price: 6.90,
+    stock: 110,
+    barcode: '740100512009',
+    image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
+    category: 'Abarrotes'
+  }
+];
+
+export const initializeDb = async () => {
+  // Try to seed database if empty
+  const prods = await getProducts();
+  if (prods.length === 0) {
+    console.log("Seeding initial products...");
+  }
 };
 
 export const getProducts = async (): Promise<Product[]> => {
@@ -86,6 +183,17 @@ export const getProducts = async (): Promise<Product[]> => {
   if (error) {
     console.error('Error fetching products:', error);
     return [];
+  }
+  if (!data || data.length === 0) {
+    console.log('No products in Supabase, seeding default products...');
+    const { error: seedError } = await supabase
+      .from('products')
+      .insert(defaultProducts);
+    if (seedError) {
+      console.error('Error seeding default products:', seedError);
+      return defaultProducts;
+    }
+    return defaultProducts;
   }
   return data || [];
 };
@@ -124,6 +232,27 @@ export const addProductStock = async (barcode: string, quantity: number): Promis
   return { success: true, product: updatedData };
 };
 
+const defaultFamilies: Family[] = [
+  {
+    id: 'fam-default-1',
+    nickname: 'Abuela María',
+    full_name: 'María Gutiérrez Delgado',
+    address: 'Calle 23 #152 e/ L y M, Apto 3B',
+    province: 'La Habana',
+    municipality: 'Plaza de la Revolución',
+    phone: '+53 51234567'
+  },
+  {
+    id: 'fam-default-2',
+    nickname: 'Tío Juan',
+    full_name: 'Juan Carlos Valdés Pérez',
+    address: 'Calle Primera #12 e/ Central y Final',
+    province: 'Artemisa',
+    municipality: 'San Antonio de los Baños',
+    phone: '+53 59876543'
+  }
+];
+
 export const getFamilies = async (): Promise<Family[]> => {
   const { data, error } = await supabase
     .from('families')
@@ -132,6 +261,17 @@ export const getFamilies = async (): Promise<Family[]> => {
   if (error) {
     console.error('Error fetching families:', error);
     return [];
+  }
+  if (!data || data.length === 0) {
+    console.log('No families in Supabase, seeding default families...');
+    const { error: seedError } = await supabase
+      .from('families')
+      .insert(defaultFamilies);
+    if (seedError) {
+      console.error('Error seeding default families:', seedError);
+      return defaultFamilies;
+    }
+    return defaultFamilies;
   }
   return data || [];
 };
@@ -270,6 +410,11 @@ export const createOrderWithStockCheck = async (
   return { success: true, order: newOrder };
 };
 
+const defaultDrivers: Driver[] = [
+  { id: 'driver-1', name: 'Yoan Martínez', status: 'Disponible', active_order_id: null, return_eta: null },
+  { id: 'driver-2', name: 'Eduardo Gómez', status: 'Disponible', active_order_id: null, return_eta: null }
+];
+
 export const getDrivers = async (): Promise<Driver[]> => {
   const { data, error } = await supabase
     .from('drivers')
@@ -278,6 +423,17 @@ export const getDrivers = async (): Promise<Driver[]> => {
   if (error) {
     console.error('Error fetching drivers:', error);
     return [];
+  }
+  if (!data || data.length === 0) {
+    console.log('No drivers in Supabase, seeding default drivers...');
+    const { error: seedError } = await supabase
+      .from('drivers')
+      .insert(defaultDrivers);
+    if (seedError) {
+      console.error('Error seeding default drivers:', seedError);
+      return defaultDrivers;
+    }
+    return defaultDrivers;
   }
   return data || [];
 };

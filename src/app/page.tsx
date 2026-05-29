@@ -254,15 +254,15 @@ export default function Storefront() {
       {/* Botón flotante secundario para el Asistente de IA (Comercio Conversacional) */}
       <Link
         href="/chat"
-        className={`fixed ${
+        className={`fixed right-4 sm:right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center justify-center sm:justify-start gap-2 font-bold text-xs w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-3.5 ${
           cart.length > 0 && !isCartOpen 
-            ? 'bottom-[136px]' 
-            : 'bottom-[76px] md:bottom-6'
-        } right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white px-5 py-3.5 rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center gap-2 font-bold text-xs`}
+            ? 'bottom-[140px] md:bottom-6' 
+            : 'bottom-[80px] md:bottom-6'
+        }`}
         title="Ordenar usando Inteligencia Artificial"
       >
-        <Sparkles size={14} className="animate-pulse text-[#FAF9F5]" />
-        <span>¿Pedir con Asistente IA?</span>
+        <Sparkles size={18} className="animate-pulse text-[#FAF9F5] shrink-0" />
+        <span className="hidden sm:inline">¿Pedir con Asistente IA?</span>
       </Link>
 
       {/* Main Grid */}
