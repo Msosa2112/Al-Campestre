@@ -16,8 +16,10 @@ export default function RootLayout({
     <html lang="es">
       <body className="antialiased min-h-screen flex flex-col relative bg-[#FAF9F5] text-[#2B2521]">
         {/* Blobs de fondo líquido premium (tonos arena y terracota suave) */}
-        <div className="bg-liquid-blob-1" />
-        <div className="bg-liquid-blob-2" />
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-10]">
+          <div className="bg-liquid-blob-1" />
+          <div className="bg-liquid-blob-2" />
+        </div>
         
         <NavigationHeader />
         

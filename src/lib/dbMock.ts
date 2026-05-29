@@ -106,6 +106,126 @@ const defaultProducts: Product[] = [
     category: 'Carnes'
   },
   {
+    id: 'prod-meat-4',
+    name: 'Picadillo de Res Especial',
+    description: 'Carne de res molida magra de primera calidad, ideal para picadillos y hamburguesas.',
+    price: 8.50,
+    stock: 50,
+    barcode: '740100512010',
+    image_url: 'https://images.unsplash.com/photo-1588168333986-5078647a5c8e?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-5',
+    name: 'Jamón York Rebanado',
+    description: 'Jamón de cerdo York curado, rebanado en lonjas finas para sándwiches (Paquete de 1 lb).',
+    price: 9.90,
+    stock: 40,
+    barcode: '740100512011',
+    image_url: 'https://images.unsplash.com/photo-1524438418049-ab2acb7aa48f?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-6',
+    name: 'Chorizo Español Casero',
+    description: 'Chorizo curado artesanal con pimentón de la Vera, sabor criollo picante (Pack x4).',
+    price: 12.00,
+    stock: 30,
+    barcode: '740100512012',
+    image_url: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-7',
+    name: 'Costillas de Cerdo Ahumadas',
+    description: 'Costillas de cerdo ahumadas al carbón con leña natural, listas para hornear.',
+    price: 19.50,
+    stock: 28,
+    barcode: '740100512013',
+    image_url: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-8',
+    name: 'Muslos de Pollo (Caja 10 lbs)',
+    description: 'Caja de muslos y contramuslos de pollo americanos seleccionados.',
+    price: 24.00,
+    stock: 20,
+    barcode: '740100512014',
+    image_url: 'https://images.unsplash.com/photo-1562967914-01dee72a7e44?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-9',
+    name: 'Chuletas de Cerdo Frescas',
+    description: 'Chuletas de cerdo con hueso, corte grueso ideal para asados criollos.',
+    price: 14.50,
+    stock: 32,
+    barcode: '740100512015',
+    image_url: 'https://images.unsplash.com/photo-1432139786580-d729c67486f5?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-10',
+    name: 'Carne Molida de Pavo',
+    description: 'Picadillo de pechuga de pavo baja en grasa y alta en proteínas.',
+    price: 7.80,
+    stock: 45,
+    barcode: '740100512016',
+    image_url: 'https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-11',
+    name: 'Filete de Pescado Blanco',
+    description: 'Filetes de pescado blanco limpios sin espinas, congelados de origen (2 lbs).',
+    price: 16.90,
+    stock: 25,
+    barcode: '740100512017',
+    image_url: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-12',
+    name: 'Salchichas de Pollo Hot Dog',
+    description: 'Paquete de 10 salchichas de pollo clásicas estilo americano.',
+    price: 3.20,
+    stock: 80,
+    barcode: '740100512018',
+    image_url: 'https://images.unsplash.com/photo-1541232972175-127e22a8ae14?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-13',
+    name: 'Bacon Ahumado Premium',
+    description: 'Tiras de tocino curado y ahumado crujiente (Paquete de 1 lb).',
+    price: 8.50,
+    stock: 55,
+    barcode: '740100512019',
+    image_url: 'https://images.unsplash.com/photo-1606850246452-0763f01b22e9?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-14',
+    name: 'Carne de Cerdo Troceada',
+    description: 'Fricase de cerdo limpio cortado en dados, listo para guisar.',
+    price: 11.00,
+    stock: 40,
+    barcode: '740100512020',
+    image_url: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-15',
+    name: 'Tasajo de Res Curado',
+    description: 'Carne de res curada y seca estilo tasajo cubano tradicional.',
+    price: 15.50,
+    stock: 18,
+    barcode: '740100512021',
+    image_url: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
     id: 'prod-grain-1',
     name: 'Frijoles Negros Importados',
     description: 'Frijol negro de primera calidad, cocción rápida y sabor tradicional.',
@@ -122,6 +242,86 @@ const defaultProducts: Product[] = [
     price: 2.80,
     stock: 180,
     barcode: '740100512005',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-3',
+    name: 'Frijoles Colorados Nacionales',
+    description: 'Frijoles colorados frescos, ideales para potajes y congris cubano (2 lbs).',
+    price: 3.90,
+    stock: 95,
+    barcode: '740100512022',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-4',
+    name: 'Garbanzos Mexicanos',
+    description: 'Garbanzo gigante seleccionado, ideal para garbanzadas con chorizo.',
+    price: 4.20,
+    stock: 110,
+    barcode: '740100512023',
+    image_url: 'https://images.unsplash.com/photo-1545156521-77bd85671d30?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-5',
+    name: 'Lentejas de la Casa',
+    description: 'Lentejas tiernas de cocción rápida, ricas en hierro y fibra alimentaria.',
+    price: 3.10,
+    stock: 130,
+    barcode: '740100512024',
+    image_url: 'https://images.unsplash.com/photo-1547050605-2f88cd02c374?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-6',
+    name: 'Arroz Integral Orgánico',
+    description: 'Arroz integral rico en fibra, cocción saludable y grano entero.',
+    price: 4.50,
+    stock: 80,
+    barcode: '740100512025',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-7',
+    name: 'Chícharos Partidos Verdes',
+    description: 'Chícharo verde partido importado, ideal para sopas y cremas.',
+    price: 2.50,
+    stock: 140,
+    barcode: '740100512026',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-8',
+    name: 'Frijoles Blancos Premium',
+    description: 'Alubias blancas tiernas, ideales para fabadas y caldos criollos.',
+    price: 3.80,
+    stock: 85,
+    barcode: '740100512027',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-9',
+    name: 'Harina de Maíz Amarilla',
+    description: 'Harina de maíz fina para tamal en cazuela y polenta criolla (2 lbs).',
+    price: 1.90,
+    stock: 160,
+    barcode: '740100512028',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-10',
+    name: 'Quinoa Orgánica 500g',
+    description: 'Superalimento quinoa blanca orgánica lavada, lista para hervir.',
+    price: 5.80,
+    stock: 50,
+    barcode: '740100512029',
     image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
     category: 'Granos'
   },
@@ -146,6 +346,86 @@ const defaultProducts: Product[] = [
     category: 'Lácteos'
   },
   {
+    id: 'prod-dairy-3',
+    name: 'Queso Gouda Importado',
+    description: 'Queso Gouda joven en bloque de 1 lb, excelente fundición y cremosidad.',
+    price: 12.50,
+    stock: 45,
+    barcode: '740100512030',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-4',
+    name: 'Leche en Polvo Entera 1kg',
+    description: 'Leche entera instantánea de alta calidad fortificada con vitaminas.',
+    price: 16.90,
+    stock: 120,
+    barcode: '740100512031',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-5',
+    name: 'Mantequilla Criolla',
+    description: 'Mantequilla pura de vaca con sal, sabor artesanal cubano (Paquete de 250g).',
+    price: 4.50,
+    stock: 70,
+    barcode: '740100512032',
+    image_url: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-6',
+    name: 'Yogur Natural Sin Azúcar',
+    description: 'Yogur natural cremoso, fermentado naturalmente sin aditivos (1 Litro).',
+    price: 2.20,
+    stock: 50,
+    barcode: '740100512033',
+    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-7',
+    name: 'Queso Crema Philadelphia',
+    description: 'Queso crema clásico suave para untar en pan y tostadas (taza de 226g).',
+    price: 5.90,
+    stock: 60,
+    barcode: '740100512034',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-8',
+    name: 'Crema de Leche Para Batir',
+    description: 'Nata líquida con 35% de materia grasa para repostería y salsas.',
+    price: 4.10,
+    stock: 40,
+    barcode: '740100512035',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-9',
+    name: 'Margarina Vegetal 500g',
+    description: 'Margarina untable enriquecida con Omega 3 y libre de grasas trans.',
+    price: 3.50,
+    stock: 75,
+    barcode: '740100512036',
+    image_url: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-10',
+    name: 'Leche Evaporada Carnation',
+    description: 'Leche evaporada Nestlé Carnation en lata de 354ml, ideal para postres.',
+    price: 2.80,
+    stock: 90,
+    barcode: '740100512037',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
     id: 'prod-grocery-1',
     name: 'Aceite de Girasol 1L',
     description: 'Aceite vegetal refinado de girasol 100% puro para cocinar.',
@@ -164,15 +444,186 @@ const defaultProducts: Product[] = [
     barcode: '740100512009',
     image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
     category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-3',
+    name: 'Harina de Trigo Todo Uso',
+    description: 'Harina de trigo blanca refinada para repostería y pan (Paquete de 1kg).',
+    price: 2.50,
+    stock: 140,
+    barcode: '740100512038',
+    image_url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-4',
+    name: 'Azúcar Blanca Refinada',
+    description: 'Azúcar de caña refinada blanca de alta pureza (2 lbs).',
+    price: 1.80,
+    stock: 150,
+    barcode: '740100512039',
+    image_url: 'https://images.unsplash.com/photo-1581447109200-bf2769116db0?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-5',
+    name: 'Puré de Tomate Concentrado',
+    description: 'Puré de tomate concentrado estilo cubano para salsas y guisados (300g).',
+    price: 1.90,
+    stock: 120,
+    barcode: '740100512040',
+    image_url: 'https://images.unsplash.com/photo-1590561991957-a55d787b629e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-6',
+    name: 'Espaguetis Italianos 500g',
+    description: 'Pasta de sémola de trigo duro espaguetis número 5 tradicionales.',
+    price: 2.10,
+    stock: 130,
+    barcode: '740100512041',
+    image_url: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-7',
+    name: 'Galletas de Soda Familiares',
+    description: 'Paquete familiar de galletas de soda saladas y crujientes (Caja de 500g).',
+    price: 3.90,
+    stock: 100,
+    barcode: '740100512042',
+    image_url: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-8',
+    name: 'Cerveza Cristal (Pack 6)',
+    description: 'La preferida de Cuba. Paquete de 6 latas de cerveza clara Cristal.',
+    price: 14.00,
+    stock: 60,
+    barcode: '740100512043',
+    image_url: 'https://images.unsplash.com/photo-1600788886242-5c96aabe3757?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-9',
+    name: 'Refresco Ciego Montero Cola',
+    description: 'Lata de refresco nacional cubano de cola Ciego Montero (355ml).',
+    price: 1.50,
+    stock: 200,
+    barcode: '740100512044',
+    image_url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-10',
+    name: 'Detergente en Polvo 1kg',
+    description: 'Detergente multiusos activo con aroma fresco para ropa blanca y de color.',
+    price: 4.90,
+    stock: 85,
+    barcode: '740100512045',
+    image_url: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-11',
+    name: 'Jabón de Baño Olor Suave',
+    description: 'Jabón de tocador cremoso para el cuidado diario de la piel (Pack x3).',
+    price: 1.20,
+    stock: 150,
+    barcode: '740100512046',
+    image_url: 'https://images.unsplash.com/photo-1607006342411-b0135f082f25?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-12',
+    name: 'Crema Dental Colgate 150g',
+    description: 'Crema dental Colgate Triple Acción protección anticaries y aliento fresco.',
+    price: 2.50,
+    stock: 110,
+    barcode: '740100512047',
+    image_url: 'https://images.unsplash.com/photo-1559591937-e1b697ff2fbf?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-13',
+    name: 'Desodorante Rexona Roll-on',
+    description: 'Desodorante antitranspirante roll-on protección 48h de larga duración.',
+    price: 3.20,
+    stock: 90,
+    barcode: '740100512048',
+    image_url: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-14',
+    name: 'Papel Higiénico (Pack x4)',
+    description: 'Rollos de papel higiénico doble hoja suave de alta resistencia.',
+    price: 2.90,
+    stock: 100,
+    barcode: '740100512049',
+    image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-15',
+    name: 'Atún en Aceite de Girasol',
+    description: 'Lata de lomos de atún claro en aceite de girasol de primera calidad (170g).',
+    price: 1.80,
+    stock: 140,
+    barcode: '740100512050',
+    image_url: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=80',
+    category: 'Abarrotes'
   }
 ];
 
-export const initializeDb = async () => {
-  // Try to seed database if empty
-  const prods = await getProducts();
-  if (prods.length === 0) {
-    console.log("Seeding initial products...");
+const defaultFamilies: Family[] = [
+  {
+    id: 'fam-default-1',
+    nickname: 'Abuela María',
+    full_name: 'María Gutiérrez Delgado',
+    address: 'Calle 23 #152 e/ L y M, Apto 3B',
+    province: 'La Habana',
+    municipality: 'Plaza de la Revolución',
+    phone: '+53 51234567'
+  },
+  {
+    id: 'fam-default-2',
+    nickname: 'Tío Juan',
+    full_name: 'Juan Carlos Valdés Pérez',
+    address: 'Calle Primera #12 e/ Central y Final',
+    province: 'Artemisa',
+    municipality: 'San Antonio de los Baños',
+    phone: '+53 59876543'
   }
+];
+
+const defaultDrivers: Driver[] = [
+  { id: 'driver-1', name: 'Yoan Martínez', status: 'Disponible', active_order_id: null, return_eta: null },
+  { id: 'driver-2', name: 'Eduardo Gómez', status: 'Disponible', active_order_id: null, return_eta: null }
+];
+
+export const initializeDb = async (force: boolean = false) => {
+  if (force) {
+    console.log("Forcing database reset...");
+    // Clean up Supabase tables
+    await supabase.from('orders').delete().neq('id', '');
+    await supabase.from('products').delete().neq('id', '');
+    await supabase.from('families').delete().neq('id', '');
+    await supabase.from('drivers').delete().neq('id', '');
+    
+    // Seed default datasets in Supabase
+    await supabase.from('products').insert(defaultProducts);
+    await supabase.from('families').insert(defaultFamilies);
+    await supabase.from('drivers').insert(defaultDrivers);
+    console.log("Supabase database successfully reset and seeded!");
+    return;
+  }
+
+  // Normal check: if empty, query functions will auto-seed themselves.
+  const prods = await getProducts();
+  const fams = await getFamilies();
+  const drvs = await getDrivers();
 };
 
 export const getProducts = async (): Promise<Product[]> => {
@@ -232,26 +683,7 @@ export const addProductStock = async (barcode: string, quantity: number): Promis
   return { success: true, product: updatedData };
 };
 
-const defaultFamilies: Family[] = [
-  {
-    id: 'fam-default-1',
-    nickname: 'Abuela María',
-    full_name: 'María Gutiérrez Delgado',
-    address: 'Calle 23 #152 e/ L y M, Apto 3B',
-    province: 'La Habana',
-    municipality: 'Plaza de la Revolución',
-    phone: '+53 51234567'
-  },
-  {
-    id: 'fam-default-2',
-    nickname: 'Tío Juan',
-    full_name: 'Juan Carlos Valdés Pérez',
-    address: 'Calle Primera #12 e/ Central y Final',
-    province: 'Artemisa',
-    municipality: 'San Antonio de los Baños',
-    phone: '+53 59876543'
-  }
-];
+
 
 export const getFamilies = async (): Promise<Family[]> => {
   const { data, error } = await supabase
@@ -410,10 +842,7 @@ export const createOrderWithStockCheck = async (
   return { success: true, order: newOrder };
 };
 
-const defaultDrivers: Driver[] = [
-  { id: 'driver-1', name: 'Yoan Martínez', status: 'Disponible', active_order_id: null, return_eta: null },
-  { id: 'driver-2', name: 'Eduardo Gómez', status: 'Disponible', active_order_id: null, return_eta: null }
-];
+
 
 export const getDrivers = async (): Promise<Driver[]> => {
   const { data, error } = await supabase

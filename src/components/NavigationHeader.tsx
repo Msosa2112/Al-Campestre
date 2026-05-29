@@ -22,12 +22,17 @@ export default function NavigationHeader() {
     }
   }, [pathname]);
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (typeof window !== 'undefined') {
-      if (confirm('¿Restablecer todos los datos del MVP simulado a los valores predeterminados?')) {
-        localStorage.clear();
-        initializeDb();
-        window.location.reload();
+      if (confirm('¿Restablecer todos los datos en Supabase a los valores predeterminados de fábrica?')) {
+        try {
+          localStorage.clear();
+          await initializeDb(true);
+          window.location.reload();
+        } catch (err) {
+          console.error("Error resetting Supabase:", err);
+          alert("Disculpe, ocurrió un error al comunicarse con la base de datos.");
+        }
       }
     }
   };
