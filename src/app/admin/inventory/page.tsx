@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getProducts, saveProduct, addProductStock, Product } from '@/lib/dbMock';
-import { Scan, Plus, ImageIcon, AlertCircle, Sparkles } from 'lucide-react';
+import { Scan, Plus, ImageIcon, AlertCircle, Sparkles, Camera } from 'lucide-react';
 
 export default function AdminInventory() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -163,13 +163,13 @@ export default function AdminInventory() {
           <div className="h-48 md:h-56 bg-[#2B2521] rounded-2xl relative overflow-hidden flex flex-col items-center justify-center border-2 border-[#D95D39]/20 shadow-inner">
             {isScanning ? (
               <div className="text-center flex flex-col items-center gap-3 px-6 animate-pulse">
-                <span className="text-3xl">📷</span>
+                <Camera size={32} className="text-white/60 mb-1" />
                 <p className="text-xs font-bold text-white tracking-wider">{scanMessage}</p>
                 <div className="w-12 h-1 bg-[#D95D39] rounded-full animate-bounce mt-1" />
               </div>
             ) : (
               <div className="text-center flex flex-col items-center gap-2 px-6">
-                <span className="text-4xl text-[#D95D39]">📷</span>
+                <Camera size={36} className="text-[#D95D39] mb-1" />
                 <p className="text-xs text-white font-bold">Cámara de escaneo inactiva</p>
                 <p className="text-[10px] text-white/50 mt-1 max-w-[180px]">Utiliza el simulador de abajo para disparar la lectura de códigos</p>
               </div>

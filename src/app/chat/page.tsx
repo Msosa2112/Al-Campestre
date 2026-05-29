@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { getProducts, getFamilies, createOrderWithStockCheck, Product, Family, Order } from '@/lib/dbMock';
-import { Send, Sparkles, ShoppingCart, User, Check, AlertCircle, RefreshCw, X } from 'lucide-react';
+import { Send, Sparkles, ShoppingCart, User, Check, AlertCircle, RefreshCw, X, Bot, ChefHat } from 'lucide-react';
 import Link from 'next/link';
 
 interface Message {
@@ -219,7 +219,7 @@ export default function ChatCommerce() {
       setMessages(prev => [...prev, {
         id: `msg-${Date.now()}`,
         sender: 'bot',
-        text: `🎉 ¡Felicidades! He completado tu orden **${result.order?.id}** por un total de **$${result.order?.total_amount.toFixed(2)}**. Los productos han sido reservados atómicamente y el repartidor será asignado a la brevedad.`,
+        text: `¡Felicidades! He completado tu orden **${result.order?.id}** por un total de **$${result.order?.total_amount.toFixed(2)}**. Los productos han sido reservados atómicamente y el repartidor será asignado a la brevedad.`,
         timestamp: new Date()
       }]);
     } else {
@@ -243,7 +243,7 @@ export default function ChatCommerce() {
     <div className="flex-1 flex flex-col gap-4 h-[calc(100vh-140px)] sm:h-[78vh] overflow-hidden">
       
       <div className="flex items-center gap-3">
-        <span className="text-2xl">🤖</span>
+        <Bot size={24} className="text-emerald-800" />
         <div>
           <h1 className="text-xl font-extrabold text-emerald-950">Comercio Conversacional IA</h1>
           <p className="text-xs text-emerald-950/60 font-semibold">Simulación de Chatbot + pgvector para emparejamiento semántico</p>
@@ -379,7 +379,7 @@ export default function ChatCommerce() {
               {/* Items in proposal */}
               {cartProposal.length === 0 ? (
                 <div className="text-center py-12 bg-white/20 rounded-2xl border border-dashed border-emerald-500/10">
-                  <p className="text-2xl mb-2">🍽️</p>
+                  <ChefHat size={32} className="text-emerald-500/40 mx-auto mb-2" />
                   <p className="text-xs font-semibold text-emerald-950/50 leading-relaxed max-w-[200px] mx-auto">
                     El chatbot agregará los productos aquí en tiempo real cuando describas lo que deseas.
                   </p>

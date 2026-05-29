@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, ShieldCheck, Truck, RotateCcw, Utensils, Menu, X } from 'lucide-react';
+import { ShoppingBag, ShieldCheck, Truck, RotateCcw, Utensils, Menu, X, Settings } from 'lucide-react';
 import { initializeDb } from '@/lib/dbMock';
 
 export default function NavigationHeader() {
@@ -88,7 +88,7 @@ export default function NavigationHeader() {
               <div className="flex justify-between items-center pb-4 border-b border-[#8C6239]/10 mb-6">
                 <div>
                   <h3 className="text-base font-extrabold text-[#2B2521] flex items-center gap-1.5">
-                    ⚙️ Panel de Control
+                    <Settings size={18} className="text-[#D95D39]" /> Panel de Control
                   </h3>
                   <p className="text-[10px] text-[#2B2521]/50 font-semibold mt-0.5">Intercambia entre perfiles del MVP</p>
                 </div>

@@ -11,7 +11,7 @@ import {
   Product, 
   Order 
 } from '@/lib/dbMock';
-import { Plus, User, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X, Search, ChevronDown, ClipboardList, Send } from 'lucide-react';
+import { Plus, User, Users, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X, Search, ChevronDown, ClipboardList, Send, Bot, TrendingUp, Flame, CheckCircle, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Storefront() {
@@ -302,7 +302,7 @@ export default function Storefront() {
         setAiMessages(prev => [...prev, {
           id: `msg-${Date.now()}`,
           sender: 'bot',
-          text: `✅ ¡Entendido! He añadido al carrito: **${listStr}**.\n\nDestinatario: **${matchedFamily ? matchedFamily.nickname : 'tu familiar seleccionado'}**.\n\nYa puedes revisar tu carrito a la derecha y pagar.`
+          text: `¡Entendido! He añadido al carrito: **${listStr}**.\n\nDestinatario: **${matchedFamily ? matchedFamily.nickname : 'tu familiar seleccionado'}**.\n\nYa puedes revisar tu carrito a la derecha y pagar.`
         }]);
       } else {
         setAiMessages(prev => [...prev, {
@@ -325,21 +325,21 @@ export default function Storefront() {
           {
             title: "Envía Alimentos Frescos y Abarrotes directos a Cuba",
             desc: "Compra combos de carnes, granos y abarrotes desde EE.UU. con entrega garantizada en la puerta de tus familiares. Pago rápido en 1-clic con Stripe.",
-            badge: "🕒 Entrega en 24-48h",
+            badge: "Entrega en 24-48h",
             gradient: "from-[#D95D39]/95 to-[#8C6239]/95",
             image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
           },
           {
             title: "Combos de Carne Premium con 15% OFF",
             desc: "Lomo de cerdo fresco, pollo entero y picadillo de res seleccionados directamente en el campo. Sabor criollo garantizado.",
-            badge: "🔥 Súper Oferta",
+            badge: "Súper Oferta",
             gradient: "from-[#C24C2A]/95 to-[#D95D39]/95",
             image: "https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=800&q=80"
           },
           {
             title: "Nuevas Zonas de Cobertura en Provincias",
             desc: "Ya entregamos en San Antonio de los Baños, Bauta, Bejucal y San José de las Lajas. Cobertura ampliada para tu tranquilidad.",
-            badge: "📍 Cobertura Ampliada",
+            badge: "Cobertura Ampliada",
             gradient: "from-[#8C6239]/95 to-[#EADEC9]/95",
             image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800&q=80"
           }
@@ -499,7 +499,8 @@ export default function Storefront() {
               className="glass-button px-4 py-2.5 flex items-center justify-between gap-2 border-[#8C6239]/15 text-[#8C6239] font-bold text-xs cursor-pointer min-w-[200px]"
             >
               <span className="flex items-center gap-1.5">
-                <span>📍 Envíos a:</span>
+                <MapPin size={14} className="text-[#8C6239]" />
+                <span>Envíos a:</span>
                 <span className="text-[#2B2521] font-extrabold">{deliveryMunicipality}, {deliveryProvince}</span>
               </span>
               <ChevronDown size={14} className="text-[#8C6239]" />
@@ -527,7 +528,7 @@ export default function Storefront() {
           {selectedCategory === 'Todos' && searchQuery === '' && (
             <div className="flex flex-col gap-3">
               <h3 className="text-sm font-extrabold text-[#8C6239] flex items-center gap-1.5">
-                <span>🔥</span> Productos Más Vendidos
+                <TrendingUp size={16} className="text-[#D95D39]" /> Productos Más Vendidos
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -540,7 +541,7 @@ export default function Storefront() {
                     return (
                       <div key={`best-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border-[#8C6239]/10 bg-[#FAF9F5]/40">
                         <span className="absolute top-2 left-2 bg-[#D95D39] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full z-10 shadow-sm animate-pulse">
-                          🔥 MÁS VENDIDO
+                          MÁS VENDIDO
                         </span>
                         
                         <div className="h-32 w-full overflow-hidden bg-[#8C6239]/5 relative">
@@ -907,7 +908,7 @@ export default function Storefront() {
               <X size={20} />
             </button>
             <h3 className="text-xl font-bold text-[#2B2521] flex items-center gap-2 mb-2">
-              👨‍👩‍👧‍👦 Registrar Familiar Recibidor en Cuba
+              <Users size={18} className="text-[#D95D39]" /> Registrar Familiar Recibidor en Cuba
             </h3>
             <p className="text-xs text-[#2B2521]/60 mb-4">
               Agrega los datos de envío de tu familiar en Cuba. Esto se guardará como recibidor predeterminado.
@@ -1019,8 +1020,8 @@ export default function Storefront() {
       {checkoutSuccess && (
         <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl text-center flex flex-col items-center gap-4 border-[#D95D39]/30">
-            <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-3xl shadow-inner border border-green-200">
-              ✓
+            <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center shadow-inner border border-green-200">
+              <CheckCircle className="w-8 h-8 stroke-[2.5]" />
             </div>
             
             <div>
@@ -1037,7 +1038,7 @@ export default function Storefront() {
             </div>
 
             <p className="text-xs text-[#2B2521]/60 leading-relaxed bg-[#D95D39]/5 p-3 rounded-xl border border-[#D95D39]/10">
-              📦 <span className="font-bold text-[#8C6239]">Validación de Inventario:</span> El stock ha sido descontado estrictamente en tiempo real en la base de datos de Restaurant Al Campestre.
+              <span className="font-bold text-[#8C6239] flex items-center gap-1.5"><CheckCircle size={14} className="text-green-600" /> Validación de Inventario:</span> El stock ha sido descontado estrictamente en tiempo real en la base de datos de Restaurant Al Campestre.
             </p>
 
             <button
@@ -1061,7 +1062,7 @@ export default function Storefront() {
               <X size={20} />
             </button>
             <h3 className="text-xl font-bold text-[#2B2521] flex items-center gap-2 mb-2">
-              📍 Seleccionar Zona de Entrega
+              <MapPin size={20} className="text-[#D95D39]" /> Seleccionar Zona de Entrega
             </h3>
             <p className="text-xs text-[#2B2521]/60 mb-4">
               Configura el destino de envío en Cuba para mostrar las tarifas de entrega y disponibilidad de productos.
@@ -1159,7 +1160,7 @@ export default function Storefront() {
               {/* Items List */}
               {cart.length === 0 ? (
                 <div className="text-center py-20">
-                  <p className="text-3xl mb-3">🛒</p>
+                  <ShoppingCart size={36} className="text-[#8C6239]/40 mx-auto mb-3" />
                   <p className="text-sm font-semibold text-[#8C6239]/60">Tu carrito está vacío.</p>
                 </div>
               ) : (
@@ -1210,7 +1211,7 @@ export default function Storefront() {
                 )}
 
                 <div className="bg-[#FAF9F5] p-3 rounded-2xl border border-[#8C6239]/10 text-xs flex flex-col gap-2">
-                  <p className="font-bold text-[#8C6239]">💳 Método de Pago (Stripe 1-Clic)</p>
+                  <p className="font-bold text-[#8C6239] flex items-center gap-1.5"><CreditCard size={14} /> Método de Pago (Stripe 1-Clic)</p>
                   <div className="flex justify-between text-[#2B2521]/70 font-semibold">
                     <span>Tarjeta Guardada:</span>
                     <span>Visa terminada en •••• 4242</span>
@@ -1228,7 +1229,7 @@ export default function Storefront() {
                       }}
                       className="text-[#D95D39] font-bold hover:underline text-left cursor-pointer"
                     >
-                      ⚠️ Asignar recibidor en Cuba
+                      <span className="flex items-center gap-1"><AlertTriangle size={14} className="text-amber-600" /> Asignar recibidor en Cuba</span>
                     </button>
                   )}
                 </div>
@@ -1345,7 +1346,7 @@ export default function Storefront() {
           {/* Header */}
           <div className="bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white p-4 flex justify-between items-center shadow-md">
             <div className="flex items-center gap-2">
-              <span className="text-xl">🤖</span>
+              <Bot size={20} className="text-white" />
               <div>
                 <h4 className="font-extrabold text-xs">Asistente Al Campestre</h4>
                 <p className="text-[9px] text-white/80 font-semibold">Te ayuda a armar tu envío con IA</p>

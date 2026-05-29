@@ -9,7 +9,7 @@ import {
   Driver,
   getProducts,
 } from '@/lib/dbMock';
-import { Truck, Check, AlertCircle, Scan, MessageCircle, RefreshCw, Lock, LogOut } from 'lucide-react';
+import { Truck, Check, AlertCircle, Scan, MessageCircle, RefreshCw, Lock, LogOut, Sparkles, Phone } from 'lucide-react';
 
 interface ScannedPicking {
   [productId: string]: number; // productId -> cantidad validada
@@ -148,7 +148,7 @@ export default function DeliveryApp() {
     if (!scannedProduct) {
       setAlertMessage({
         type: 'error',
-        text: `⚠️ ERROR: Código [${barcode}] no registrado en almacén.`
+        text: `ERROR: Código [${barcode}] no registrado en almacén.`
       });
       return;
     }
@@ -158,7 +158,7 @@ export default function DeliveryApp() {
     if (!orderItem) {
       setAlertMessage({
         type: 'error',
-        text: `⚠️ CORRESPONDENCIA INCORRECTA: El producto [${scannedProduct.name}] no pertenece a este pedido.`
+        text: `CORRESPONDENCIA INCORRECTA: El producto [${scannedProduct.name}] no pertenece a este pedido.`
       });
       return;
     }
@@ -167,7 +167,7 @@ export default function DeliveryApp() {
     if (currentQty >= orderItem.quantity) {
       setAlertMessage({
         type: 'error',
-        text: `⚠️ El producto ${scannedProduct.name} ya está completo (${orderItem.quantity}/${orderItem.quantity}).`
+        text: `El producto ${scannedProduct.name} ya está completo (${orderItem.quantity}/${orderItem.quantity}).`
       });
       return;
     }
@@ -289,8 +289,9 @@ export default function DeliveryApp() {
             </button>
           </form>
 
-          <div className="text-[10px] text-center text-[#2B2521]/50 bg-[#FAF9F5] p-2.5 rounded-xl border border-dashed border-[#8C6239]/25">
-            💡 <span className="font-bold">Demostración:</span> Ingresa <span className="font-bold">"Juan"</span> y PIN <span className="font-bold">"1111"</span>, o <span className="font-bold">"Yusniel"</span> y PIN <span className="font-bold">"2222"</span>.
+          <div className="text-[10px] text-center text-[#2B2521]/50 bg-[#FAF9F5] p-2.5 rounded-xl border border-dashed border-[#8C6239]/25 flex items-center justify-center gap-1.5">
+            <Sparkles size={14} className="text-amber-500 flex-shrink-0" />
+            <span><span className="font-bold">Demostración:</span> Ingresa <span className="font-bold">"Juan"</span> y PIN <span className="font-bold">"1111"</span>, o <span className="font-bold">"Yusniel"</span> y PIN <span className="font-bold">"2222"</span>.</span>
           </div>
         </div>
       </div>
@@ -314,11 +315,10 @@ export default function DeliveryApp() {
         </div>
       )}
 
-      {/* Header del Repartidor */}
       <div className="premium-card p-4 bg-white flex justify-between items-center shadow-md">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center text-base border border-[#8C6239]/10">
-            🚚
+          <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center border border-[#8C6239]/10">
+            <Truck size={18} className="text-[#D95D39]" />
           </div>
           <div>
             <h3 className="text-xs font-extrabold text-[#2B2521]">{currentDriver?.name}</h3>
@@ -381,7 +381,7 @@ export default function DeliveryApp() {
                   href={`tel:${activeOrder.family_phone}`}
                   className="text-base font-bold text-[#D95D39] hover:underline flex items-center gap-1.5 mt-0.5"
                 >
-                  📞 {activeOrder.family_phone}
+                  <Phone size={14} className="inline mr-1 align-middle" /> {activeOrder.family_phone}
                 </a>
               </div>
 
@@ -500,9 +500,10 @@ export default function DeliveryApp() {
                 
                 <button
                   onClick={() => setShowIncidentModal(true)}
-                  className="w-full py-3.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-2xl active:scale-95 transition-colors cursor-pointer"
+                  className="w-full py-3.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-2xl active:scale-95 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                 >
-                  ⚠️ Reportar Incidencia / Fallo de Entrega
+                  <AlertCircle size={14} />
+                  Reportar Incidencia / Fallo de Entrega
                 </button>
               </div>
             )}
@@ -511,7 +512,7 @@ export default function DeliveryApp() {
         </div>
       ) : (
         <div className="premium-card p-10 text-center bg-white border border-[#8C6239]/10 flex flex-col items-center justify-center min-h-[340px]">
-          <span className="text-5xl mb-4 animate-bounce">🚚</span>
+          <Truck size={48} className="text-[#D95D39]/40 mb-4 animate-bounce" />
           <h3 className="text-base font-extrabold text-[#2B2521]">Sin Órdenes Asignadas</h3>
           <p className="text-xs text-[#2B2521]/60 mt-2 max-w-[240px] leading-relaxed">
             Actualmente no tienes pedidos pendientes de despacho en tu ruta activa. Contacta al Administrador de base para asignar pedidos.
