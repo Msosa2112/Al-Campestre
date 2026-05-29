@@ -55,6 +55,7 @@ export default function NavigationHeader() {
       {/* Hamburger Toggle Button */}
       <div className="flex items-center gap-2">
         <button
+          id="profile-menu-trigger"
           onClick={() => setIsMenuOpen(true)}
           className="glass-button p-2.5 rounded-xl border-[#D95D39]/15 text-[#D95D39] hover:bg-[#D95D39]/10 transition-colors flex items-center gap-1.5 cursor-pointer"
           title="Cambiar de Rol / Configuración"

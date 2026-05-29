@@ -11,16 +11,26 @@ import {
   Product, 
   Order 
 } from '@/lib/dbMock';
-import { Plus, User, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X } from 'lucide-react';
+import { Plus, User, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X, Search, ChevronDown, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Storefront() {
   const [products, setProducts] = useState<Product[]>([]);
   const [families, setFamilies] = useState<Family[]>([]);
   const [selectedFamilyId, setSelectedFamilyId] = useState<string>('');
+  const activeFamily = families.find(f => f.id === selectedFamilyId);
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Active Delivery Area States
+  const [deliveryProvince, setDeliveryProvince] = useState('La Habana');
+  const [deliveryMunicipality, setDeliveryMunicipality] = useState('Plaza de la Revolución');
+  const [showZoneModal, setShowZoneModal] = useState(false);
+  
+  // Hero Promotion Index
+  const [activePromoIndex, setActivePromoIndex] = useState(0);
   
   // Modals
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -57,6 +67,20 @@ export default function Storefront() {
       console.error('Error loading data:', err);
     }
   };
+
+  useEffect(() => {
+    if (activeFamily) {
+      setDeliveryProvince(activeFamily.province);
+      setDeliveryMunicipality(activeFamily.municipality);
+    }
+  }, [selectedFamilyId, families, activeFamily]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActivePromoIndex(prev => (prev + 1) % 3);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -161,30 +185,80 @@ export default function Storefront() {
   };
 
   const totalCartPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const activeFamily = families.find(f => f.id === selectedFamilyId);
 
   return (
-    <div className="flex-1 flex flex-col gap-6">
+    <div className="flex-1 flex flex-col gap-6 pb-20 md:pb-0">
       
-      {/* Hero Bienvenida Tradicional */}
-      <div className="glass-panel p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-4 overflow-hidden relative border-[#D95D39]/10 bg-gradient-to-br from-[#D95D39]/5 to-[#8C6239]/5">
-        <div className="flex-1 flex flex-col gap-2">
-          <h1 className="text-xl md:text-3xl font-extrabold text-[#2B2521] tracking-tight leading-tight">
-            Envía Alimentos Frescos y Abarrotes directos a Cuba
-          </h1>
-          <p className="text-[#2B2521]/70 text-xs md:text-sm max-w-2xl leading-relaxed">
-            Compra combos de carnes, granos y abarrotes desde EE.UU. con entrega garantizada en la puerta de tus familiares. Selecciona tu familiar recibidor, añade productos al carrito y finaliza con pago rápido en 1-clic con Stripe.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs font-bold text-[#8C6239] bg-white/40 border border-white/60 px-3.5 py-2 rounded-2xl">
-          <span>🕒 Entrega en 24-48h</span>
+      {/* Hero Banner Slideshow Premium */}
+      <div className="relative overflow-hidden rounded-3xl h-44 sm:h-52 w-full shadow-lg">
+        {/* Promos */}
+        {[
+          {
+            title: "Envía Alimentos Frescos y Abarrotes directos a Cuba",
+            desc: "Compra combos de carnes, granos y abarrotes desde EE.UU. con entrega garantizada en la puerta de tus familiares. Pago rápido en 1-clic con Stripe.",
+            badge: "🕒 Entrega en 24-48h",
+            gradient: "from-[#D95D39]/95 to-[#8C6239]/95",
+            image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
+          },
+          {
+            title: "Combos de Carne Premium con 15% OFF",
+            desc: "Lomo de cerdo fresco, pollo entero y picadillo de res seleccionados directamente en el campo. Sabor criollo garantizado.",
+            badge: "🔥 Súper Oferta",
+            gradient: "from-[#C24C2A]/95 to-[#D95D39]/95",
+            image: "https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=800&q=80"
+          },
+          {
+            title: "Nuevas Zonas de Cobertura en Provincias",
+            desc: "Ya entregamos en San Antonio de los Baños, Bauta, Bejucal y San José de las Lajas. Cobertura ampliada para tu tranquilidad.",
+            badge: "📍 Cobertura Ampliada",
+            gradient: "from-[#8C6239]/95 to-[#EADEC9]/95",
+            image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800&q=80"
+          }
+        ].map((promo, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 w-full h-full flex flex-col md:flex-row justify-between items-start md:items-center p-6 md:p-8 text-white transition-opacity duration-700 bg-gradient-to-r ${promo.gradient} ${
+              activePromoIndex === idx ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+            }`}
+          >
+            <div 
+              className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-25"
+              style={{ backgroundImage: `url('${promo.image}')` }}
+            />
+            <div className="relative z-10 flex-1 flex flex-col gap-1.5 max-w-2xl">
+              <span className="bg-white/25 border border-white/30 text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit">
+                {promo.badge}
+              </span>
+              <h1 className="text-base sm:text-2xl font-extrabold tracking-tight leading-tight">
+                {promo.title}
+              </h1>
+              <p className="text-white/80 text-[10px] sm:text-xs leading-relaxed line-clamp-2">
+                {promo.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+          {[0, 1, 2].map(i => (
+            <button
+              key={i}
+              onClick={() => setActivePromoIndex(i)}
+              className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                activePromoIndex === i ? 'bg-white w-5' : 'bg-white/40'
+              }`}
+            />
+          ))}
         </div>
       </div>
 
       {/* Botón flotante secundario para el Asistente de IA (Comercio Conversacional) */}
       <Link
         href="/chat"
-        className={`fixed ${cart.length > 0 && !isCartOpen ? 'bottom-24' : 'bottom-6'} right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white px-5 py-3.5 rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center gap-2 font-bold text-xs`}
+        className={`fixed ${
+          cart.length > 0 && !isCartOpen 
+            ? 'bottom-[136px]' 
+            : 'bottom-[76px] md:bottom-6'
+        } right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white px-5 py-3.5 rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center gap-2 font-bold text-xs`}
         title="Ordenar usando Inteligencia Artificial"
       >
         <Sparkles size={14} className="animate-pulse text-[#FAF9F5]" />
@@ -265,14 +339,50 @@ export default function Storefront() {
         </div>
 
         {/* Product Catalog */}
-        <div className="lg:col-span-3 flex flex-col gap-6">
+        <div className="lg:col-span-3 flex flex-col gap-6" id="catalog-section">
           
+          {/* Barra de Búsqueda y Selector de Zona para Móviles y Escritorio */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Buscador */}
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                placeholder="Buscar productos (ej. pollo, arroz, lomo)..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full glass-input pl-10 pr-4 py-2.5 text-xs font-semibold focus:bg-white"
+                id="search-input"
+              />
+              <Search className="absolute left-3.5 top-3.5 text-[#8C6239] w-4 h-4" />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3.5 top-3.5 text-[#2B2521]/60 hover:text-red-500 text-xs font-bold"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Selector de Provincia / Municipio */}
+            <button
+              onClick={() => setShowZoneModal(true)}
+              className="glass-button px-4 py-2.5 flex items-center justify-between gap-2 border-[#8C6239]/15 text-[#8C6239] font-bold text-xs cursor-pointer min-w-[200px]"
+            >
+              <span className="flex items-center gap-1.5">
+                <span>📍 Envíos a:</span>
+                <span className="text-[#2B2521] font-extrabold">{deliveryMunicipality}, {deliveryProvince}</span>
+              </span>
+              <ChevronDown size={14} className="text-[#8C6239]" />
+            </button>
+          </div>
+
           {/* Header & Cart Button */}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-2">
             <h2 className="text-xl font-extrabold text-[#2B2521]">Catálogo de Productos</h2>
             <button
               onClick={() => setIsCartOpen(true)}
-              className="glass-button px-4 py-2.5 flex items-center gap-2 relative border-[#8C6239]/15 text-[#8C6239] cursor-pointer"
+              className="glass-button px-4 py-2.5 hidden md:flex items-center gap-2 relative border-[#8C6239]/15 text-[#8C6239] cursor-pointer"
             >
               <ShoppingCart size={16} />
               <span className="font-bold text-sm">Mi Carrito</span>
@@ -284,8 +394,8 @@ export default function Storefront() {
             </button>
           </div>
 
-          {/* Más Vendidos (Best Sellers Section) - Only shown on "Todos" category */}
-          {selectedCategory === 'Todos' && (
+          {/* Más Vendidos (Best Sellers Section) - Only shown on "Todos" category when not searching */}
+          {selectedCategory === 'Todos' && searchQuery === '' && (
             <div className="flex flex-col gap-3">
               <h3 className="text-sm font-extrabold text-[#8C6239] flex items-center gap-1.5">
                 <span>🔥</span> Productos Más Vendidos
@@ -340,7 +450,7 @@ export default function Storefront() {
           {/* Categories Selector Pills */}
           <div className="flex flex-col gap-2">
             <h3 className="text-xs font-bold text-[#2B2521]/70 uppercase tracking-wider">Categorías de Envíos:</h3>
-            <div className="glass-track flex items-center p-1 w-fit max-w-full overflow-x-auto whitespace-nowrap scrollbar-none">
+            <div className="glass-track flex items-center p-1 w-full overflow-x-auto whitespace-nowrap scrollbar-none">
               {['Todos', 'Carnes', 'Granos', 'Lácteos', 'Abarrotes'].map(cat => (
                 <button
                   key={cat}
@@ -362,7 +472,12 @@ export default function Storefront() {
           {/* Vista Escritorio: Rejilla de Tarjetas */}
           <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-4">
             {products
-              .filter(p => selectedCategory === 'Todos' || p.category === selectedCategory)
+              .filter(p => {
+                const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+              })
               .map(product => {
                 const inCartItem = cart.find(i => i.product.id === product.id);
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
@@ -424,7 +539,12 @@ export default function Storefront() {
           {/* Vista Móvil: Diseño de 1 Sola Columna con Imágenes Grandes y Stock Destacado */}
           <div className="grid grid-cols-1 gap-5 md:hidden">
             {products
-              .filter(p => selectedCategory === 'Todos' || p.category === selectedCategory)
+              .filter(p => {
+                const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+              })
               .map(product => {
                 const inCartItem = cart.find(i => i.product.id === product.id);
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
@@ -482,7 +602,7 @@ export default function Storefront() {
 
       {/* Orders Tracking List */}
       {orders.length > 0 && (
-        <div className="glass-panel p-5 mt-4">
+        <div className="glass-panel p-5 mt-4" id="orders-tracking">
           <h2 className="text-lg font-extrabold text-[#2B2521] mb-4">Progreso del Pedido</h2>
           
           {/* Vista Escritorio: Tabla */}
@@ -801,6 +921,92 @@ export default function Storefront() {
         </div>
       )}
 
+      {/* MODAL: Selector de Zona de Entrega */}
+      {showZoneModal && (
+        <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl relative border-[#D95D39]/20">
+            <button 
+              onClick={() => setShowZoneModal(false)}
+              className="absolute top-4 right-4 text-[#2B2521]/60 hover:text-[#2B2521] cursor-pointer"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-xl font-bold text-[#2B2521] flex items-center gap-2 mb-2">
+              📍 Seleccionar Zona de Entrega
+            </h3>
+            <p className="text-xs text-[#2B2521]/60 mb-4">
+              Configura el destino de envío en Cuba para mostrar las tarifas de entrega y disponibilidad de productos.
+            </p>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-[#2B2521]/70">Provincia</label>
+                <select
+                  value={deliveryProvince}
+                  onChange={e => {
+                    const newProv = e.target.value;
+                    setDeliveryProvince(newProv);
+                    // Set default municipality for province
+                    if (newProv === 'La Habana') setDeliveryMunicipality('Plaza de la Revolución');
+                    else if (newProv === 'Artemisa') setDeliveryMunicipality('San Antonio de los Baños');
+                    else if (newProv === 'Mayabeque') setDeliveryMunicipality('Bejucal');
+                  }}
+                  className="glass-input text-sm"
+                >
+                  <option value="La Habana">La Habana</option>
+                  <option value="Artemisa">Artemisa</option>
+                  <option value="Mayabeque">Mayabeque</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-[#2B2521]/70">Municipio</label>
+                {deliveryProvince === 'La Habana' && (
+                  <select 
+                    value={deliveryMunicipality} 
+                    onChange={e => setDeliveryMunicipality(e.target.value)} 
+                    className="glass-input text-sm"
+                  >
+                    <option value="Plaza de la Revolución">Plaza de la Revolución</option>
+                    <option value="Playa">Playa</option>
+                    <option value="Centro Habana">Centro Habana</option>
+                    <option value="Habana Vieja">Habana Vieja</option>
+                    <option value="Boyeros">Boyeros</option>
+                  </select>
+                )}
+                {deliveryProvince === 'Artemisa' && (
+                  <select 
+                    value={deliveryMunicipality} 
+                    onChange={e => setDeliveryMunicipality(e.target.value)} 
+                    className="glass-input text-sm"
+                  >
+                    <option value="San Antonio de los Baños">San Antonio de los Baños</option>
+                    <option value="Bauta">Bauta</option>
+                  </select>
+                )}
+                {deliveryProvince === 'Mayabeque' && (
+                  <select 
+                    value={deliveryMunicipality} 
+                    onChange={e => setDeliveryMunicipality(e.target.value)} 
+                    className="glass-input text-sm"
+                  >
+                    <option value="Bejucal">Bejucal</option>
+                    <option value="San José de las Lajas">San José de las Lajas</option>
+                  </select>
+                )}
+              </div>
+
+              <button
+                onClick={() => setShowZoneModal(false)}
+                className="glass-button-primary py-2.5 mt-2 text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+              >
+                Confirmar Zona de Envío
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Cart Sidebar Panel */}
       {isCartOpen && (
         <div className="fixed inset-0 z-40 bg-[#2B2521]/20 backdrop-blur-xs flex justify-end animate-fadeIn">
@@ -918,7 +1124,7 @@ export default function Storefront() {
 
       {/* Barra de Carrito Fija en Móvil (solo si hay items y el carrito no está abierto) */}
       {cart.length > 0 && !isCartOpen && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 p-4 flex justify-between items-center shadow-lg animate-slide-up md:hidden">
+        <div className="fixed bottom-16 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 p-4 flex justify-between items-center shadow-lg animate-slide-up md:hidden">
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-[#8C6239] uppercase tracking-wider">Tu Carrito</span>
             <span className="text-base font-extrabold text-[#2B2521]">${totalCartPrice.toFixed(2)}</span>
@@ -933,6 +1139,70 @@ export default function Storefront() {
           </button>
         </div>
       )}
+
+      {/* Barra de Navegación Móvil Fija (Tab Bar Inferior) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 h-16 flex justify-around items-center md:hidden">
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors"
+        >
+          <Home size={20} />
+          <span className="text-[10px] font-bold mt-1">Inicio</span>
+        </button>
+        <button 
+          onClick={() => {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+              searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              searchInput.focus();
+            }
+          }}
+          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors"
+        >
+          <Search size={20} />
+          <span className="text-[10px] font-bold mt-1">Buscar</span>
+        </button>
+        <Link 
+          href="/chat"
+          className="flex flex-col items-center justify-center text-[#D95D39] hover:scale-105 transition-transform"
+        >
+          <div className="bg-gradient-to-r from-[#D95D39] to-[#C24C2A] p-2 rounded-full text-white shadow-md">
+            <Sparkles size={20} className="animate-pulse" />
+          </div>
+          <span className="text-[10px] font-extrabold mt-0.5">Asistente IA</span>
+        </Link>
+        <button 
+          onClick={() => {
+            const ordersSection = document.getElementById('orders-tracking');
+            if (ordersSection) {
+              ordersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              alert("No tienes pedidos activos para rastrear.");
+            }
+          }}
+          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors relative"
+        >
+          <ClipboardList size={20} />
+          <span className="text-[10px] font-bold mt-1">Pedidos</span>
+          {orders.length > 0 && (
+            <span className="absolute -top-1 right-2 bg-[#D95D39] text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
+              {orders.length}
+            </span>
+          )}
+        </button>
+        <button 
+          onClick={() => {
+            const trigger = document.getElementById('profile-menu-trigger');
+            if (trigger) {
+              trigger.click();
+            }
+          }}
+          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors"
+        >
+          <User size={20} />
+          <span className="text-[10px] font-bold mt-1">Perfiles</span>
+        </button>
+      </div>
 
     </div>
   );
