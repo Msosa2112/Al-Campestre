@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { getProducts, getFamilies, createOrderWithStockCheck, Product, Family, Order } from '@/lib/dbMock';
-import { Send, Sparkles, ShoppingCart, User, Check, AlertCircle, RefreshCw } from 'lucide-react';
+import { Send, Sparkles, ShoppingCart, User, Check, AlertCircle, RefreshCw, X } from 'lucide-react';
 import Link from 'next/link';
 
 interface Message {
@@ -27,6 +27,7 @@ export default function ChatCommerce() {
   const [selectedFamily, setSelectedFamily] = useState<Family | null>(null);
   const [orderCreated, setOrderCreated] = useState<Order | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -108,12 +109,12 @@ export default function ChatCommerce() {
     // 2. Parse items and quantities
     // Keywords matching dictionary mapping to product IDs
     const dictionary = [
-      { keys: ['cerdo', 'puerco', 'lomo', 'carne'], id: 'prod-1' },
-      { keys: ['arroz', 'grano'], id: 'prod-2' },
-      { keys: ['frijoles', 'caraotas', 'judias', 'negros'], id: 'prod-3' },
-      { keys: ['aceite', 'girasol', 'cocina'], id: 'prod-4' },
-      { keys: ['leche', 'polvo'], id: 'prod-5' },
-      { keys: ['pollo', 'gallina', 'muslos'], id: 'prod-6' }
+      { keys: ['cerdo', 'puerco', 'lomo', 'carne'], id: 'prod-meat-2' },
+      { keys: ['arroz', 'grano'], id: 'prod-grain-2' },
+      { keys: ['frijoles', 'caraotas', 'judias', 'negros'], id: 'prod-grain-1' },
+      { keys: ['aceite', 'girasol', 'cocina'], id: 'prod-grocery-1' },
+      { keys: ['leche', 'polvo'], id: 'prod-dairy-4' },
+      { keys: ['pollo', 'gallina', 'muslos'], id: 'prod-meat-3' }
     ];
 
     const detectedItems: CartProposalItem[] = [...cartProposal];
@@ -170,6 +171,9 @@ export default function ChatCommerce() {
     }
 
     setCartProposal(detectedItems);
+    if (matchedAny) {
+      setIsMobileDrawerOpen(true);
+    }
 
     let botResponse = '';
     if (matchedAny) {
@@ -236,7 +240,7 @@ export default function ChatCommerce() {
   const totalAmount = cartProposal.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   return (
-    <div className="flex-1 flex flex-col gap-4 max-h-[85vh]">
+    <div className="flex-1 flex flex-col gap-4 h-[calc(100vh-140px)] sm:h-[78vh] overflow-hidden">
       
       <div className="flex items-center gap-3">
         <span className="text-2xl">🤖</span>
@@ -246,11 +250,34 @@ export default function ChatCommerce() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0 h-full">
         
         {/* Chat Window */}
-        <div className="lg:col-span-2 glass-panel flex flex-col justify-between overflow-hidden h-[68vh] bg-white/70">
+        <div className="lg:col-span-2 glass-panel flex flex-col justify-between overflow-hidden h-full bg-white/70">
           
+          {/* Mobile Proposal Banner */}
+          {cartProposal.length > 0 && (
+            <div className="bg-emerald-50 border-b border-emerald-500/10 px-4 py-2.5 flex justify-between items-center text-xs animate-fadeIn lg:hidden">
+              <div className="flex items-center gap-2">
+                <span className="bg-emerald-500 text-white p-1.5 rounded-lg flex items-center justify-center">
+                  <ShoppingCart size={14} />
+                </span>
+                <div>
+                  <p className="font-bold text-emerald-950">Paquete para {selectedFamily?.nickname || 'Familiar'}</p>
+                  <p className="text-emerald-950/60 text-[10px]">
+                    {cartProposal.reduce((sum, i) => sum + i.quantity, 0)} artículos • ${totalAmount.toFixed(2)}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsMobileDrawerOpen(true)}
+                className="glass-button-primary px-3 py-1.5 text-[10px] font-bold cursor-pointer"
+              >
+                Revisar y Pagar
+              </button>
+            </div>
+          )}
+
           {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
             {messages.map(msg => (
@@ -309,8 +336,8 @@ export default function ChatCommerce() {
 
         </div>
 
-        {/* AI Proposal Drawer */}
-        <div className="lg:col-span-1 flex flex-col gap-4 h-[68vh]">
+        {/* AI Proposal Sidebar (Desktop only) */}
+        <div className="hidden lg:flex lg:col-span-1 flex-col gap-4 h-full">
           
           <div className="glass-panel p-5 bg-gradient-to-b from-white/90 to-emerald-500/5 flex flex-col justify-between h-full border-emerald-500/20">
             
@@ -323,7 +350,7 @@ export default function ChatCommerce() {
                 {cartProposal.length > 0 && (
                   <button 
                     onClick={clearProposal}
-                    className="text-xs font-bold text-emerald-950/60 hover:text-red-500 flex items-center gap-1"
+                    className="text-xs font-bold text-emerald-950/60 hover:text-red-500 flex items-center gap-1 cursor-pointer"
                   >
                     <RefreshCw size={10} />
                     Limpiar
@@ -423,6 +450,105 @@ export default function ChatCommerce() {
         </div>
 
       </div>
+
+      {/* BOTTOM SHEET / DRAWER: Mobile Proposal Review */}
+      {isMobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 bg-[#2B2521]/30 backdrop-blur-xs flex items-end lg:hidden animate-fadeIn">
+          {/* Backdrop Click Close */}
+          <div className="absolute inset-0" onClick={() => setIsMobileDrawerOpen(false)} />
+          
+          {/* Bottom Sheet Box */}
+          <div className="relative w-full bg-white/95 backdrop-blur-md rounded-t-3xl shadow-2xl border-t border-[#8C6239]/10 p-6 flex flex-col gap-4 max-h-[75vh] overflow-y-auto z-10 animate-slide-up">
+            
+            {/* Header */}
+            <div className="flex justify-between items-center pb-3 border-b border-emerald-500/10">
+              <h3 className="text-base font-extrabold text-emerald-950 flex items-center gap-2">
+                <Sparkles size={16} className="text-emerald-500 animate-spin" style={{ animationDuration: '4s' }} />
+                Paquete Propuesto (IA)
+              </h3>
+              <div className="flex items-center gap-3">
+                {cartProposal.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      clearProposal();
+                      setIsMobileDrawerOpen(false);
+                    }}
+                    className="text-xs font-bold text-emerald-950/60 hover:text-red-500 flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw size={10} />
+                    Limpiar
+                  </button>
+                )}
+                <button 
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="text-emerald-950/60 hover:text-emerald-950 p-1.5 rounded-full hover:bg-emerald-500/10 transition cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Destination */}
+            <div className="bg-[#FAF9F5] p-3 rounded-2xl border border-emerald-500/10 flex flex-col gap-1 text-xs">
+              <span className="font-bold text-emerald-900/60">Destinatario Cuba (Vinculado por IA):</span>
+              {selectedFamily ? (
+                <div className="flex items-center justify-between mt-1">
+                  <div>
+                    <p className="font-bold text-emerald-950">{selectedFamily.nickname}</p>
+                    <p className="text-emerald-950/60">{selectedFamily.full_name}</p>
+                  </div>
+                  <span className="text-[10px] bg-emerald-500/15 text-emerald-700 px-2 py-0.5 rounded-full font-bold">
+                    Detectado
+                  </span>
+                </div>
+              ) : (
+                <span className="text-amber-600 font-semibold">Crea un familiar en la pestaña Inicio para enlazar</span>
+              )}
+            </div>
+
+            {/* Itemized List */}
+            <div className="flex flex-col gap-2 overflow-y-auto max-h-[30vh] pr-1">
+              {cartProposal.map(item => (
+                <div key={item.product.id} className="p-2.5 bg-white border border-emerald-500/5 rounded-xl flex justify-between items-center text-xs">
+                  <div>
+                    <p className="font-bold text-emerald-950">{item.product.name}</p>
+                    <p className="text-emerald-950/60">${item.product.price.toFixed(2)} x {item.quantity}</p>
+                  </div>
+                  <span className="font-extrabold text-emerald-950">${(item.product.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Total and Checkout */}
+            <div className="border-t border-emerald-500/10 pt-4 flex flex-col gap-3">
+              <div className="flex justify-between items-baseline text-xs">
+                <span className="font-bold text-emerald-950/60">Importe Total:</span>
+                <span className="text-xl font-extrabold text-emerald-950">${totalAmount.toFixed(2)}</span>
+              </div>
+
+              {checkoutError && (
+                <p className="text-xs font-bold text-red-500 bg-red-50 p-2.5 rounded-xl">{checkoutError}</p>
+              )}
+
+              <button
+                onClick={async () => {
+                  await handleProposalCheckout();
+                  setIsMobileDrawerOpen(false);
+                }}
+                disabled={!selectedFamily || orderCreated !== null}
+                className={`w-full py-3.5 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg transition-all ${
+                  selectedFamily && !orderCreated
+                    ? 'glass-button-primary cursor-pointer'
+                    : 'bg-emerald-950/5 text-emerald-950/40 border border-emerald-950/10 cursor-not-allowed'
+                }`}
+              >
+                Confirmar y Pagar ${totalAmount.toFixed(2)}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );
