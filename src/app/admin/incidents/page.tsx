@@ -201,7 +201,7 @@ export default function AdminIncidents() {
             </form>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-white/20 rounded-2xl border border-dashed border-emerald-500/10">
-              <Wrench size={36} className="text-[#D95D39] mb-3" />
+              <Wrench size={36} className="text-[#2D6A4F] mb-3" />
               <h3 className="text-sm font-bold text-emerald-950">Resolución de Incidentes</h3>
               <p className="text-xs text-emerald-950/50 mt-1 max-w-[180px] leading-relaxed">
                 Selecciona un pedido con incidencia en la lista de la izquierda para emitir reembolsos en Stripe o crédito de tienda.

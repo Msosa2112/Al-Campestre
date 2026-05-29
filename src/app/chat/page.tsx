@@ -453,12 +453,12 @@ export default function ChatCommerce() {
 
       {/* BOTTOM SHEET / DRAWER: Mobile Proposal Review */}
       {isMobileDrawerOpen && (
-        <div className="fixed inset-0 z-50 bg-[#2B2521]/30 backdrop-blur-xs flex items-end lg:hidden animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-[#1A2421]/30 backdrop-blur-xs flex items-end lg:hidden animate-fadeIn">
           {/* Backdrop Click Close */}
           <div className="absolute inset-0" onClick={() => setIsMobileDrawerOpen(false)} />
           
           {/* Bottom Sheet Box */}
-          <div className="relative w-full bg-white/95 backdrop-blur-md rounded-t-3xl shadow-2xl border-t border-[#8C6239]/10 p-6 flex flex-col gap-4 max-h-[75vh] overflow-y-auto z-10 animate-slide-up">
+          <div className="relative w-full bg-white/95 backdrop-blur-md rounded-t-3xl shadow-2xl border-t border-[#40916C]/10 p-6 flex flex-col gap-4 max-h-[75vh] overflow-y-auto z-10 animate-slide-up">
             
             {/* Header */}
             <div className="flex justify-between items-center pb-3 border-b border-emerald-500/10">
@@ -489,7 +489,7 @@ export default function ChatCommerce() {
             </div>
 
             {/* Destination */}
-            <div className="bg-[#FAF9F5] p-3 rounded-2xl border border-emerald-500/10 flex flex-col gap-1 text-xs">
+            <div className="bg-[#FFFFFF] p-3 rounded-2xl border border-emerald-500/10 flex flex-col gap-1 text-xs">
               <span className="font-bold text-emerald-900/60">Destinatario Cuba (Vinculado por IA):</span>
               {selectedFamily ? (
                 <div className="flex items-center justify-between mt-1">

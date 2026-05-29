@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, ShieldCheck, Truck, RotateCcw, Utensils, Menu, X, Settings } from 'lucide-react';
+import { ShoppingBag, ShieldCheck, Truck, RotateCcw, Utensils, Menu, X, Settings, Sparkles } from 'lucide-react';
 import { initializeDb } from '@/lib/dbMock';
 
 export default function NavigationHeader() {
@@ -39,34 +39,75 @@ export default function NavigationHeader() {
 
   const closeMenu = () => setIsMenuOpen(false);
 
+  const handleToggleAi = () => {
+    if (pathname !== '/') {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('open-ai-assistant', 'true');
+      }
+      window.location.href = '/';
+    } else {
+      window.dispatchEvent(new CustomEvent('toggle-ai-assistant'));
+    }
+  };
+
   return (
-    <header className="glass-panel w-full sticky top-0 left-0 right-0 z-50 rounded-none border-t-0 border-x-0 px-4 py-3 mb-0 flex justify-between items-center sm:my-4 sm:mx-auto sm:max-w-7xl sm:px-6 sm:py-4 sm:rounded-3xl sm:border sm:mb-6">
+    <header className="sticky top-3 left-0 right-0 z-50 w-full px-4 py-3 flex justify-between items-center bg-white/95 backdrop-blur-md border-b border-[#2D6A4F]/10 sm:top-4 sm:w-[calc(100%-4rem)] lg:w-[calc(100%-6rem)] xl:max-w-7xl sm:mx-auto sm:bg-white sm:shadow-[0_8px_30px_rgb(0,0,0,0.02)] sm:px-8 sm:py-4 sm:rounded-t-none sm:rounded-b-3xl sm:border-t-0 sm:border-x sm:border-b sm:border-[#2D6A4F]/10 sm:mb-6 transition-all duration-300">
+      {/* Esquina cóncava izquierda para unir con el marco superior (visible solo en pantallas grandes) */}
+      <svg
+        className="absolute top-0 right-full h-6 w-6 text-white fill-current pointer-events-none hidden sm:block"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M24 24V0H0C10.7452 0 24 10.7452 24 24Z" fill="white" />
+        <path d="M0 0C10.7452 0 24 10.7452 24 24" stroke="rgba(45,106,79,0.1)" strokeWidth="1" fill="none" />
+      </svg>
+
+      {/* Esquina cóncava derecha para unir con el marco superior (visible solo en pantallas grandes) */}
+      <svg
+        className="absolute top-0 left-full h-6 w-6 text-white fill-current pointer-events-none hidden sm:block"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M0 24V0H24C13.2548 0 0 13.2548 0 24Z" fill="white" />
+        <path d="M24 0C13.2548 0 0 13.2548 0 24" stroke="rgba(45,106,79,0.1)" strokeWidth="1" fill="none" />
+      </svg>
       
       {/* Brand logo (aligned with logo brand colors) */}
       <Link href="/" className="flex items-center gap-3 group">
-        <div className="bg-gradient-to-br from-[#D95D39] to-[#C24C2A] text-white p-2.5 rounded-2xl border border-white/40 shadow-sm group-hover:scale-105 transition-transform duration-200">
+        <div className="bg-gradient-to-br from-[#2D6A4F] to-[#1B4332] text-white p-2.5 rounded-2xl border border-white/40 shadow-sm group-hover:scale-105 transition-transform duration-200">
           <Utensils size={20} className="stroke-[2.5]" />
         </div>
         <div>
-          <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-[#2B2521] to-[#C24C2A] bg-clip-text text-transparent">
+          <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-[#1A2421] to-[#1B4332] bg-clip-text text-transparent">
             Al Campestre
           </span>
-          <span className="text-[10px] font-extrabold block text-[#D95D39] -mt-1">
+          <span className="text-[10px] font-extrabold block text-[#2D6A4F] -mt-1">
             Envíos a Cuba · MVP
           </span>
         </div>
       </Link>
 
-      {/* Hamburger Toggle Button */}
+      {/* Action Buttons */}
       <div className="flex items-center gap-2">
+        <button
+          onClick={handleToggleAi}
+          className="glass-button p-2.5 rounded-xl border-[#2D6A4F]/15 text-[#2D6A4F] hover:bg-[#2D6A4F]/10 transition-colors flex items-center gap-1.5 cursor-pointer"
+          title="Asistente de Compra con IA"
+        >
+          <Sparkles size={18} className="text-[#2D6A4F] animate-pulse" />
+          <span className="text-xs font-bold hidden sm:inline text-[#1A2421]">Asistente IA</span>
+        </button>
+
         <button
           id="profile-menu-trigger"
           onClick={() => setIsMenuOpen(true)}
-          className="glass-button p-2.5 rounded-xl border-[#D95D39]/15 text-[#D95D39] hover:bg-[#D95D39]/10 transition-colors flex items-center gap-1.5 cursor-pointer"
+          className="glass-button p-2.5 rounded-xl border-[#2D6A4F]/15 text-[#2D6A4F] hover:bg-[#2D6A4F]/10 transition-colors flex items-center gap-1.5 cursor-pointer"
           title="Cambiar de Rol / Configuración"
         >
           <Menu size={18} />
-          <span className="text-xs font-bold hidden sm:inline text-[#2B2521]">Perfiles</span>
+          <span className="text-xs font-bold hidden sm:inline text-[#1A2421]">Perfiles</span>
         </button>
       </div>
 
@@ -76,25 +117,25 @@ export default function NavigationHeader() {
           
           {/* Backdrop Blur Overlay */}
           <div 
-            className="fixed inset-0 bg-[#2B2521]/10 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-[#1A2421]/10 backdrop-blur-xs transition-opacity"
             onClick={closeMenu}
           />
 
           {/* Drawer Content */}
-          <div className="w-full max-w-sm h-full bg-white/95 backdrop-blur-md border-l border-[#8C6239]/10 shadow-2xl p-6 flex flex-col justify-between z-10 animate-slideIn">
+          <div className="w-full max-w-sm h-full bg-white/95 backdrop-blur-md border-l border-[#40916C]/10 shadow-2xl p-6 flex flex-col justify-between z-10 animate-slideIn">
             
             <div>
               {/* Header inside drawer */}
-              <div className="flex justify-between items-center pb-4 border-b border-[#8C6239]/10 mb-6">
+              <div className="flex justify-between items-center pb-4 border-b border-[#40916C]/10 mb-6">
                 <div>
-                  <h3 className="text-base font-extrabold text-[#2B2521] flex items-center gap-1.5">
-                    <Settings size={18} className="text-[#D95D39]" /> Panel de Control
+                  <h3 className="text-base font-extrabold text-[#1A2421] flex items-center gap-1.5">
+                    <Settings size={18} className="text-[#2D6A4F]" /> Panel de Control
                   </h3>
-                  <p className="text-[10px] text-[#2B2521]/50 font-semibold mt-0.5">Intercambia entre perfiles del MVP</p>
+                  <p className="text-[10px] text-[#1A2421]/50 font-semibold mt-0.5">Intercambia entre perfiles del MVP</p>
                 </div>
                 <button
                   onClick={closeMenu}
-                  className="text-[#2B2521]/60 hover:text-[#2B2521] p-1.5 rounded-full hover:bg-[#8C6239]/10 transition-colors cursor-pointer"
+                  className="text-[#1A2421]/60 hover:text-[#1A2421] p-1.5 rounded-full hover:bg-[#40916C]/10 transition-colors cursor-pointer"
                 >
                   <X size={18} />
                 </button>
@@ -107,21 +148,21 @@ export default function NavigationHeader() {
                   onClick={closeMenu}
                   className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
                     activeRole === 'client'
-                      ? 'bg-[#D95D39]/10 border-[#D95D39] shadow-sm text-[#D95D39] font-extrabold'
-                      : 'bg-white/40 border-white/60 hover:bg-white/70 text-[#2B2521]/70 font-semibold'
+                      ? 'bg-[#2D6A4F]/10 border-[#2D6A4F] shadow-sm text-[#2D6A4F] font-extrabold'
+                      : 'bg-white/40 border-white/60 hover:bg-white/70 text-[#1A2421]/70 font-semibold'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#D95D39]/15 text-[#D95D39] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-xl bg-[#2D6A4F]/15 text-[#2D6A4F] flex items-center justify-center">
                       <ShoppingBag size={16} />
                     </div>
                     <div>
                       <p className="text-xs">Cliente (EE.UU.)</p>
-                      <p className="text-[9px] text-[#2B2521]/50 font-normal">Tienda de cara al comprador</p>
+                      <p className="text-[9px] text-[#1A2421]/50 font-normal">Tienda de cara al comprador</p>
                     </div>
                   </div>
                   {activeRole === 'client' && (
-                    <span className="w-2 h-2 rounded-full bg-[#D95D39]" />
+                    <span className="w-2 h-2 rounded-full bg-[#2D6A4F]" />
                   )}
                 </Link>
 
@@ -130,21 +171,21 @@ export default function NavigationHeader() {
                   onClick={closeMenu}
                   className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
                     activeRole === 'admin'
-                      ? 'bg-[#D95D39]/10 border-[#D95D39] shadow-sm text-[#D95D39] font-extrabold'
-                      : 'bg-white/40 border-white/60 hover:bg-white/70 text-[#2B2521]/70 font-semibold'
+                      ? 'bg-[#2D6A4F]/10 border-[#2D6A4F] shadow-sm text-[#2D6A4F] font-extrabold'
+                      : 'bg-white/40 border-white/60 hover:bg-white/70 text-[#1A2421]/70 font-semibold'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#D95D39]/15 text-[#D95D39] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-xl bg-[#2D6A4F]/15 text-[#2D6A4F] flex items-center justify-center">
                       <ShieldCheck size={16} />
                     </div>
                     <div>
                       <p className="text-xs">Administrador</p>
-                      <p className="text-[9px] text-[#2B2521]/50 font-normal">Inventario, despacho e incidencias</p>
+                      <p className="text-[9px] text-[#1A2421]/50 font-normal">Inventario, despacho e incidencias</p>
                     </div>
                   </div>
                   {activeRole === 'admin' && (
-                    <span className="w-2 h-2 rounded-full bg-[#D95D39]" />
+                    <span className="w-2 h-2 rounded-full bg-[#2D6A4F]" />
                   )}
                 </Link>
 
@@ -153,36 +194,36 @@ export default function NavigationHeader() {
                   onClick={closeMenu}
                   className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
                     activeRole === 'delivery'
-                      ? 'bg-[#D95D39]/10 border-[#D95D39] shadow-sm text-[#D95D39] font-extrabold'
-                      : 'bg-white/40 border-white/60 hover:bg-white/70 text-[#2B2521]/70 font-semibold'
+                      ? 'bg-[#2D6A4F]/10 border-[#2D6A4F] shadow-sm text-[#2D6A4F] font-extrabold'
+                      : 'bg-white/40 border-white/60 hover:bg-white/70 text-[#1A2421]/70 font-semibold'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#D95D39]/15 text-[#D95D39] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-xl bg-[#2D6A4F]/15 text-[#2D6A4F] flex items-center justify-center">
                       <Truck size={16} />
                     </div>
                     <div>
                       <p className="text-xs">Repartidor (PWA)</p>
-                      <p className="text-[9px] text-[#2B2521]/50 font-normal">Hitos de entrega offline-first</p>
+                      <p className="text-[9px] text-[#1A2421]/50 font-normal">Hitos de entrega offline-first</p>
                     </div>
                   </div>
                   {activeRole === 'delivery' && (
-                    <span className="w-2 h-2 rounded-full bg-[#D95D39]" />
+                    <span className="w-2 h-2 rounded-full bg-[#2D6A4F]" />
                   )}
                 </Link>
               </div>
             </div>
 
             {/* Bottom Actions inside drawer */}
-            <div className="flex flex-col gap-3 pt-6 border-t border-[#8C6239]/10">
-              <div className="bg-[#D95D39]/5 p-3 rounded-2xl text-[10px] text-[#2B2521]/70 border border-[#D95D39]/5">
-                <span className="font-bold text-[#D95D39] block mb-0.5">Modo de Demostración:</span>
+            <div className="flex flex-col gap-3 pt-6 border-t border-[#40916C]/10">
+              <div className="bg-[#2D6A4F]/5 p-3 rounded-2xl text-[10px] text-[#1A2421]/70 border border-[#2D6A4F]/5">
+                <span className="font-bold text-[#2D6A4F] block mb-0.5">Modo de Demostración:</span>
                 Puedes cambiar de rol en cualquier momento para ver cómo se comunican las pantallas entre sí en tiempo real.
               </div>
 
               <button
                 onClick={handleReset}
-                className="glass-button w-full py-2.5 flex items-center justify-center gap-2 text-xs font-bold border-white/50 text-[#2B2521] hover:bg-rose-500/10 hover:text-rose-700 hover:border-rose-500/25 cursor-pointer"
+                className="glass-button w-full py-2.5 flex items-center justify-center gap-2 text-xs font-bold border-white/50 text-[#1A2421] hover:bg-rose-500/10 hover:text-rose-700 hover:border-rose-500/25 cursor-pointer"
               >
                 <RotateCcw size={14} />
                 Reiniciar Datos del MVP

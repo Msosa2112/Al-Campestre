@@ -37,7 +37,7 @@ export default function AdminLayout({
       <div className="glass-panel p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
           <h1 className="text-xl font-extrabold text-emerald-950 flex items-center gap-2">
-            <Key size={20} className="text-[#D95D39]" /> Panel de Administración
+            <Key size={20} className="text-[#2D6A4F]" /> Panel de Administración
           </h1>
           <p className="text-xs text-emerald-950/60 font-semibold">
             Monitoreo en tiempo real del restaurante, despachos de choferes y reembolsos.

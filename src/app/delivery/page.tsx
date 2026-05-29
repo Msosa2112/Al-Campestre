@@ -10,6 +10,10 @@ import {
   getProducts,
 } from '@/lib/dbMock';
 import { Truck, Check, AlertCircle, Scan, MessageCircle, RefreshCw, Lock, LogOut, Sparkles, Phone } from 'lucide-react';
+import { MapPin, User, CheckCircle2, Navigation, AlertTriangle, CloudOff, ChevronRight, X } from 'lucide-react';
+import { CustomSelect } from "@/components/ui/custom-select";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+
 
 interface ScannedPicking {
   [productId: string]: number; // productId -> cantidad validada
@@ -237,13 +241,13 @@ export default function DeliveryApp() {
   if (!isLoggedIn) {
     return (
       <div className="flex-grow flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-sm premium-card p-6 bg-white shadow-xl flex flex-col gap-6 border-t-4 border-[#D95D39]">
+        <div className="w-full max-w-sm premium-card p-6 bg-white shadow-xl flex flex-col gap-6 border-t-4 border-[#2D6A4F]">
           <div className="text-center">
-            <div className="w-12 h-12 bg-[#FAF9F5] text-[#D95D39] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner border border-[#D95D39]/10">
+            <div className="w-12 h-12 bg-[#FFFFFF] text-[#2D6A4F] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner border border-[#2D6A4F]/10">
               <Lock size={22} />
             </div>
-            <h2 className="text-lg font-extrabold text-[#2B2521]">Acceso de Repartidor</h2>
-            <p className="text-xs text-[#2B2521]/60 mt-1">Identifícate con tus credenciales de ruta</p>
+            <h2 className="text-lg font-extrabold text-[#1A2421]">Acceso de Repartidor</h2>
+            <p className="text-xs text-[#1A2421]/60 mt-1">Identifícate con tus credenciales de ruta</p>
           </div>
 
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -255,7 +259,7 @@ export default function DeliveryApp() {
             )}
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2B2521]/70">Usuario (Nombre):</label>
+              <label className="text-xs font-bold text-[#1A2421]/70">Usuario (Nombre):</label>
               <input
                 type="text"
                 required
@@ -267,7 +271,7 @@ export default function DeliveryApp() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2B2521]/70">PIN de Seguridad (4 dígitos):</label>
+              <label className="text-xs font-bold text-[#1A2421]/70">PIN de Seguridad (4 dígitos):</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -281,15 +285,15 @@ export default function DeliveryApp() {
               />
             </div>
 
-            <button
+            <InteractiveHoverButton
               type="submit"
-              className="btn-primary w-full py-4 text-sm font-bold text-white rounded-xl shadow-lg bg-gradient-to-r from-[#D95D39] to-[#C24C2A] hover:brightness-105 active:scale-95 transition-all mt-2 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-4 text-sm mt-2"
             >
               INGRESAR AL PANEL
-            </button>
+            </InteractiveHoverButton>
           </form>
 
-          <div className="text-[10px] text-center text-[#2B2521]/50 bg-[#FAF9F5] p-2.5 rounded-xl border border-dashed border-[#8C6239]/25 flex items-center justify-center gap-1.5">
+          <div className="text-[10px] text-center text-[#1A2421]/50 bg-[#FFFFFF] p-2.5 rounded-xl border border-dashed border-[#40916C]/25 flex items-center justify-center gap-1.5">
             <Sparkles size={14} className="text-amber-500 flex-shrink-0" />
             <span><span className="font-bold">Demostración:</span> Ingresa <span className="font-bold">"Juan"</span> y PIN <span className="font-bold">"1111"</span>, o <span className="font-bold">"Yusniel"</span> y PIN <span className="font-bold">"2222"</span>.</span>
           </div>
@@ -317,11 +321,11 @@ export default function DeliveryApp() {
 
       <div className="premium-card p-4 bg-white flex justify-between items-center shadow-md">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#FAF9F5] flex items-center justify-center border border-[#8C6239]/10">
-            <Truck size={18} className="text-[#D95D39]" />
+          <div className="w-8 h-8 rounded-full bg-[#FFFFFF] flex items-center justify-center border border-[#40916C]/10">
+            <Truck size={18} className="text-[#2D6A4F]" />
           </div>
           <div>
-            <h3 className="text-xs font-extrabold text-[#2B2521]">{currentDriver?.name}</h3>
+            <h3 className="text-xs font-extrabold text-[#1A2421]">{currentDriver?.name}</h3>
             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
               currentDriver?.status === 'Disponible' 
                 ? 'bg-green-100 text-green-800' 
@@ -336,7 +340,7 @@ export default function DeliveryApp() {
         
         <button
           onClick={handleLogout}
-          className="text-[#2B2521]/60 hover:text-red-600 p-2 rounded-xl hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
+          className="text-[#1A2421]/60 hover:text-red-600 p-2 rounded-xl hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
           title="Cerrar Sesión"
         >
           <LogOut size={16} />
@@ -361,33 +365,33 @@ export default function DeliveryApp() {
         <div className="flex-1 flex flex-col gap-4">
           
           {/* Tarjeta de Destinatario y Dirección */}
-          <div className="premium-card p-6 bg-white shadow-lg flex flex-col gap-4 border border-[#8C6239]/10">
+          <div className="premium-card p-6 bg-white shadow-lg flex flex-col gap-4 border border-[#40916C]/10">
             <div>
-              <span className="text-[10px] font-extrabold text-[#D95D39] bg-[#D95D39]/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
+              <span className="text-[10px] font-extrabold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
                 {activeOrder.status === 'assigned' ? 'Listo para Despacho' : 'Pedido en Camino'}
               </span>
-              <h2 className="text-xl font-extrabold text-[#2B2521] mt-2">Pedido: {activeOrder.id}</h2>
+              <h2 className="text-xl font-extrabold text-[#1A2421] mt-2">Pedido: {activeOrder.id}</h2>
             </div>
             
-            <div className="bg-[#FAF9F5] p-4 rounded-2xl flex flex-col gap-3 border border-[#8C6239]/10">
+            <div className="bg-[#FFFFFF] p-4 rounded-2xl flex flex-col gap-3 border border-[#40916C]/10">
               <div>
-                <span className="text-[10px] font-bold text-[#2B2521]/50 uppercase tracking-wider block">Destinatario (Cuba):</span>
-                <span className="text-lg font-extrabold text-[#2B2521] leading-tight block mt-0.5">{activeOrder.family_name}</span>
+                <span className="text-[10px] font-bold text-[#1A2421]/50 uppercase tracking-wider block">Destinatario (Cuba):</span>
+                <span className="text-lg font-extrabold text-[#1A2421] leading-tight block mt-0.5">{activeOrder.family_name}</span>
               </div>
               
               <div>
-                <span className="text-[10px] font-bold text-[#2B2521]/50 uppercase tracking-wider block">Teléfono de Contacto:</span>
+                <span className="text-[10px] font-bold text-[#1A2421]/50 uppercase tracking-wider block">Teléfono de Contacto:</span>
                 <a 
                   href={`tel:${activeOrder.family_phone}`}
-                  className="text-base font-bold text-[#D95D39] hover:underline flex items-center gap-1.5 mt-0.5"
+                  className="text-base font-bold text-[#2D6A4F] hover:underline flex items-center gap-1.5 mt-0.5"
                 >
                   <Phone size={14} className="inline mr-1 align-middle" /> {activeOrder.family_phone}
                 </a>
               </div>
 
               <div>
-                <span className="text-[10px] font-bold text-[#2B2521]/50 uppercase tracking-wider block">Dirección de Entrega:</span>
-                <span className="text-sm font-bold text-[#2B2521] leading-relaxed block mt-0.5">{activeOrder.family_address}</span>
+                <span className="text-[10px] font-bold text-[#1A2421]/50 uppercase tracking-wider block">Dirección de Entrega:</span>
+                <span className="text-sm font-bold text-[#1A2421] leading-relaxed block mt-0.5">{activeOrder.family_address}</span>
               </div>
             </div>
           </div>
@@ -395,8 +399,8 @@ export default function DeliveryApp() {
           {/* Sección de validación de picking (solo si está en base) */}
           {activeOrder.status === 'assigned' && (
             <div className="premium-card p-5 bg-white shadow-md flex flex-col gap-3">
-              <div className="flex justify-between items-center pb-2 border-b border-[#2B2521]/5">
-                <h3 className="text-xs font-extrabold text-[#2B2521] uppercase tracking-wider">Picking de Almacén</h3>
+              <div className="flex justify-between items-center pb-2 border-b border-[#1A2421]/5">
+                <h3 className="text-xs font-extrabold text-[#1A2421] uppercase tracking-wider">Picking de Almacén</h3>
                 {pickingCompleted && (
                   <span className="text-[10px] text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-full border border-green-200 flex items-center gap-0.5">
                     ✓ Validado
@@ -414,14 +418,14 @@ export default function DeliveryApp() {
                       className={`p-3 rounded-2xl border text-xs flex items-center justify-between transition-colors ${
                         isSatisfied 
                           ? 'bg-green-50 border-green-200 text-green-800' 
-                          : 'bg-[#FAF9F5] border-[#8C6239]/10 text-[#2B2521]'
+                          : 'bg-[#FFFFFF] border-[#40916C]/10 text-[#1A2421]'
                       }`}
                     >
                       <div>
                         <p className="font-extrabold">{item.productName}</p>
-                        <p className="text-[10px] text-[#2B2521]/60 mt-0.5">Cantidad total: {item.quantity} lbs</p>
+                        <p className="text-[10px] text-[#1A2421]/60 mt-0.5">Cantidad total: {item.quantity} lbs</p>
                       </div>
-                      <span className="font-mono font-extrabold text-sm text-[#2B2521]">
+                      <span className="font-mono font-extrabold text-sm text-[#1A2421]">
                         {scanned} / {item.quantity}
                       </span>
                     </div>
@@ -441,31 +445,42 @@ export default function DeliveryApp() {
 
               {/* Lector simplificado de códigos de barra para picking */}
               {!pickingCompleted && (
-                <div className="bg-[#2B2521] p-4 rounded-2xl flex flex-col gap-2.5 text-white">
+                <div className="bg-[#1A2421] p-4 rounded-2xl flex flex-col gap-2.5 text-white">
                   <h4 className="text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Scan size={12} className="text-[#D95D39]" />
+                    <Scan size={12} className="text-[#2D6A4F]" />
                     Simular Escaneo del Producto
                   </h4>
-                  <select
-                    onChange={e => handleSimulatePickingScan(e.target.value)}
-                    defaultValue=""
-                    className="bg-white text-[#2B2521] text-xs rounded-xl p-2.5 outline-none font-bold w-full"
-                  >
-                    <option value="" disabled>-- Selecciona un código de barras --</option>
-                    <optgroup label="Productos en este Pedido">
-                      {activeOrder.items.map(item => {
-                        const productsList = JSON.parse(localStorage.getItem('campestre_products') || '[]');
-                        const prod = productsList.find((p: { id: string }) => p.id === item.productId);
-                        return prod ? (
-                          <option key={item.productId} value={prod.barcode}>{item.productName} ({prod.barcode})</option>
-                        ) : null;
-                      })}
-                    </optgroup>
-                    <optgroup label="Producto Errático (Generará Alerta)">
-                      <option value="7501020304082">Aceite de Girasol (Código Incorrecto)</option>
-                      <option value="7501020304099">Leche en Polvo (Código Incorrecto)</option>
-                    </optgroup>
-                  </select>
+                  {(() => {
+                    const productsList = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('campestre_products') || '[]') : [];
+                    const orderItems = activeOrder.items.map(item => {
+                      const prod = productsList.find((p: { id: string }) => p.id === item.productId);
+                      return prod ? { value: prod.barcode, label: `${item.productName} (${prod.barcode})` } : null;
+                    }).filter(Boolean) as { value: string; label: string }[];
+
+                    const pickingOptions = [
+                      {
+                        label: "Productos en este Pedido",
+                        options: orderItems
+                      },
+                      {
+                        label: "Producto Errático (Generará Alerta)",
+                        options: [
+                          { value: "7501020304082", label: "Aceite de Girasol (Código Incorrecto)" },
+                          { value: "7501020304099", label: "Leche en Polvo (Código Incorrecto)" }
+                        ]
+                      }
+                    ];
+
+                    return (
+                      <CustomSelect
+                        options={pickingOptions}
+                        value=""
+                        onChange={handleSimulatePickingScan}
+                        placeholder="-- Selecciona un código de barras --"
+                        triggerClassName="text-xs font-bold bg-white text-[#1A2421] h-10 border-transparent focus:border-transparent focus:ring-0"
+                      />
+                    );
+                  })()}
                 </div>
               )}
             </div>
@@ -474,29 +489,23 @@ export default function DeliveryApp() {
           {/* BOTÓN DE ACCIÓN GIGANTE (Fácil acceso con pulgar en móvil) */}
           <div className="mt-auto pt-4 flex flex-col gap-3">
             {activeOrder.status === 'assigned' && (
-              <button
+              <InteractiveHoverButton
                 onClick={handleStartRoute}
                 disabled={!pickingCompleted}
-                className={`w-full py-5 text-sm font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all cursor-pointer ${
-                  pickingCompleted
-                    ? 'bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white'
-                    : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'
-                }`}
+                className="w-full text-sm"
               >
-                <Truck size={18} />
                 INICIAR RUTA (NOTIFICAR WHATSAPP)
-              </button>
+              </InteractiveHoverButton>
             )}
 
             {activeOrder.status === 'in_transit' && (
               <div className="flex flex-col gap-3">
-                <button
+                <InteractiveHoverButton
                   onClick={handleDeliverOrder}
-                  className="w-full py-5 text-sm font-extrabold text-white bg-gradient-to-r from-green-600 to-green-500 rounded-2xl shadow-lg shadow-green-600/25 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full text-sm"
                 >
-                  <Check size={18} className="stroke-[3]" />
                   MARCAR COMO ENTREGADO
-                </button>
+                </InteractiveHoverButton>
                 
                 <button
                   onClick={() => setShowIncidentModal(true)}
@@ -511,10 +520,10 @@ export default function DeliveryApp() {
 
         </div>
       ) : (
-        <div className="premium-card p-10 text-center bg-white border border-[#8C6239]/10 flex flex-col items-center justify-center min-h-[340px]">
-          <Truck size={48} className="text-[#D95D39]/40 mb-4 animate-bounce" />
-          <h3 className="text-base font-extrabold text-[#2B2521]">Sin Órdenes Asignadas</h3>
-          <p className="text-xs text-[#2B2521]/60 mt-2 max-w-[240px] leading-relaxed">
+        <div className="premium-card p-10 text-center bg-white border border-[#40916C]/10 flex flex-col items-center justify-center min-h-[340px]">
+          <Truck size={48} className="text-[#2D6A4F]/40 mb-4 animate-bounce" />
+          <h3 className="text-base font-extrabold text-[#1A2421]">Sin Órdenes Asignadas</h3>
+          <p className="text-xs text-[#1A2421]/60 mt-2 max-w-[240px] leading-relaxed">
             Actualmente no tienes pedidos pendientes de despacho en tu ruta activa. Contacta al Administrador de base para asignar pedidos.
           </p>
         </div>
@@ -522,16 +531,16 @@ export default function DeliveryApp() {
 
       {/* Modal de Reporte de Incidencias */}
       {showIncidentModal && (
-        <div className="fixed inset-0 bg-[#2B2521]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-[#1A2421]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="premium-card w-full max-w-sm p-6 bg-white shadow-2xl relative border-t-4 border-red-500">
-            <h3 className="text-sm font-extrabold text-[#2B2521] flex items-center gap-1.5 mb-3">
+            <h3 className="text-sm font-extrabold text-[#1A2421] flex items-center gap-1.5 mb-3">
               <AlertCircle size={16} className="text-red-500" />
               Reportar Incidencia de Entrega
             </h3>
             
             <form onSubmit={handleReportIncident} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-[#2B2521]/70">Escribe el motivo del fallo:</label>
+                <label className="text-xs font-bold text-[#1A2421]/70">Escribe el motivo del fallo:</label>
                 <textarea
                   required
                   value={incidentReason}
@@ -549,12 +558,12 @@ export default function DeliveryApp() {
                 >
                   Atrás
                 </button>
-                <button
+                <InteractiveHoverButton
                   type="submit"
-                  className="btn-primary font-bold text-xs py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-md shadow-red-500/10"
+                  className="py-3 text-xs"
                 >
                   Registrar Fallo
-                </button>
+                </InteractiveHoverButton>
               </div>
             </form>
           </div>

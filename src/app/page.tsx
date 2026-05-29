@@ -13,6 +13,35 @@ import {
 } from '@/lib/dbMock';
 import { Plus, User, Users, ShoppingCart, Check, CreditCard, ArrowRight, Sparkles, Home, Phone, MapPin, X, Search, ChevronDown, ClipboardList, Send, Bot, TrendingUp, Flame, CheckCircle, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { GooeyInput } from "@/components/ui/gooey-input";
+import { CustomSelect } from "@/components/ui/custom-select";
+
+const provinceOptions = [
+  { value: "La Habana", label: "La Habana" },
+  { value: "Artemisa", label: "Artemisa" },
+  { value: "Mayabeque", label: "Mayabeque" },
+];
+
+const habanaMunicipios = [
+  { value: "Plaza de la Revolución", label: "Plaza de la Revolución" },
+  { value: "Playa", label: "Playa" },
+  { value: "Centro Habana", label: "Centro Habana" },
+  { value: "Habana Vieja", label: "Habana Vieja" },
+  { value: "Boyeros", label: "Boyeros" },
+];
+
+const artemisaMunicipios = [
+  { value: "San Antonio de los Baños", label: "San Antonio de los Baños" },
+  { value: "Bauta", label: "Bauta" },
+];
+
+const mayabequeMunicipios = [
+  { value: "Bejucal", label: "Bejucal" },
+  { value: "San José de las Lajas", label: "San José de las Lajas" },
+];
+
+
 
 export default function Storefront() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,6 +57,7 @@ export default function Storefront() {
   const [deliveryProvince, setDeliveryProvince] = useState('La Habana');
   const [deliveryMunicipality, setDeliveryMunicipality] = useState('Plaza de la Revolución');
   const [showZoneModal, setShowZoneModal] = useState(false);
+  const [isMobileFamilyOpen, setIsMobileFamilyOpen] = useState(false);
   
   // Hero Promotion Index
   const [activePromoIndex, setActivePromoIndex] = useState(0);
@@ -101,6 +131,44 @@ export default function Storefront() {
     const interval = setInterval(loadData, 3000);
     return () => clearInterval(interval);
   }, [selectedFamilyId]);
+
+  useEffect(() => {
+    const handleToggle = () => {
+      setIsAiWidgetOpen(prev => !prev);
+    };
+    window.addEventListener('toggle-ai-assistant', handleToggle);
+    
+    if (typeof window !== 'undefined') {
+      const shouldOpen = sessionStorage.getItem('open-ai-assistant');
+      if (shouldOpen === 'true') {
+        setIsAiWidgetOpen(true);
+        sessionStorage.removeItem('open-ai-assistant');
+      }
+
+      // Detectar si venimos con parámetros de búsqueda o pedidos desde otras páginas
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('search') === 'true') {
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          setTimeout(() => {
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            searchInput.focus();
+          }, 500);
+        }
+      } else if (searchParams.get('orders') === 'true') {
+        const ordersSection = document.getElementById('orders-tracking');
+        if (ordersSection) {
+          setTimeout(() => {
+            ordersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 500);
+        }
+      }
+    }
+    
+    return () => {
+      window.removeEventListener('toggle-ai-assistant', handleToggle);
+    };
+  }, []);
 
   useEffect(() => {
     if (isAiWidgetOpen) {
@@ -326,21 +394,21 @@ export default function Storefront() {
             title: "Envía Alimentos Frescos y Abarrotes directos a Cuba",
             desc: "Compra combos de carnes, granos y abarrotes desde EE.UU. con entrega garantizada en la puerta de tus familiares. Pago rápido en 1-clic con Stripe.",
             badge: "Entrega en 24-48h",
-            gradient: "from-[#D95D39]/95 to-[#8C6239]/95",
+            gradient: "from-[#2D6A4F]/95 to-[#40916C]/95",
             image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
           },
           {
             title: "Combos de Carne Premium con 15% OFF",
             desc: "Lomo de cerdo fresco, pollo entero y picadillo de res seleccionados directamente en el campo. Sabor criollo garantizado.",
             badge: "Súper Oferta",
-            gradient: "from-[#C24C2A]/95 to-[#D95D39]/95",
+            gradient: "from-[#1B4332]/95 to-[#2D6A4F]/95",
             image: "https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=800&q=80"
           },
           {
             title: "Nuevas Zonas de Cobertura en Provincias",
             desc: "Ya entregamos en San Antonio de los Baños, Bauta, Bejucal y San José de las Lajas. Cobertura ampliada para tu tranquilidad.",
             badge: "Cobertura Ampliada",
-            gradient: "from-[#8C6239]/95 to-[#EADEC9]/95",
+            gradient: "from-[#40916C]/95 to-[#D8F3DC]/95",
             image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800&q=80"
           }
         ].map((promo, idx) => (
@@ -380,34 +448,22 @@ export default function Storefront() {
         </div>
       </div>
 
-      {/* Botón flotante secundario para el Asistente de IA (Comercio Conversacional) */}
-      <button
-        onClick={() => setIsAiWidgetOpen(prev => !prev)}
-        className={`fixed right-4 sm:right-6 z-40 bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white rounded-full shadow-xl border border-white/30 hover:scale-105 transition-all duration-300 flex items-center justify-center sm:justify-start gap-2 font-bold text-xs w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-3.5 cursor-pointer ${
-          cart.length > 0 && !isCartOpen 
-            ? 'bottom-[140px] md:bottom-6' 
-            : 'bottom-[80px] md:bottom-6'
-        }`}
-        title="Ordenar usando Inteligencia Artificial"
-      >
-        <Sparkles size={18} className="animate-pulse text-[#FAF9F5] shrink-0" />
-        <span className="hidden sm:inline">¿Pedir con Asistente IA?</span>
-      </button>
+
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         
         {/* Sidebar: Familiar Recibidor */}
-        <div className="lg:col-span-1 flex flex-col gap-4">
+        <div className="hidden lg:flex lg:col-span-1 flex-col gap-4">
           <div className="glass-panel p-5 flex flex-col gap-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold text-[#2B2521] flex items-center gap-2">
-                <User size={18} className="text-[#8C6239]" />
+              <h2 className="text-lg font-bold text-[#1A2421] flex items-center gap-2">
+                <User size={18} className="text-[#40916C]" />
                 ¿Quién Recibe en Cuba?
               </h2>
               <button 
                 onClick={() => setShowOnboarding(true)}
-                className="bg-[#D95D39]/10 hover:bg-[#D95D39]/20 text-[#D95D39] p-1.5 rounded-xl transition cursor-pointer"
+                className="bg-[#2D6A4F]/10 hover:bg-[#2D6A4F]/20 text-[#2D6A4F] p-1.5 rounded-xl transition cursor-pointer"
                 title="Agregar Familiar"
               >
                 <Plus size={16} />
@@ -415,14 +471,14 @@ export default function Storefront() {
             </div>
 
             {families.length === 0 ? (
-              <div className="text-center py-6 bg-white/30 rounded-2xl border border-dashed border-[#8C6239]/20">
-                <p className="text-xs text-[#2B2521]/60 mb-3">No tienes familiares guardados aún.</p>
-                <button
+              <div className="text-center py-6 bg-white/30 rounded-2xl border border-dashed border-[#40916C]/20">
+                <p className="text-xs text-[#1A2421]/60 mb-3">No tienes familiares guardados aún.</p>
+                <InteractiveHoverButton
                   onClick={() => setShowOnboarding(true)}
-                  className="glass-button text-xs px-4 py-2 font-bold cursor-pointer"
+                  className="text-xs"
                 >
                   Registrar Primer Recibidor
-                </button>
+                </InteractiveHoverButton>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -432,17 +488,17 @@ export default function Storefront() {
                     onClick={() => setSelectedFamilyId(fam.id)}
                     className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                       selectedFamilyId === fam.id
-                        ? 'bg-[#D95D39]/10 border-[#D95D39] shadow-sm'
+                        ? 'bg-[#2D6A4F]/10 border-[#2D6A4F] shadow-sm'
                         : 'bg-white/40 border-white/55 hover:bg-white/70'
                     }`}
                   >
                     <div>
-                      <p className="text-sm font-bold text-[#2B2521]">{fam.nickname}</p>
-                      <p className="text-xs text-[#2B2521]/60 truncate max-w-[180px]">{fam.full_name}</p>
-                      <p className="text-xs text-[#2B2521]/50 mt-1">{fam.municipality}, {fam.province}</p>
+                      <p className="text-sm font-bold text-[#1A2421]">{fam.nickname}</p>
+                      <p className="text-xs text-[#1A2421]/60 truncate max-w-[180px]">{fam.full_name}</p>
+                      <p className="text-xs text-[#1A2421]/50 mt-1">{fam.municipality}, {fam.province}</p>
                     </div>
                     {selectedFamilyId === fam.id && (
-                      <span className="bg-[#D95D39] text-white p-1 rounded-full text-xs">
+                      <span className="bg-[#2D6A4F] text-white p-1 rounded-full text-xs">
                         <Check size={12} className="stroke-[3]" />
                       </span>
                     )}
@@ -452,14 +508,14 @@ export default function Storefront() {
             )}
 
             {activeFamily && (
-              <div className="bg-white/60 p-3.5 rounded-2xl text-xs flex flex-col gap-2 border border-[#8C6239]/10">
-                <p className="font-bold text-[#8C6239] mb-1">Detalles de Entrega:</p>
-                <p className="flex items-start gap-1.5 text-[#2B2521]">
-                  <MapPin size={12} className="mt-0.5 text-[#8C6239] flex-shrink-0" />
+              <div className="bg-white/60 p-3.5 rounded-2xl text-xs flex flex-col gap-2 border border-[#40916C]/10">
+                <p className="font-bold text-[#40916C] mb-1">Detalles de Entrega:</p>
+                <p className="flex items-start gap-1.5 text-[#1A2421]">
+                  <MapPin size={12} className="mt-0.5 text-[#40916C] flex-shrink-0" />
                   <span>{activeFamily.address}, {activeFamily.municipality}, {activeFamily.province}</span>
                 </p>
-                <p className="flex items-center gap-1.5 text-[#2B2521]">
-                  <Phone size={12} className="text-[#8C6239] flex-shrink-0" />
+                <p className="flex items-center gap-1.5 text-[#1A2421]">
+                  <Phone size={12} className="text-[#40916C] flex-shrink-0" />
                   <span>{activeFamily.phone}</span>
                 </p>
               </div>
@@ -471,53 +527,111 @@ export default function Storefront() {
         <div className="lg:col-span-3 flex flex-col gap-6" id="catalog-section">
           
           {/* Barra de Búsqueda y Selector de Zona para Móviles y Escritorio */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            {/* Buscador */}
-            <div className="flex-1 relative">
-              <input
-                type="text"
-                placeholder="Buscar productos (ej. pollo, arroz, lomo)..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="w-full glass-input pl-10 pr-4 py-2.5 text-xs font-semibold focus:bg-white"
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Buscador Gooey */}
+              <GooeyInput
                 id="search-input"
+                placeholder="Buscar productos (ej. pollo, lomo)..."
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+                collapsedWidth={160}
+                expandedWidth={300}
+                expandedOffset={48}
+                className="flex-1 justify-start"
+                classNames={{
+                  trigger: "bg-[#FFFFFF] border border-[#40916C]/20 text-[#1A2421] rounded-full h-10 shadow-sm",
+                  input: "text-[#1A2421] placeholder:text-[#1A2421]/45 h-full",
+                  bubbleSurface: "bg-[#2D6A4F] text-[#FFFFFF] shadow-md border border-[#1B4332]/10"
+                }}
               />
-              <Search className="absolute left-3.5 top-3.5 text-[#8C6239] w-4 h-4" />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3.5 top-3.5 text-[#2B2521]/60 hover:text-red-500 text-xs font-bold"
-                >
-                  ✕
-                </button>
-              )}
+
+              {/* Selector de Provincia / Municipio */}
+              <button
+                onClick={() => setShowZoneModal(true)}
+                className="glass-button px-4 py-2.5 flex items-center justify-between gap-2 border-[#40916C]/15 text-[#40916C] font-bold text-xs cursor-pointer min-w-[200px]"
+              >
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={14} className="text-[#40916C]" />
+                  <span>Envíos a:</span>
+                  <span className="text-[#1A2421] font-extrabold">{deliveryMunicipality}, {deliveryProvince}</span>
+                </span>
+                <ChevronDown size={14} className="text-[#40916C]" />
+              </button>
             </div>
 
-            {/* Selector de Provincia / Municipio */}
-            <button
-              onClick={() => setShowZoneModal(true)}
-              className="glass-button px-4 py-2.5 flex items-center justify-between gap-2 border-[#8C6239]/15 text-[#8C6239] font-bold text-xs cursor-pointer min-w-[200px]"
-            >
-              <span className="flex items-center gap-1.5">
-                <MapPin size={14} className="text-[#8C6239]" />
-                <span>Envíos a:</span>
-                <span className="text-[#2B2521] font-extrabold">{deliveryMunicipality}, {deliveryProvince}</span>
-              </span>
-              <ChevronDown size={14} className="text-[#8C6239]" />
-            </button>
+            {/* Selector de Recibidor (Solo visible en móviles) */}
+            <div className="lg:hidden w-full relative">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsMobileFamilyOpen(!isMobileFamilyOpen)}
+                  className="flex-1 glass-button px-4 py-2.5 flex items-center justify-between gap-2 border-[#40916C]/15 text-[#40916C] font-bold text-xs cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 truncate">
+                    <User size={14} className="text-[#40916C] flex-shrink-0" />
+                    <span>Recibe en Cuba:</span>
+                    <span className="text-[#1A2421] font-extrabold truncate">
+                      {activeFamily ? activeFamily.nickname : 'Seleccionar...'}
+                    </span>
+                  </span>
+                  <ChevronDown size={14} className="text-[#40916C] flex-shrink-0" />
+                </button>
+                <button
+                  onClick={() => setShowOnboarding(true)}
+                  className="bg-[#2D6A4F]/10 hover:bg-[#2D6A4F]/20 text-[#2D6A4F] p-2.5 rounded-xl border border-[#40916C]/15 transition cursor-pointer flex-shrink-0 flex items-center justify-center"
+                  title="Agregar Familiar"
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+
+              {activeFamily && (
+                <p className="text-[10px] text-[#1A2421]/60 mt-1 px-1 truncate">
+                  📍 {activeFamily.address}, {activeFamily.municipality} | 📞 {activeFamily.phone}
+                </p>
+              )}
+
+              {isMobileFamilyOpen && families.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white/95 backdrop-blur-md border border-[#40916C]/15 shadow-lg rounded-2xl p-2 z-35 flex flex-col gap-1 max-h-60 overflow-y-auto">
+                  {families.map(fam => (
+                    <button
+                      key={fam.id}
+                      onClick={() => {
+                        setSelectedFamilyId(fam.id);
+                        setIsMobileFamilyOpen(false);
+                      }}
+                      className={`w-full p-2.5 rounded-xl text-left transition-colors flex items-center justify-between text-xs cursor-pointer ${
+                        selectedFamilyId === fam.id
+                          ? 'bg-[#2D6A4F]/10 text-[#2D6A4F] font-bold'
+                          : 'hover:bg-[#2D6A4F]/5 text-[#1A2421]/80 font-medium'
+                      }`}
+                    >
+                      <div className="truncate pr-4">
+                        <p className="font-bold">{fam.nickname}</p>
+                        <p className="text-[10px] opacity-75 truncate">{fam.full_name} · {fam.municipality}</p>
+                      </div>
+                      {selectedFamilyId === fam.id && (
+                        <Check size={12} className="stroke-[3] text-[#2D6A4F]" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Header & Cart Button */}
           <div className="flex justify-between items-center mt-2">
-            <h2 className="text-xl font-extrabold text-[#2B2521]">Catálogo de Productos</h2>
+            <h2 className="text-xl font-extrabold text-[#1A2421]">Catálogo de Productos</h2>
             <button
               onClick={() => setIsCartOpen(true)}
-              className="glass-button px-4 py-2.5 hidden md:flex items-center gap-2 relative border-[#8C6239]/15 text-[#8C6239] cursor-pointer"
+              className="glass-button px-4 py-2.5 hidden md:flex items-center gap-2 relative border-[#40916C]/15 text-[#40916C] cursor-pointer"
             >
               <ShoppingCart size={16} />
               <span className="font-bold text-sm">Mi Carrito</span>
               {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#D95D39] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
+                <span className="absolute -top-2 -right-2 bg-[#2D6A4F] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
                   {cart.reduce((sum, i) => sum + i.quantity, 0)}
                 </span>
               )}
@@ -527,8 +641,8 @@ export default function Storefront() {
           {/* Más Vendidos (Best Sellers Section) - Only shown on "Todos" category when not searching */}
           {selectedCategory === 'Todos' && searchQuery === '' && (
             <div className="flex flex-col gap-3">
-              <h3 className="text-sm font-extrabold text-[#8C6239] flex items-center gap-1.5">
-                <TrendingUp size={16} className="text-[#D95D39]" /> Productos Más Vendidos
+              <h3 className="text-sm font-extrabold text-[#40916C] flex items-center gap-1.5">
+                <TrendingUp size={16} className="text-[#2D6A4F]" /> Productos Más Vendidos
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -539,12 +653,12 @@ export default function Storefront() {
                     const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                     return (
-                      <div key={`best-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border-[#8C6239]/10 bg-[#FAF9F5]/40">
-                        <span className="absolute top-2 left-2 bg-[#D95D39] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full z-10 shadow-sm animate-pulse">
+                      <div key={`best-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border-[#40916C]/10 bg-[#FFFFFF]/40">
+                        <span className="absolute top-2 left-2 bg-[#2D6A4F] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full z-10 shadow-sm animate-pulse">
                           MÁS VENDIDO
                         </span>
                         
-                        <div className="h-32 w-full overflow-hidden bg-[#8C6239]/5 relative">
+                        <div className="h-32 w-full overflow-hidden bg-[#40916C]/5 relative">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 
                             src={product.image_url} 
@@ -555,19 +669,19 @@ export default function Storefront() {
 
                         <div className="p-3.5 flex-1 flex flex-col justify-between gap-3">
                           <div>
-                            <h4 className="font-bold text-sm text-[#2B2521] leading-tight">{product.name}</h4>
-                            <p className="text-[10px] text-[#2B2521]/60 line-clamp-1 mt-0.5">{product.description}</p>
+                            <h4 className="font-bold text-sm text-[#1A2421] leading-tight">{product.name}</h4>
+                            <p className="text-[10px] text-[#1A2421]/60 line-clamp-1 mt-0.5">{product.description}</p>
                           </div>
                           
                           <div className="flex justify-between items-center">
-                            <span className="text-sm font-extrabold text-[#2B2521]">${product.price.toFixed(2)}</span>
-                            <button
+                            <span className="text-sm font-extrabold text-[#1A2421]">${product.price.toFixed(2)}</span>
+                            <InteractiveHoverButton
                               onClick={() => addToCart(product)}
                               disabled={remainingStock <= 0}
-                              className="glass-button-primary px-3.5 py-1.5 text-[10px] font-bold cursor-pointer"
+                              className="text-[10px]"
                             >
                               Agregar
-                            </button>
+                            </InteractiveHoverButton>
                           </div>
                         </div>
                       </div>
@@ -579,7 +693,7 @@ export default function Storefront() {
 
           {/* Categories Selector Pills */}
           <div className="flex flex-col gap-2">
-            <h3 className="text-xs font-bold text-[#2B2521]/70 uppercase tracking-wider">Categorías de Envíos:</h3>
+            <h3 className="text-xs font-bold text-[#1A2421]/70 uppercase tracking-wider">Categorías de Envíos:</h3>
             <div className="glass-track flex items-center p-1 w-full overflow-x-auto whitespace-nowrap scrollbar-none">
               {['Todos', 'Carnes', 'Granos', 'Lácteos', 'Abarrotes'].map(cat => (
                 <button
@@ -588,7 +702,7 @@ export default function Storefront() {
                   className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     selectedCategory === cat
                       ? 'glass-button-segmented-active'
-                      : 'text-[#2B2521]/60 hover:text-[#2B2521] px-4'
+                      : 'text-[#1A2421]/60 hover:text-[#1A2421] px-4'
                   }`}
                 >
                   {cat}
@@ -615,50 +729,45 @@ export default function Storefront() {
                 return (
                   <div key={product.id} className="glass-card flex flex-col overflow-hidden relative">
                     {/* Image wrapper */}
-                    <div className="h-44 w-full overflow-hidden bg-[#8C6239]/5 relative">
+                    <div className="h-44 w-full overflow-hidden bg-[#40916C]/5 relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img 
                         src={product.image_url} 
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
-                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-[#8C6239] border border-white">
+                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-[#40916C] border border-white">
                         {product.category}
                       </span>
                     </div>
 
                     <div className="p-4 flex-1 flex flex-col justify-between gap-4">
                       <div className="flex flex-col gap-1">
-                        <h3 className="font-bold text-base text-[#2B2521] leading-tight">{product.name}</h3>
-                        <p className="text-xs text-[#2B2521]/60 line-clamp-2 leading-relaxed">{product.description}</p>
+                        <h3 className="font-bold text-base text-[#1A2421] leading-tight">{product.name}</h3>
+                        <p className="text-xs text-[#1A2421]/60 line-clamp-2 leading-relaxed">{product.description}</p>
                       </div>
 
                       <div className="flex flex-col gap-2">
                         <div className="flex justify-between items-baseline">
-                          <span className="text-xl font-extrabold text-[#2B2521]">${product.price.toFixed(2)}</span>
+                          <span className="text-xl font-extrabold text-[#1A2421]">${product.price.toFixed(2)}</span>
                           <span className={`text-xs font-semibold ${
                             remainingStock > 10 
                               ? 'text-green-600' 
                               : remainingStock > 0 
-                              ? 'text-[#D95D39] animate-pulse' 
+                              ? 'text-[#2D6A4F] animate-pulse' 
                               : 'text-red-500'
                           }`}>
                             {remainingStock > 0 ? `Stock: ${remainingStock} disp.` : 'Agotado'}
                           </span>
                         </div>
 
-                        <button
+                        <InteractiveHoverButton
                           onClick={() => addToCart(product)}
                           disabled={remainingStock <= 0}
-                          className={`w-full py-2.5 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                            remainingStock > 0
-                              ? 'glass-button-primary'
-                              : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
-                          }`}
+                          className="w-full text-xs"
                         >
-                          <Plus size={14} />
-                          Agregar al Carrito
-                        </button>
+                          {remainingStock > 0 ? "Agregar al Carrito" : "Agotado"}
+                        </InteractiveHoverButton>
                       </div>
                     </div>
                   </div>
@@ -680,15 +789,15 @@ export default function Storefront() {
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                 return (
-                  <div key={`mob-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border border-[#8C6239]/10">
-                    <div className="h-48 w-full overflow-hidden bg-[#8C6239]/5 relative">
+                  <div key={`mob-${product.id}`} className="glass-card flex flex-col overflow-hidden relative border border-[#40916C]/10">
+                    <div className="h-48 w-full overflow-hidden bg-[#40916C]/5 relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img 
                         src={product.image_url} 
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
-                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#8C6239] border border-white">
+                      <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#40916C] border border-white">
                         {product.category}
                       </span>
                     </div>
@@ -696,13 +805,13 @@ export default function Storefront() {
                     <div className="p-4 flex flex-col gap-3">
                       <div>
                         <div className="flex justify-between items-baseline gap-2">
-                          <h4 className="font-extrabold text-base text-[#2B2521] leading-tight">{product.name}</h4>
-                          <span className="text-base font-extrabold text-[#D95D39]">${product.price.toFixed(2)}</span>
+                          <h4 className="font-extrabold text-base text-[#1A2421] leading-tight">{product.name}</h4>
+                          <span className="text-base font-extrabold text-[#2D6A4F]">${product.price.toFixed(2)}</span>
                         </div>
-                        <p className="text-xs text-[#2B2521]/60 leading-relaxed mt-1">{product.description}</p>
+                        <p className="text-xs text-[#1A2421]/60 leading-relaxed mt-1">{product.description}</p>
                       </div>
                       
-                      <div className="flex justify-between items-center pt-2.5 border-t border-[#2B2521]/5">
+                      <div className="flex justify-between items-center pt-2.5 border-t border-[#1A2421]/5">
                         <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
                           remainingStock > 10 
                             ? 'bg-green-50 text-green-700 border border-green-200' 
@@ -713,13 +822,13 @@ export default function Storefront() {
                           {remainingStock > 0 ? `Quedan ${remainingStock} libras` : 'Agotado'}
                         </span>
                         
-                        <button
+                        <InteractiveHoverButton
                           onClick={() => addToCart(product)}
                           disabled={remainingStock <= 0}
-                          className="glass-button-primary px-5 py-2.5 text-xs font-bold cursor-pointer"
+                          className="text-xs"
                         >
                           {remainingStock > 0 ? 'Añadir' : 'Agotado'}
-                        </button>
+                        </InteractiveHoverButton>
                       </div>
                     </div>
                   </div>
@@ -733,13 +842,13 @@ export default function Storefront() {
       {/* Orders Tracking List */}
       {orders.length > 0 && (
         <div className="glass-panel p-5 mt-4" id="orders-tracking">
-          <h2 className="text-lg font-extrabold text-[#2B2521] mb-4">Progreso del Pedido</h2>
+          <h2 className="text-lg font-extrabold text-[#1A2421] mb-4">Progreso del Pedido</h2>
           
           {/* Vista Escritorio: Tabla */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-[#8C6239]/10 text-[#2B2521]/60 font-bold">
+                <tr className="border-b border-[#40916C]/10 text-[#1A2421]/60 font-bold">
                   <th className="py-2.5">Código Pedido</th>
                   <th className="py-2.5">Destinatario</th>
                   <th className="py-2.5">Monto Total</th>
@@ -748,12 +857,12 @@ export default function Storefront() {
                   <th className="py-2.5">Notas logísticas</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2B2521]/5">
+              <tbody className="divide-y divide-[#1A2421]/5">
                 {orders.map(order => (
                   <tr key={order.id} className="hover:bg-white/20 transition-colors">
-                    <td className="py-3 font-mono font-bold text-[#2B2521]">{order.id}</td>
-                    <td className="py-3 text-[#2B2521] font-semibold">{order.family_name}</td>
-                    <td className="py-3 font-extrabold text-[#2B2521]">${order.total_amount.toFixed(2)}</td>
+                    <td className="py-3 font-mono font-bold text-[#1A2421]">{order.id}</td>
+                    <td className="py-3 text-[#1A2421] font-semibold">{order.family_name}</td>
+                    <td className="py-3 font-extrabold text-[#1A2421]">${order.total_amount.toFixed(2)}</td>
                     <td className="py-3">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold inline-block ${
                         order.status === 'delivered' 
@@ -762,7 +871,7 @@ export default function Storefront() {
                           ? 'bg-blue-100 text-blue-700 border border-blue-200 animate-pulse' 
                           : order.status === 'incident' 
                           ? 'bg-red-100 text-red-700 border border-red-200'
-                          : 'bg-[#FAF9F5] text-[#8C6239] border border-[#8C6239]/20'
+                          : 'bg-[#FFFFFF] text-[#40916C] border border-[#40916C]/20'
                       }`}>
                         {order.status === 'pending' && 'Pendiente'}
                         {order.status === 'paid' && 'Pagado (1-Clic)'}
@@ -782,8 +891,8 @@ export default function Storefront() {
                         </span>
                       )}
                     </td>
-                    <td className="py-3 text-[#2B2521]/70">{order.delivery_name || 'Pendiente de despacho'}</td>
-                    <td className="py-3 text-xs text-[#2B2521]/60 max-w-[200px] truncate" title={order.notes || order.incident_reason}>
+                    <td className="py-3 text-[#1A2421]/70">{order.delivery_name || 'Pendiente de despacho'}</td>
+                    <td className="py-3 text-xs text-[#1A2421]/60 max-w-[200px] truncate" title={order.notes || order.incident_reason}>
                       {order.incident_reason ? `Fallo: ${order.incident_reason}` : (order.notes || 'Ninguna')}
                     </td>
                   </tr>
@@ -809,22 +918,22 @@ export default function Storefront() {
               ];
 
               return (
-                <div key={order.id} className="premium-card p-5 bg-white shadow-md flex flex-col gap-4 border border-[#8C6239]/10">
-                  <div className="flex justify-between items-center pb-2 border-b border-[#2B2521]/5">
+                <div key={order.id} className="premium-card p-5 bg-white shadow-md flex flex-col gap-4 border border-[#40916C]/10">
+                  <div className="flex justify-between items-center pb-2 border-b border-[#1A2421]/5">
                     <div>
-                      <span className="text-[9px] font-bold text-[#8C6239] uppercase tracking-wider block">Código Pedido</span>
-                      <span className="font-mono font-extrabold text-sm text-[#2B2521]">{order.id}</span>
+                      <span className="text-[9px] font-bold text-[#40916C] uppercase tracking-wider block">Código Pedido</span>
+                      <span className="font-mono font-extrabold text-sm text-[#1A2421]">{order.id}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[9px] font-bold text-[#8C6239] uppercase tracking-wider block">Total Pagado</span>
-                      <span className="text-sm font-extrabold text-[#D95D39]">${order.total_amount.toFixed(2)}</span>
+                      <span className="text-[9px] font-bold text-[#40916C] uppercase tracking-wider block">Total Pagado</span>
+                      <span className="text-sm font-extrabold text-[#2D6A4F]">${order.total_amount.toFixed(2)}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-1 text-[11px] text-[#2B2521]/80">
-                    <p><span className="font-semibold text-[#2B2521]">Recibe:</span> {order.family_name}</p>
-                    <p className="truncate"><span className="font-semibold text-[#2B2521]">Dirección:</span> {order.family_address}</p>
-                    {order.delivery_name && <p><span className="font-semibold text-[#2B2521]">Repartidor:</span> {order.delivery_name}</p>}
+                  <div className="flex flex-col gap-1 text-[11px] text-[#1A2421]/80">
+                    <p><span className="font-semibold text-[#1A2421]">Recibe:</span> {order.family_name}</p>
+                    <p className="truncate"><span className="font-semibold text-[#1A2421]">Dirección:</span> {order.family_address}</p>
+                    {order.delivery_name && <p><span className="font-semibold text-[#1A2421]">Repartidor:</span> {order.delivery_name}</p>}
                   </div>
 
                   {/* Timeline Vertical */}
@@ -839,7 +948,7 @@ export default function Storefront() {
                           {/* Línea conectora */}
                           {!isLast && (
                             <div className={`absolute left-[11px] top-6 w-[2.5px] h-8 ${
-                              step > s.index ? 'bg-[#D95D39]' : 'bg-gray-200'
+                              step > s.index ? 'bg-[#2D6A4F]' : 'bg-gray-200'
                             }`} />
                           )}
 
@@ -848,7 +957,7 @@ export default function Storefront() {
                             isIncident
                               ? 'bg-red-500 text-white shadow-md shadow-red-500/25 border border-red-600'
                               : isCompleted 
-                              ? 'bg-[#D95D39] text-white shadow-md shadow-[#D95D39]/25 border border-[#D95D39]' 
+                              ? 'bg-[#2D6A4F] text-white shadow-md shadow-[#2D6A4F]/25 border border-[#2D6A4F]' 
                               : 'bg-gray-100 text-gray-400 border border-gray-200'
                           }`}>
                             {isIncident ? '✕' : isCompleted ? '✓' : s.index + 1}
@@ -860,7 +969,7 @@ export default function Storefront() {
                               isIncident
                                 ? 'text-red-600'
                                 : isCompleted 
-                                ? 'text-[#2B2521]' 
+                                ? 'text-[#1A2421]' 
                                 : 'text-gray-400'
                             }`}>
                               {s.title}
@@ -876,7 +985,7 @@ export default function Storefront() {
 
                   {/* Incidentes o Reembolsos */}
                   {(order.refunded || order.store_credit_issued) && (
-                    <div className="mt-1 pt-2.5 border-t border-[#2B2521]/5 flex gap-2">
+                    <div className="mt-1 pt-2.5 border-t border-[#1A2421]/5 flex gap-2">
                       {order.refunded && (
                         <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[9px] font-extrabold rounded">
                           Reembolso Stripe
@@ -899,18 +1008,18 @@ export default function Storefront() {
 
       {/* MODAL: Onboarding Familiar */}
       {showOnboarding && (
-        <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="glass-panel w-full max-w-lg p-6 bg-white/95 shadow-2xl relative">
             <button 
               onClick={() => setShowOnboarding(false)}
-              className="absolute top-4 right-4 text-[#2B2521]/60 hover:text-[#2B2521] cursor-pointer"
+              className="absolute top-4 right-4 text-[#1A2421]/60 hover:text-[#1A2421] cursor-pointer"
             >
               <X size={20} />
             </button>
-            <h3 className="text-xl font-bold text-[#2B2521] flex items-center gap-2 mb-2">
-              <Users size={18} className="text-[#D95D39]" /> Registrar Familiar Recibidor en Cuba
+            <h3 className="text-xl font-bold text-[#1A2421] flex items-center gap-2 mb-2">
+              <Users size={18} className="text-[#2D6A4F]" /> Registrar Familiar Recibidor en Cuba
             </h3>
-            <p className="text-xs text-[#2B2521]/60 mb-4">
+            <p className="text-xs text-[#1A2421]/60 mb-4">
               Agrega los datos de envío de tu familiar en Cuba. Esto se guardará como recibidor predeterminado.
             </p>
 
@@ -919,7 +1028,7 @@ export default function Storefront() {
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-[#2B2521]/70">Apodo Familiar (Ej. Mamá, Abuela)</label>
+                  <label className="text-xs font-bold text-[#1A2421]/70">Apodo Familiar (Ej. Mamá, Abuela)</label>
                   <input
                     type="text"
                     required
@@ -930,7 +1039,7 @@ export default function Storefront() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-[#2B2521]/70">Nombre Completo del Recibidor</label>
+                  <label className="text-xs font-bold text-[#1A2421]/70">Nombre Completo del Recibidor</label>
                   <input
                     type="text"
                     required
@@ -944,45 +1053,37 @@ export default function Storefront() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-[#2B2521]/70">Provincia</label>
-                  <select
+                  <label className="text-xs font-bold text-[#1A2421]/70">Provincia</label>
+                  <CustomSelect
+                    options={provinceOptions}
                     value={province}
-                    onChange={e => setProvince(e.target.value)}
-                    className="glass-input text-sm"
-                  >
-                    <option value="La Habana">La Habana</option>
-                    <option value="Artemisa">Artemisa</option>
-                    <option value="Mayabeque">Mayabeque</option>
-                  </select>
+                    onChange={val => {
+                      setProvince(val);
+                      // Set default municipality for province
+                      if (val === 'La Habana') setMunicipality('Plaza de la Revolución');
+                      else if (val === 'Artemisa') setMunicipality('San Antonio de los Baños');
+                      else if (val === 'Mayabeque') setMunicipality('Bejucal');
+                    }}
+                  />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-[#2B2521]/70">Municipio</label>
-                  {province === 'La Habana' && (
-                    <select value={municipality} onChange={e => setMunicipality(e.target.value)} className="glass-input text-sm">
-                      <option value="Plaza de la Revolución">Plaza de la Revolución</option>
-                      <option value="Playa">Playa</option>
-                      <option value="Centro Habana">Centro Habana</option>
-                      <option value="Habana Vieja">Habana Vieja</option>
-                      <option value="Boyeros">Boyeros</option>
-                    </select>
-                  )}
-                  {province === 'Artemisa' && (
-                    <select value={municipality} onChange={e => setMunicipality(e.target.value)} className="glass-input text-sm">
-                      <option value="San Antonio de los Baños">San Antonio de los Baños</option>
-                      <option value="Bauta">Bauta</option>
-                    </select>
-                  )}
-                  {province === 'Mayabeque' && (
-                    <select value={municipality} onChange={e => setMunicipality(e.target.value)} className="glass-input text-sm">
-                      <option value="Bejucal">Bejucal</option>
-                      <option value="San José de las Lajas">San José de las Lajas</option>
-                    </select>
-                  )}
+                  <label className="text-xs font-bold text-[#1A2421]/70">Municipio</label>
+                  <CustomSelect
+                    options={
+                      province === 'La Habana'
+                        ? habanaMunicipios
+                        : province === 'Artemisa'
+                        ? artemisaMunicipios
+                        : mayabequeMunicipios
+                    }
+                    value={municipality}
+                    onChange={setMunicipality}
+                  />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-[#2B2521]/70">Dirección Exacta (Calle, Número, e/ Calles)</label>
+                <label className="text-xs font-bold text-[#1A2421]/70">Dirección Exacta (Calle, Número, e/ Calles)</label>
                 <input
                   type="text"
                   required
@@ -994,7 +1095,7 @@ export default function Storefront() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-[#2B2521]/70">Teléfono Celular en Cuba (WhatsApp preferente)</label>
+                <label className="text-xs font-bold text-[#1A2421]/70">Teléfono Celular en Cuba (WhatsApp preferente)</label>
                 <input
                   type="text"
                   required
@@ -1005,12 +1106,12 @@ export default function Storefront() {
                 />
               </div>
 
-              <button
+              <InteractiveHoverButton
                 type="submit"
-                className="glass-button-primary py-2.5 mt-2 text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full text-sm mt-2"
               >
                 Guardar y Activar Familiar
-              </button>
+              </InteractiveHoverButton>
             </form>
           </div>
         </div>
@@ -1018,120 +1119,93 @@ export default function Storefront() {
 
       {/* MODAL: Checkout Exitoso (Simulación Stripe) */}
       {checkoutSuccess && (
-        <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl text-center flex flex-col items-center gap-4 border-[#D95D39]/30">
+        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl text-center flex flex-col items-center gap-4 border-[#2D6A4F]/30">
             <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center shadow-inner border border-green-200">
               <CheckCircle className="w-8 h-8 stroke-[2.5]" />
             </div>
             
             <div>
-              <h3 className="text-xl font-extrabold text-[#2B2521]">¡Pago Exitoso en 1-Clic!</h3>
-              <p className="text-xs text-[#2B2521]/60 mt-1">Procesado con Stripe Checkout para LLC en EE.UU.</p>
+              <h3 className="text-xl font-extrabold text-[#1A2421]">¡Pago Exitoso en 1-Clic!</h3>
+              <p className="text-xs text-[#1A2421]/60 mt-1">Procesado con Stripe Checkout para LLC en EE.UU.</p>
             </div>
 
-            <div className="bg-[#FAF9F5] w-full p-4 rounded-2xl text-left border border-[#8C6239]/10 text-xs flex flex-col gap-1.5">
-              <p className="text-[#8C6239] font-bold">Resumen del Pedido:</p>
-              <p className="text-[#2B2521] font-bold text-sm">Código: {checkoutSuccess.id}</p>
-              <p className="text-[#2B2521]"><span className="font-semibold">Recibe:</span> {checkoutSuccess.family_name}</p>
-              <p className="text-[#2B2521]"><span className="font-semibold">Destino:</span> {checkoutSuccess.family_address}</p>
-              <p className="text-[#D95D39] font-extrabold text-right text-sm mt-1">Total Pagado: ${checkoutSuccess.total_amount.toFixed(2)}</p>
+            <div className="bg-[#FFFFFF] w-full p-4 rounded-2xl text-left border border-[#40916C]/10 text-xs flex flex-col gap-1.5">
+              <p className="text-[#40916C] font-bold">Resumen del Pedido:</p>
+              <p className="text-[#1A2421] font-bold text-sm">Código: {checkoutSuccess.id}</p>
+              <p className="text-[#1A2421]"><span className="font-semibold">Recibe:</span> {checkoutSuccess.family_name}</p>
+              <p className="text-[#1A2421]"><span className="font-semibold">Destino:</span> {checkoutSuccess.family_address}</p>
+              <p className="text-[#2D6A4F] font-extrabold text-right text-sm mt-1">Total Pagado: ${checkoutSuccess.total_amount.toFixed(2)}</p>
             </div>
 
-            <p className="text-xs text-[#2B2521]/60 leading-relaxed bg-[#D95D39]/5 p-3 rounded-xl border border-[#D95D39]/10">
-              <span className="font-bold text-[#8C6239] flex items-center gap-1.5"><CheckCircle size={14} className="text-green-600" /> Validación de Inventario:</span> El stock ha sido descontado estrictamente en tiempo real en la base de datos de Restaurant Al Campestre.
+            <p className="text-xs text-[#1A2421]/60 leading-relaxed bg-[#2D6A4F]/5 p-3 rounded-xl border border-[#2D6A4F]/10">
+              <span className="font-bold text-[#40916C] flex items-center gap-1.5"><CheckCircle size={14} className="text-green-600" /> Validación de Inventario:</span> El stock ha sido descontado estrictamente en tiempo real en la base de datos de Restaurant Al Campestre.
             </p>
 
-            <button
+            <InteractiveHoverButton
               onClick={() => setCheckoutSuccess(null)}
-              className="glass-button-primary w-full py-2.5 text-sm font-bold cursor-pointer"
+              className="w-full text-sm"
             >
               Entendido / Seguir Comprando
-            </button>
+            </InteractiveHoverButton>
           </div>
         </div>
       )}
 
       {/* MODAL: Selector de Zona de Entrega */}
       {showZoneModal && (
-        <div className="fixed inset-0 bg-[#2B2521]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl relative border-[#D95D39]/20">
+        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl relative border-[#2D6A4F]/20">
             <button 
               onClick={() => setShowZoneModal(false)}
-              className="absolute top-4 right-4 text-[#2B2521]/60 hover:text-[#2B2521] cursor-pointer"
+              className="absolute top-4 right-4 text-[#1A2421]/60 hover:text-[#1A2421] cursor-pointer"
             >
               <X size={20} />
             </button>
-            <h3 className="text-xl font-bold text-[#2B2521] flex items-center gap-2 mb-2">
-              <MapPin size={20} className="text-[#D95D39]" /> Seleccionar Zona de Entrega
+            <h3 className="text-xl font-bold text-[#1A2421] flex items-center gap-2 mb-2">
+              <MapPin size={20} className="text-[#2D6A4F]" /> Seleccionar Zona de Entrega
             </h3>
-            <p className="text-xs text-[#2B2521]/60 mb-4">
+            <p className="text-xs text-[#1A2421]/60 mb-4">
               Configura el destino de envío en Cuba para mostrar las tarifas de entrega y disponibilidad de productos.
             </p>
 
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-[#2B2521]/70">Provincia</label>
-                <select
+                <label className="text-xs font-bold text-[#1A2421]/70">Provincia</label>
+                <CustomSelect
+                  options={provinceOptions}
                   value={deliveryProvince}
-                  onChange={e => {
-                    const newProv = e.target.value;
-                    setDeliveryProvince(newProv);
+                  onChange={val => {
+                    setDeliveryProvince(val);
                     // Set default municipality for province
-                    if (newProv === 'La Habana') setDeliveryMunicipality('Plaza de la Revolución');
-                    else if (newProv === 'Artemisa') setDeliveryMunicipality('San Antonio de los Baños');
-                    else if (newProv === 'Mayabeque') setDeliveryMunicipality('Bejucal');
+                    if (val === 'La Habana') setDeliveryMunicipality('Plaza de la Revolución');
+                    else if (val === 'Artemisa') setDeliveryMunicipality('San Antonio de los Baños');
+                    else if (val === 'Mayabeque') setDeliveryMunicipality('Bejucal');
                   }}
-                  className="glass-input text-sm"
-                >
-                  <option value="La Habana">La Habana</option>
-                  <option value="Artemisa">Artemisa</option>
-                  <option value="Mayabeque">Mayabeque</option>
-                </select>
+                />
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-[#2B2521]/70">Municipio</label>
-                {deliveryProvince === 'La Habana' && (
-                  <select 
-                    value={deliveryMunicipality} 
-                    onChange={e => setDeliveryMunicipality(e.target.value)} 
-                    className="glass-input text-sm"
-                  >
-                    <option value="Plaza de la Revolución">Plaza de la Revolución</option>
-                    <option value="Playa">Playa</option>
-                    <option value="Centro Habana">Centro Habana</option>
-                    <option value="Habana Vieja">Habana Vieja</option>
-                    <option value="Boyeros">Boyeros</option>
-                  </select>
-                )}
-                {deliveryProvince === 'Artemisa' && (
-                  <select 
-                    value={deliveryMunicipality} 
-                    onChange={e => setDeliveryMunicipality(e.target.value)} 
-                    className="glass-input text-sm"
-                  >
-                    <option value="San Antonio de los Baños">San Antonio de los Baños</option>
-                    <option value="Bauta">Bauta</option>
-                  </select>
-                )}
-                {deliveryProvince === 'Mayabeque' && (
-                  <select 
-                    value={deliveryMunicipality} 
-                    onChange={e => setDeliveryMunicipality(e.target.value)} 
-                    className="glass-input text-sm"
-                  >
-                    <option value="Bejucal">Bejucal</option>
-                    <option value="San José de las Lajas">San José de las Lajas</option>
-                  </select>
-                )}
+                <label className="text-xs font-bold text-[#1A2421]/70">Municipio</label>
+                <CustomSelect
+                  options={
+                    deliveryProvince === 'La Habana'
+                      ? habanaMunicipios
+                      : deliveryProvince === 'Artemisa'
+                      ? artemisaMunicipios
+                      : mayabequeMunicipios
+                  }
+                  value={deliveryMunicipality}
+                  onChange={setDeliveryMunicipality}
+                />
               </div>
 
-              <button
+              <InteractiveHoverButton
                 onClick={() => setShowZoneModal(false)}
-                className="glass-button-primary py-2.5 mt-2 text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                className="w-full text-sm mt-2"
               >
                 Confirmar Zona de Envío
-              </button>
+              </InteractiveHoverButton>
             </div>
           </div>
         </div>
@@ -1139,19 +1213,19 @@ export default function Storefront() {
 
       {/* Cart Sidebar Panel */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-40 bg-[#2B2521]/20 backdrop-blur-xs flex justify-end animate-fadeIn">
-          <div className="w-full max-w-md h-full bg-white/95 backdrop-blur-md border-l border-[#8C6239]/10 shadow-2xl p-6 flex flex-col justify-between">
+        <div className="fixed inset-0 z-40 bg-[#1A2421]/20 backdrop-blur-xs flex justify-end animate-fadeIn">
+          <div className="w-full max-w-md h-full bg-white/95 backdrop-blur-md border-l border-[#40916C]/10 shadow-2xl p-6 flex flex-col justify-between">
             
             {/* Header */}
             <div>
-              <div className="flex justify-between items-center pb-4 border-b border-[#8C6239]/10">
-                <h3 className="text-lg font-bold text-[#2B2521] flex items-center gap-2">
-                  <ShoppingCart size={18} className="text-[#8C6239]" />
+              <div className="flex justify-between items-center pb-4 border-b border-[#40916C]/10">
+                <h3 className="text-lg font-bold text-[#1A2421] flex items-center gap-2">
+                  <ShoppingCart size={18} className="text-[#40916C]" />
                   Detalle del Carrito
                 </h3>
                 <button 
                   onClick={() => setIsCartOpen(false)}
-                  className="text-[#2B2521]/60 hover:text-[#2B2521] p-1 rounded-full hover:bg-[#8C6239]/10 transition cursor-pointer"
+                  className="text-[#1A2421]/60 hover:text-[#1A2421] p-1 rounded-full hover:bg-[#40916C]/10 transition cursor-pointer"
                 >
                   <X size={20} />
                 </button>
@@ -1160,37 +1234,37 @@ export default function Storefront() {
               {/* Items List */}
               {cart.length === 0 ? (
                 <div className="text-center py-20">
-                  <ShoppingCart size={36} className="text-[#8C6239]/40 mx-auto mb-3" />
-                  <p className="text-sm font-semibold text-[#8C6239]/60">Tu carrito está vacío.</p>
+                  <ShoppingCart size={36} className="text-[#40916C]/40 mx-auto mb-3" />
+                  <p className="text-sm font-semibold text-[#40916C]/60">Tu carrito está vacío.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3 py-4 max-h-[60vh] overflow-y-auto pr-1">
                   {cart.map(item => (
-                    <div key={item.product.id} className="p-3 bg-[#FAF9F5]/40 border border-[#8C6239]/10 rounded-2xl flex justify-between items-center gap-4">
+                    <div key={item.product.id} className="p-3 bg-[#FFFFFF]/40 border border-[#40916C]/10 rounded-2xl flex justify-between items-center gap-4">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-[#2B2521] truncate">{item.product.name}</p>
-                        <p className="text-xs text-[#2B2521]/60 font-semibold">${item.product.price.toFixed(2)} / libra</p>
+                        <p className="text-sm font-bold text-[#1A2421] truncate">{item.product.name}</p>
+                        <p className="text-xs text-[#1A2421]/60 font-semibold">${item.product.price.toFixed(2)} / libra</p>
                       </div>
                       
                       {/* Quantity selector */}
-                      <div className="flex items-center gap-2.5 bg-white/80 px-2 py-1 rounded-xl border border-[#8C6239]/15">
+                      <div className="flex items-center gap-2.5 bg-white/80 px-2 py-1 rounded-xl border border-[#40916C]/15">
                         <button 
                           onClick={() => updateCartQty(item.product.id, -1)}
-                          className="font-bold text-[#2B2521] hover:text-[#D95D39] px-1 cursor-pointer"
+                          className="font-bold text-[#1A2421] hover:text-[#2D6A4F] px-1 cursor-pointer"
                         >
                           -
                         </button>
-                        <span className="text-xs font-bold text-[#2B2521] min-w-4 text-center">{item.quantity}</span>
+                        <span className="text-xs font-bold text-[#1A2421] min-w-4 text-center">{item.quantity}</span>
                         <button 
                           onClick={() => updateCartQty(item.product.id, 1)}
-                          className="font-bold text-[#2B2521] hover:text-[#D95D39] px-1 cursor-pointer"
+                          className="font-bold text-[#1A2421] hover:text-[#2D6A4F] px-1 cursor-pointer"
                         >
                           +
                         </button>
                       </div>
                       
                       <div className="text-right">
-                        <span className="text-sm font-extrabold text-[#2B2521]">${(item.product.price * item.quantity).toFixed(2)}</span>
+                        <span className="text-sm font-extrabold text-[#1A2421]">${(item.product.price * item.quantity).toFixed(2)}</span>
                       </div>
                     </div>
                   ))}
@@ -1200,26 +1274,26 @@ export default function Storefront() {
 
             {/* Footer / Stripe Checkout */}
             {cart.length > 0 && (
-              <div className="border-t border-[#8C6239]/10 pt-4 flex flex-col gap-3">
+              <div className="border-t border-[#40916C]/10 pt-4 flex flex-col gap-3">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-sm font-bold text-[#2B2521]/70">Subtotal:</span>
-                  <span className="text-2xl font-extrabold text-[#2B2521]">${totalCartPrice.toFixed(2)}</span>
+                  <span className="text-sm font-bold text-[#1A2421]/70">Subtotal:</span>
+                  <span className="text-2xl font-extrabold text-[#1A2421]">${totalCartPrice.toFixed(2)}</span>
                 </div>
 
                 {checkoutError && (
                   <p className="text-xs font-bold text-red-500 bg-red-50 p-2.5 rounded-xl">{checkoutError}</p>
                 )}
 
-                <div className="bg-[#FAF9F5] p-3 rounded-2xl border border-[#8C6239]/10 text-xs flex flex-col gap-2">
-                  <p className="font-bold text-[#8C6239] flex items-center gap-1.5"><CreditCard size={14} /> Método de Pago (Stripe 1-Clic)</p>
-                  <div className="flex justify-between text-[#2B2521]/70 font-semibold">
+                <div className="bg-[#FFFFFF] p-3 rounded-2xl border border-[#40916C]/10 text-xs flex flex-col gap-2">
+                  <p className="font-bold text-[#40916C] flex items-center gap-1.5"><CreditCard size={14} /> Método de Pago (Stripe 1-Clic)</p>
+                  <div className="flex justify-between text-[#1A2421]/70 font-semibold">
                     <span>Tarjeta Guardada:</span>
                     <span>Visa terminada en •••• 4242</span>
                   </div>
                   {activeFamily ? (
-                    <div className="flex justify-between text-[#2B2521]/70 font-semibold truncate">
+                    <div className="flex justify-between text-[#1A2421]/70 font-semibold truncate">
                       <span>Destinatario en Cuba:</span>
-                      <span className="font-bold text-[#8C6239]">{activeFamily.nickname}</span>
+                      <span className="font-bold text-[#40916C]">{activeFamily.nickname}</span>
                     </div>
                   ) : (
                     <button
@@ -1227,25 +1301,20 @@ export default function Storefront() {
                         setIsCartOpen(false);
                         setShowOnboarding(true);
                       }}
-                      className="text-[#D95D39] font-bold hover:underline text-left cursor-pointer"
+                      className="text-[#2D6A4F] font-bold hover:underline text-left cursor-pointer"
                     >
                       <span className="flex items-center gap-1"><AlertTriangle size={14} className="text-amber-600" /> Asignar recibidor en Cuba</span>
                     </button>
                   )}
                 </div>
 
-                <button
+                <InteractiveHoverButton
                   onClick={handleCheckout}
                   disabled={!selectedFamilyId}
-                  className={`w-full py-3.5 font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all ${
-                    selectedFamilyId
-                      ? 'glass-button-primary cursor-pointer'
-                      : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
-                  }`}
+                  className="w-full text-sm"
                 >
-                  <CreditCard size={16} />
                   Pagar en 1-Clic con Stripe
-                </button>
+                </InteractiveHoverButton>
               </div>
             )}
           </div>
@@ -1254,97 +1323,32 @@ export default function Storefront() {
 
       {/* Barra de Carrito Fija en Móvil (solo si hay items y el carrito no está abierto) */}
       {cart.length > 0 && !isCartOpen && (
-        <div className="fixed bottom-16 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 p-4 flex justify-between items-center shadow-lg animate-slide-up md:hidden">
+        <div className="fixed bottom-[88px] left-4 right-4 z-40 bg-white/90 backdrop-blur-md border border-[#40916C]/15 p-4 flex justify-between items-center shadow-lg rounded-3xl animate-slide-up md:hidden max-w-[420px] mx-auto">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-[#8C6239] uppercase tracking-wider">Tu Carrito</span>
-            <span className="text-base font-extrabold text-[#2B2521]">${totalCartPrice.toFixed(2)}</span>
-            <span className="text-[10px] text-[#2B2521]/60 font-semibold">{cart.reduce((sum, i) => sum + i.quantity, 0)} lbs en total</span>
+            <span className="text-[10px] font-bold text-[#40916C] uppercase tracking-wider">Tu Carrito</span>
+            <span className="text-base font-extrabold text-[#1A2421]">${totalCartPrice.toFixed(2)}</span>
+            <span className="text-[10px] text-[#1A2421]/60 font-semibold">{cart.reduce((sum, i) => sum + i.quantity, 0)} lbs en total</span>
           </div>
-          <button
+          <InteractiveHoverButton
             onClick={() => setIsCartOpen(true)}
-            className="glass-button-primary px-5 py-3 text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md"
+            className="text-xs"
           >
-            <ShoppingCart size={14} />
             Ver Carrito & Pagar
-          </button>
+          </InteractiveHoverButton>
         </div>
       )}
-
-      {/* Barra de Navegación Móvil Fija (Tab Bar Inferior) */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#8C6239]/10 h-16 flex justify-around items-center md:hidden">
-        <button 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors animate-fadeIn"
-        >
-          <Home size={20} />
-          <span className="text-[10px] font-bold mt-1">Inicio</span>
-        </button>
-        <button 
-          onClick={() => {
-            const searchInput = document.getElementById('search-input');
-            if (searchInput) {
-              searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              searchInput.focus();
-            }
-          }}
-          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors"
-        >
-          <Search size={20} />
-          <span className="text-[10px] font-bold mt-1">Buscar</span>
-        </button>
-        <button 
-          onClick={() => setIsAiWidgetOpen(prev => !prev)}
-          className="flex flex-col items-center justify-center text-[#D95D39] hover:scale-105 transition-transform cursor-pointer"
-        >
-          <div className="bg-gradient-to-r from-[#D95D39] to-[#C24C2A] p-2 rounded-full text-white shadow-md">
-            <Sparkles size={20} className="animate-pulse" />
-          </div>
-          <span className="text-[10px] font-extrabold mt-0.5">Asistente IA</span>
-        </button>
-        <button 
-          onClick={() => {
-            const ordersSection = document.getElementById('orders-tracking');
-            if (ordersSection) {
-              ordersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-              alert("No tienes pedidos activos para rastrear.");
-            }
-          }}
-          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors relative"
-        >
-          <ClipboardList size={20} />
-          <span className="text-[10px] font-bold mt-1">Pedidos</span>
-          {orders.length > 0 && (
-            <span className="absolute -top-1 right-2 bg-[#D95D39] text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
-              {orders.length}
-            </span>
-          )}
-        </button>
-        <button 
-          onClick={() => {
-            const trigger = document.getElementById('profile-menu-trigger');
-            if (trigger) {
-              trigger.click();
-            }
-          }}
-          className="flex flex-col items-center justify-center text-[#8C6239] hover:text-[#D95D39] transition-colors"
-        >
-          <User size={20} />
-          <span className="text-[10px] font-bold mt-1">Perfiles</span>
-        </button>
-      </div>
 
       {/* CHATBOT EMERGENTE: Widget de IA */}
       {isAiWidgetOpen && (
         <div 
-          className={`fixed right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[360px] h-[450px] bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-[#D95D39]/20 flex flex-col justify-between overflow-hidden animate-slide-up ${
+          className={`fixed right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[360px] h-[450px] bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-[#2D6A4F]/20 flex flex-col justify-between overflow-hidden animate-slide-up ${
             cart.length > 0 && !isCartOpen 
-              ? 'bottom-[148px] md:bottom-[72px]' 
-              : 'bottom-[84px] md:bottom-[72px]'
+              ? 'bottom-[164px] md:bottom-6' 
+              : 'bottom-[88px] md:bottom-6'
           }`}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white p-4 flex justify-between items-center shadow-md">
+          <div className="bg-gradient-to-r from-[#2D6A4F] to-[#1B4332] text-white p-4 flex justify-between items-center shadow-md">
             <div className="flex items-center gap-2">
               <Bot size={20} className="text-white" />
               <div>
@@ -1369,8 +1373,8 @@ export default function Storefront() {
               >
                 <div className={`p-2.5 rounded-2xl text-xs leading-relaxed whitespace-pre-line shadow-inner ${
                   msg.sender === 'user' 
-                    ? 'bg-[#D95D39] text-white rounded-tr-none' 
-                    : 'bg-[#FAF9F5] text-[#2B2521] border border-[#8C6239]/10 rounded-tl-none'
+                    ? 'bg-[#2D6A4F] text-white rounded-tr-none' 
+                    : 'bg-[#FFFFFF] text-[#1A2421] border border-[#40916C]/10 rounded-tl-none'
                 }`}>
                   {msg.text}
                 </div>
@@ -1379,10 +1383,10 @@ export default function Storefront() {
 
             {aiIsTyping && (
               <div className="flex gap-2 self-start max-w-[85%]">
-                <div className="p-3 rounded-2xl bg-[#FAF9F5] text-[#2B2521] border border-[#8C6239]/10 rounded-tl-none flex gap-1 items-center">
-                  <span className="w-1.5 h-1.5 bg-[#D95D39] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-1.5 h-1.5 bg-[#D95D39] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-1.5 h-1.5 bg-[#D95D39] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="p-3 rounded-2xl bg-[#FFFFFF] text-[#1A2421] border border-[#40916C]/10 rounded-tl-none flex gap-1 items-center">
+                  <span className="w-1.5 h-1.5 bg-[#2D6A4F] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 bg-[#2D6A4F] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 bg-[#2D6A4F] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             )}
@@ -1391,7 +1395,7 @@ export default function Storefront() {
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleSendAiMessage} className="p-3 border-t border-[#8C6239]/10 bg-[#FAF9F5]/40 flex gap-2">
+          <form onSubmit={handleSendAiMessage} className="p-3 border-t border-[#40916C]/10 bg-[#FFFFFF]/40 flex gap-2">
             <input
               type="text"
               value={aiInput}

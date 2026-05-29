@@ -10,6 +10,7 @@ import {
   Driver 
 } from '@/lib/dbMock';
 import { Truck, UserCheck, Clock, CheckCircle } from 'lucide-react';
+import { CustomSelect } from "@/components/ui/custom-select";
 
 export default function AdminDispatch() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -69,15 +70,15 @@ export default function AdminDispatch() {
     <div className="flex flex-col gap-6">
       
       {/* Pending Dispatch Section */}
-      <div className="glass-panel p-5 bg-white/80 border-[#8C6239]/10">
-        <h2 className="text-lg font-extrabold text-[#2B2521] flex items-center gap-2 mb-3">
-          <Clock size={18} className="text-[#D95D39]" />
+      <div className="glass-panel p-5 bg-white/80 border-[#40916C]/10">
+        <h2 className="text-lg font-extrabold text-[#1A2421] flex items-center gap-2 mb-3">
+          <Clock size={18} className="text-[#2D6A4F]" />
           Pedidos Pendientes de Despacho ({pendingDispatchOrders.length})
         </h2>
         
         {pendingDispatchOrders.length === 0 ? (
-          <div className="text-center py-6 bg-[#D95D39]/5 rounded-2xl border border-dashed border-[#D95D39]/15">
-            <p className="text-xs text-[#2B2521]/60 font-semibold">No hay pedidos pagados esperando despacho.</p>
+          <div className="text-center py-6 bg-[#2D6A4F]/5 rounded-2xl border border-dashed border-[#2D6A4F]/15">
+            <p className="text-xs text-[#1A2421]/60 font-semibold">No hay pedidos pagados esperando despacho.</p>
           </div>
         ) : (
           <>
@@ -85,7 +86,7 @@ export default function AdminDispatch() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-[#8C6239]/10 text-[#2B2521]/60 font-bold">
+                  <tr className="border-b border-[#40916C]/10 text-[#1A2421]/60 font-bold">
                     <th className="py-2">Código</th>
                     <th className="py-2">Familiar Destinatario</th>
                     <th className="py-2">Dirección Cuba</th>
@@ -93,29 +94,27 @@ export default function AdminDispatch() {
                     <th className="py-2 text-right">Asignar Repartidor</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#2B2521]/5">
+                <tbody className="divide-y divide-[#1A2421]/5">
                   {pendingDispatchOrders.map(order => (
                     <tr key={order.id} className="hover:bg-white/20 transition-colors">
-                      <td className="py-2.5 font-mono font-bold text-[#2B2521]">{order.id}</td>
-                      <td className="py-2.5 font-semibold text-[#8C6239]">{order.family_name}</td>
-                      <td className="py-2.5 text-[#2B2521]/70 truncate max-w-[200px]">{order.family_address}</td>
-                      <td className="py-2.5 font-extrabold text-[#2B2521]">${order.total_amount.toFixed(2)}</td>
+                      <td className="py-2.5 font-mono font-bold text-[#1A2421]">{order.id}</td>
+                      <td className="py-2.5 font-semibold text-[#40916C]">{order.family_name}</td>
+                      <td className="py-2.5 text-[#1A2421]/70 truncate max-w-[200px]">{order.family_address}</td>
+                      <td className="py-2.5 font-extrabold text-[#1A2421]">${order.total_amount.toFixed(2)}</td>
                       <td className="py-2.5 text-right">
                         {availableDrivers.length === 0 ? (
                           <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
                             Sin choferes disponibles
                           </span>
                         ) : (
-                          <select
-                            onChange={e => handleAssignDriver(order.id, e.target.value)}
-                            defaultValue=""
-                            className="glass-input text-[10px] py-1 px-2 font-bold max-w-[150px] cursor-pointer"
-                          >
-                            <option value="" disabled>-- Seleccionar Chofer --</option>
-                            {availableDrivers.map(drv => (
-                              <option key={drv.id} value={drv.id}>{drv.name}</option>
-                            ))}
-                          </select>
+                          <CustomSelect
+                            options={availableDrivers.map(drv => ({ value: drv.id, label: drv.name }))}
+                            value=""
+                            onChange={val => handleAssignDriver(order.id, val)}
+                            placeholder="-- Seleccionar Chofer --"
+                            triggerClassName="text-[10px] py-1 px-2 h-7 font-bold text-[#1A2421]"
+                            className="max-w-[150px] inline-block text-left"
+                          />
                         )}
                       </td>
                     </tr>
@@ -127,32 +126,30 @@ export default function AdminDispatch() {
             {/* Vista Móvil: Tarjetas */}
             <div className="block md:hidden flex flex-col gap-3">
               {pendingDispatchOrders.map(order => (
-                <div key={order.id} className="p-3.5 bg-white/40 border border-[#8C6239]/10 rounded-2xl flex flex-col gap-2 text-xs">
-                  <div className="flex justify-between items-center pb-1.5 border-b border-[#2B2521]/5">
-                    <span className="font-mono font-bold text-[#2B2521]">{order.id}</span>
-                    <span className="text-[#2B2521] font-bold">${order.total_amount.toFixed(2)}</span>
+                <div key={order.id} className="p-3.5 bg-white/40 border border-[#40916C]/10 rounded-2xl flex flex-col gap-2 text-xs">
+                  <div className="flex justify-between items-center pb-1.5 border-b border-[#1A2421]/5">
+                    <span className="font-mono font-bold text-[#1A2421]">{order.id}</span>
+                    <span className="text-[#1A2421] font-bold">${order.total_amount.toFixed(2)}</span>
                   </div>
-                  <div className="flex flex-col gap-1 text-[#2B2521]/80">
-                    <p><span className="font-semibold text-[#2B2521]">Familiar:</span> {order.family_name}</p>
-                    <p className="truncate"><span className="font-semibold text-[#2B2521]">Destino:</span> {order.family_address}</p>
+                  <div className="flex flex-col gap-1 text-[#1A2421]/80">
+                    <p><span className="font-semibold text-[#1A2421]">Familiar:</span> {order.family_name}</p>
+                    <p className="truncate"><span className="font-semibold text-[#1A2421]">Destino:</span> {order.family_address}</p>
                   </div>
-                  <div className="flex justify-between items-center mt-2 border-t border-[#2B2521]/5 pt-2">
-                    <span className="font-semibold text-[10px] text-[#2B2521]/70">Asignar Repartidor:</span>
+                  <div className="flex justify-between items-center mt-2 border-t border-[#1A2421]/5 pt-2">
+                    <span className="font-semibold text-[10px] text-[#1A2421]/70">Asignar Repartidor:</span>
                     {availableDrivers.length === 0 ? (
                       <span className="text-[9px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
                         Sin choferes
                       </span>
                     ) : (
-                      <select
-                        onChange={e => handleAssignDriver(order.id, e.target.value)}
-                        defaultValue=""
-                        className="glass-input text-[10px] py-0.5 px-2 font-bold max-w-[120px] cursor-pointer"
-                      >
-                        <option value="" disabled>-- Elegir --</option>
-                        {availableDrivers.map(drv => (
-                          <option key={drv.id} value={drv.id}>{drv.name}</option>
-                        ))}
-                      </select>
+                      <CustomSelect
+                        options={availableDrivers.map(drv => ({ value: drv.id, label: drv.name }))}
+                        value=""
+                        onChange={val => handleAssignDriver(order.id, val)}
+                        placeholder="-- Elegir --"
+                        triggerClassName="text-[10px] py-0.5 px-2 h-7 font-bold text-[#1A2421]"
+                        className="max-w-[120px] inline-block text-left"
+                      />
                     )}
                   </div>
                 </div>
@@ -164,8 +161,8 @@ export default function AdminDispatch() {
 
       {/* Drivers status board - 3 columns (Desktop) or Tabs (Mobile) */}
       <div>
-        <h2 className="text-lg font-extrabold text-[#2B2521] mb-4 flex items-center gap-2">
-          <Truck size={18} className="text-[#8C6239]" />
+        <h2 className="text-lg font-extrabold text-[#1A2421] mb-4 flex items-center gap-2">
+          <Truck size={18} className="text-[#40916C]" />
           Estado de Repartidores en Base
         </h2>
 
@@ -175,8 +172,8 @@ export default function AdminDispatch() {
             onClick={() => setActiveTab('disponibles')}
             className={`flex-1 py-2 text-center text-xs font-bold rounded-full transition-all cursor-pointer ${
               activeTab === 'disponibles'
-                ? 'bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white shadow-sm'
-                : 'text-[#2B2521]/60'
+                ? 'bg-gradient-to-r from-[#2D6A4F] to-[#1B4332] text-white shadow-sm'
+                : 'text-[#1A2421]/60'
             }`}
           >
             Disponibles ({availableDrivers.length})
@@ -185,8 +182,8 @@ export default function AdminDispatch() {
             onClick={() => setActiveTab('en_ruta')}
             className={`flex-1 py-2 text-center text-xs font-bold rounded-full transition-all cursor-pointer ${
               activeTab === 'en_ruta'
-                ? 'bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white shadow-sm'
-                : 'text-[#2B2521]/60'
+                ? 'bg-gradient-to-r from-[#2D6A4F] to-[#1B4332] text-white shadow-sm'
+                : 'text-[#1A2421]/60'
             }`}
           >
             En Ruta ({enRutaDrivers.length})
@@ -195,8 +192,8 @@ export default function AdminDispatch() {
             onClick={() => setActiveTab('en_retorno')}
             className={`flex-1 py-2 text-center text-xs font-bold rounded-full transition-all cursor-pointer ${
               activeTab === 'en_retorno'
-                ? 'bg-gradient-to-r from-[#D95D39] to-[#C24C2A] text-white shadow-sm'
-                : 'text-[#2B2521]/60'
+                ? 'bg-gradient-to-r from-[#2D6A4F] to-[#1B4332] text-white shadow-sm'
+                : 'text-[#1A2421]/60'
             }`}
           >
             Retorno ({enRetornoDrivers.length})
@@ -206,17 +203,17 @@ export default function AdminDispatch() {
         {/* Vista Móvil: Panel de Hitos Activo */}
         <div className="block md:hidden">
           {activeTab === 'disponibles' && (
-            <div className="premium-card p-4 bg-white/90 border-[#8C6239]/10 flex flex-col gap-3 min-h-[220px]">
-              <h3 className="text-xs font-extrabold text-[#2B2521] pb-2 border-b border-[#2B2521]/5 flex items-center gap-1.5">
+            <div className="premium-card p-4 bg-white/90 border-[#40916C]/10 flex flex-col gap-3 min-h-[220px]">
+              <h3 className="text-xs font-extrabold text-[#1A2421] pb-2 border-b border-[#1A2421]/5 flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
                 Disponibles ({availableDrivers.length})
               </h3>
               <div className="flex flex-col gap-2">
                 {availableDrivers.length === 0 ? (
-                  <p className="text-[10px] text-[#2B2521]/40 text-center py-8 font-semibold">No hay repartidores disponibles.</p>
+                  <p className="text-[10px] text-[#1A2421]/40 text-center py-8 font-semibold">No hay repartidores disponibles.</p>
                 ) : (
                   availableDrivers.map(drv => (
-                    <div key={drv.id} className="p-3 bg-[#FAF9F5]/40 border border-[#8C6239]/10 rounded-xl flex items-center justify-between text-xs font-bold">
+                    <div key={drv.id} className="p-3 bg-[#FFFFFF]/40 border border-[#40916C]/10 rounded-xl flex items-center justify-between text-xs font-bold">
                       <span>{drv.name}</span>
                       <UserCheck size={16} className="text-green-500" />
                     </div>
@@ -227,25 +224,25 @@ export default function AdminDispatch() {
           )}
 
           {activeTab === 'en_ruta' && (
-            <div className="premium-card p-4 bg-white/90 border-[#8C6239]/10 flex flex-col gap-3 min-h-[220px]">
-              <h3 className="text-xs font-extrabold text-[#2B2521] pb-2 border-b border-[#2B2521]/5 flex items-center gap-1.5">
+            <div className="premium-card p-4 bg-white/90 border-[#40916C]/10 flex flex-col gap-3 min-h-[220px]">
+              <h3 className="text-xs font-extrabold text-[#1A2421] pb-2 border-b border-[#1A2421]/5 flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
                 En Ruta ({enRutaDrivers.length})
               </h3>
               <div className="flex flex-col gap-2">
                 {enRutaDrivers.length === 0 ? (
-                  <p className="text-[10px] text-[#2B2521]/40 text-center py-8 font-semibold">No hay despachos en ruta.</p>
+                  <p className="text-[10px] text-[#1A2421]/40 text-center py-8 font-semibold">No hay despachos en ruta.</p>
                 ) : (
                   enRutaDrivers.map(drv => {
                     const order = orders.find(o => o.id === drv.active_order_id);
                     return (
-                      <div key={drv.id} className="p-3 bg-[#FAF9F5]/40 border border-[#8C6239]/10 rounded-xl flex flex-col gap-2 text-xs">
+                      <div key={drv.id} className="p-3 bg-[#FFFFFF]/40 border border-[#40916C]/10 rounded-xl flex flex-col gap-2 text-xs">
                         <div className="flex justify-between items-center font-bold">
                           <span>{drv.name}</span>
                           <span className="bg-blue-50 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-extrabold border border-blue-200">En Ruta</span>
                         </div>
                         {order && (
-                          <div className="bg-[#FAF9F5]/80 p-2 rounded-lg border border-[#8C6239]/5 text-[10px] text-[#2B2521]/70">
+                          <div className="bg-[#FFFFFF]/80 p-2 rounded-lg border border-[#40916C]/5 text-[10px] text-[#1A2421]/70">
                             <p className="font-bold text-blue-900">Pedido: {order.id}</p>
                             <p className="truncate mt-0.5">Destinatario: {order.family_name}</p>
                             <p className="truncate text-gray-500 mt-0.5 font-bold">Estado: {
@@ -262,19 +259,19 @@ export default function AdminDispatch() {
           )}
 
           {activeTab === 'en_retorno' && (
-            <div className="premium-card p-4 bg-white/90 border-[#8C6239]/10 flex flex-col gap-3 min-h-[220px]">
-              <h3 className="text-xs font-extrabold text-[#2B2521] pb-2 border-b border-[#2B2521]/5 flex items-center gap-1.5">
+            <div className="premium-card p-4 bg-white/90 border-[#40916C]/10 flex flex-col gap-3 min-h-[220px]">
+              <h3 className="text-xs font-extrabold text-[#1A2421] pb-2 border-b border-[#1A2421]/5 flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-purple-500 animate-bounce" />
                 En Retorno ({enRetornoDrivers.length})
               </h3>
               <div className="flex flex-col gap-2">
                 {enRetornoDrivers.length === 0 ? (
-                  <p className="text-[10px] text-[#2B2521]/40 text-center py-8 font-semibold">No hay choferes en camino de regreso.</p>
+                  <p className="text-[10px] text-[#1A2421]/40 text-center py-8 font-semibold">No hay choferes en camino de regreso.</p>
                 ) : (
                   enRetornoDrivers.map(drv => {
                     const minsRemaining = getRemainingMinutes(drv.return_eta);
                     return (
-                      <div key={drv.id} className="p-3 bg-[#FAF9F5]/40 border border-[#8C6239]/10 rounded-xl flex flex-col gap-2 text-xs">
+                      <div key={drv.id} className="p-3 bg-[#FFFFFF]/40 border border-[#40916C]/10 rounded-xl flex flex-col gap-2 text-xs">
                         <div className="flex justify-between items-center font-bold">
                           <span>{drv.name}</span>
                           <span className="bg-purple-50 text-purple-700 text-[9px] px-1.5 py-0.5 rounded font-extrabold border border-purple-200">Retorno</span>
@@ -296,9 +293,9 @@ export default function AdminDispatch() {
         <div className="hidden md:grid grid-cols-3 gap-6">
           
           {/* COLUMN 1: Disponibles */}
-          <div className="glass-panel p-4 bg-[#FAF9F5]/40 border-[#8C6239]/10 flex flex-col gap-3 min-h-[300px]">
-            <div className="flex justify-between items-center pb-2 border-b border-[#8C6239]/10">
-              <h3 className="text-xs font-extrabold text-[#2B2521] flex items-center gap-1.5">
+          <div className="glass-panel p-4 bg-[#FFFFFF]/40 border-[#40916C]/10 flex flex-col gap-3 min-h-[300px]">
+            <div className="flex justify-between items-center pb-2 border-b border-[#40916C]/10">
+              <h3 className="text-xs font-extrabold text-[#1A2421] flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
                 Disponibles ({availableDrivers.length})
               </h3>
@@ -306,12 +303,12 @@ export default function AdminDispatch() {
             
             <div className="flex flex-col gap-2">
               {availableDrivers.length === 0 ? (
-                <p className="text-[10px] text-[#2B2521]/40 text-center py-8 font-semibold">No hay repartidores disponibles en base.</p>
+                <p className="text-[10px] text-[#1A2421]/40 text-center py-8 font-semibold">No hay repartidores disponibles en base.</p>
               ) : (
                 availableDrivers.map(drv => (
-                  <div key={drv.id} className="p-3 bg-white border border-[#8C6239]/10 rounded-xl shadow-sm flex items-center justify-between text-xs">
+                  <div key={drv.id} className="p-3 bg-white border border-[#40916C]/10 rounded-xl shadow-sm flex items-center justify-between text-xs">
                     <div>
-                      <p className="font-bold text-[#2B2521]">{drv.name}</p>
+                      <p className="font-bold text-[#1A2421]">{drv.name}</p>
                       <p className="text-[10px] text-green-600 font-bold mt-0.5">Listo para despacho</p>
                     </div>
                     <UserCheck size={16} className="text-green-500" />
@@ -324,7 +321,7 @@ export default function AdminDispatch() {
           {/* COLUMN 2: En Ruta */}
           <div className="glass-panel p-4 bg-blue-50/10 border-blue-500/10 flex flex-col gap-3 min-h-[300px]">
             <div className="flex justify-between items-center pb-2 border-b border-blue-500/10">
-              <h3 className="text-xs font-extrabold text-[#2B2521] flex items-center gap-1.5">
+              <h3 className="text-xs font-extrabold text-[#1A2421] flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
                 En Ruta ({enRutaDrivers.length})
               </h3>
@@ -332,19 +329,19 @@ export default function AdminDispatch() {
             
             <div className="flex flex-col gap-2">
               {enRutaDrivers.length === 0 ? (
-                <p className="text-[10px] text-[#2B2521]/40 text-center py-8 font-semibold">No hay despachos activos en este momento.</p>
+                <p className="text-[10px] text-[#1A2421]/40 text-center py-8 font-semibold">No hay despachos activos en este momento.</p>
               ) : (
                 enRutaDrivers.map(drv => {
                   const order = orders.find(o => o.id === drv.active_order_id);
                   return (
                     <div key={drv.id} className="p-3 bg-white border border-blue-500/10 rounded-xl shadow-sm flex flex-col gap-2 text-xs">
                       <div className="flex justify-between items-center">
-                        <p className="font-bold text-[#2B2521]">{drv.name}</p>
+                        <p className="font-bold text-[#1A2421]">{drv.name}</p>
                         <span className="bg-blue-50 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-extrabold border border-blue-200">Entregando</span>
                       </div>
                       
                       {order && (
-                        <div className="bg-blue-50/50 p-2 rounded-lg border border-blue-500/5 text-[10px] text-[#2B2521]/70">
+                        <div className="bg-blue-50/50 p-2 rounded-lg border border-blue-500/5 text-[10px] text-[#1A2421]/70">
                           <p className="font-bold text-blue-900">Pedido: {order.id}</p>
                           <p className="truncate mt-0.5 font-semibold">Hacia: {order.family_name}</p>
                           <p className="truncate text-gray-500 font-semibold mt-0.5">Estado: {
@@ -362,7 +359,7 @@ export default function AdminDispatch() {
           {/* COLUMN 3: En Retorno */}
           <div className="glass-panel p-4 bg-purple-50/10 border-purple-500/10 flex flex-col gap-3 min-h-[300px]">
             <div className="flex justify-between items-center pb-2 border-b border-purple-500/10">
-              <h3 className="text-xs font-extrabold text-[#2B2521] flex items-center gap-1.5">
+              <h3 className="text-xs font-extrabold text-[#1A2421] flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-purple-500 animate-bounce" />
                 En Retorno ({enRetornoDrivers.length})
               </h3>
@@ -370,14 +367,14 @@ export default function AdminDispatch() {
             
             <div className="flex flex-col gap-2">
               {enRetornoDrivers.length === 0 ? (
-                <p className="text-[10px] text-[#2B2521]/40 text-center py-8 font-semibold">No hay repartidores regresando.</p>
+                <p className="text-[10px] text-[#1A2421]/40 text-center py-8 font-semibold">No hay repartidores regresando.</p>
               ) : (
                 enRetornoDrivers.map(drv => {
                   const minsRemaining = getRemainingMinutes(drv.return_eta);
                   return (
                     <div key={drv.id} className="p-3 bg-white border border-purple-500/10 rounded-xl shadow-sm flex flex-col gap-1.5 text-xs">
                       <div className="flex justify-between items-center">
-                        <p className="font-bold text-[#2B2521]">{drv.name}</p>
+                        <p className="font-bold text-[#1A2421]">{drv.name}</p>
                         <span className="bg-purple-100 text-purple-800 text-[9px] px-1.5 py-0.5 rounded font-extrabold">Retorno</span>
                       </div>
                       
