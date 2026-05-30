@@ -8,6 +8,7 @@ import {
   Order, 
   Driver,
   getProducts,
+  checkDriverReturnStatus,
 } from '@/lib/dbMock';
 import { Truck, Check, AlertCircle, Scan, MessageCircle, RefreshCw, Lock, LogOut, Sparkles, Phone } from 'lucide-react';
 import { MapPin, User, CheckCircle2, Navigation, AlertTriangle, CloudOff, ChevronRight, X } from 'lucide-react';
@@ -43,6 +44,7 @@ export default function DeliveryApp() {
 
   const loadData = async () => {
     try {
+      await checkDriverReturnStatus();
       const [drvs, ords] = await Promise.all([
         getDrivers(),
         getOrders()
@@ -52,6 +54,12 @@ export default function DeliveryApp() {
     } catch (err) {
       console.error('Error loading data:', err);
     }
+  };
+
+  const getRemainingSeconds = (isoString: string | null) => {
+    if (!isoString) return 0;
+    const diff = new Date(isoString).getTime() - Date.now();
+    return Math.max(0, Math.ceil(diff / 1000));
   };
 
   useEffect(() => {
@@ -308,7 +316,7 @@ export default function DeliveryApp() {
       
       {/* Floating WhatsApp Toast */}
       {whatsappToast && (
-        <div className="fixed top-4 left-4 right-4 bg-emerald-950/95 text-white p-4 rounded-2xl shadow-xl z-50 border border-emerald-500/20 animate-slideIn flex gap-3 items-start">
+        <div className="fixed top-4 left-4 right-4 bg-emerald-950/95 text-white p-4 rounded-2xl shadow-xl z-[100] border border-emerald-500/20 animate-slideIn flex gap-3 items-start">
           <div className="bg-emerald-500 p-2 rounded-xl text-white">
             <MessageCircle size={18} className="fill-white" />
           </div>
@@ -349,13 +357,13 @@ export default function DeliveryApp() {
       </div>
 
       {currentDriver && currentDriver.status === 'En Retorno' && (
-        <div className="bg-purple-50 text-purple-800 p-4 rounded-3xl border border-purple-200 text-xs flex flex-col gap-1.5 shadow-sm animate-pulse">
+        <div className="bg-purple-50 text-purple-800 p-4 rounded-3xl border border-purple-200 text-xs flex flex-col gap-1.5 shadow-sm">
           <span className="font-extrabold flex items-center gap-1">
-            <RefreshCw size={14} className="animate-spin" />
-            Retornando a la Base del Restaurante
+            <RefreshCw size={14} className="animate-spin text-purple-600" />
+            Retornando a la Base del Restaurante ({getRemainingSeconds(currentDriver.return_eta)} s)
           </span>
-          <p className="text-[10px] leading-relaxed text-purple-700">
-            El sistema ha calculado tu tiempo de retorno y está estimando tu disponibilidad automáticamente en el panel de despacho de base.
+          <p className="text-[10px] leading-relaxed text-purple-700 font-semibold">
+            Simulación acelerada para MVP: Estarás disponible de nuevo en {getRemainingSeconds(currentDriver.return_eta)} segundos.
           </p>
         </div>
       )}
@@ -531,7 +539,7 @@ export default function DeliveryApp() {
 
       {/* Modal de Reporte de Incidencias */}
       {showIncidentModal && (
-        <div className="fixed inset-0 bg-[#1A2421]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-[#1A2421]/40 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-fadeIn">
           <div className="premium-card w-full max-w-sm p-6 bg-white shadow-2xl relative border-t-4 border-red-500">
             <h3 className="text-sm font-extrabold text-[#1A2421] flex items-center gap-1.5 mb-3">
               <AlertCircle size={16} className="text-red-500" />

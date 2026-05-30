@@ -92,7 +92,7 @@ export default function NavigationHeader() {
 
       {/* Sliding Side Drawer for Roles (Hamburger Menu) */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
+        <div className="fixed inset-0 z-[100] flex justify-end">
           
           {/* Backdrop Blur Overlay */}
           <div 

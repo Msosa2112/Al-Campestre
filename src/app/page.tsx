@@ -7,6 +7,7 @@ import {
   saveFamily, 
   createOrderWithStockCheck, 
   getOrders,
+  checkDriverReturnStatus,
   Family, 
   Product, 
   Order 
@@ -94,8 +95,14 @@ export default function Storefront() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutError, setCheckoutError] = useState('');
 
+  // Loading & Flying cart animation states
+  const [isLoading, setIsLoading] = useState(true);
+  const [flyingItems, setFlyingItems] = useState<{ id: string; x: number; y: number; tx: number; ty: number; img: string }[]>([]);
+  const [isCartPopping, setIsCartPopping] = useState(false);
+
   const loadData = async () => {
     try {
+      await checkDriverReturnStatus();
       const [prods, fams, ords] = await Promise.all([
         getProducts(),
         getFamilies(),
@@ -110,6 +117,8 @@ export default function Storefront() {
       }
     } catch (err) {
       console.error('Error loading data:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -208,8 +217,48 @@ export default function Storefront() {
     setFamilyError('');
   };
 
-  const addToCart = (product: Product) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -6;
+    const rotateY = ((x - centerX) / centerX) * 6;
+    card.style.setProperty('--tilt-x', `${rotateX}deg`);
+    card.style.setProperty('--tilt-y', `${rotateY}deg`);
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    card.style.setProperty('--tilt-x', '0deg');
+    card.style.setProperty('--tilt-y', '0deg');
+  };
+
+  const addToCart = (product: Product, e?: React.MouseEvent<HTMLButtonElement>) => {
     if (product.stock <= 0) return;
+
+    if (e) {
+      const clickX = e.clientX;
+      const clickY = e.clientY;
+      let targetEl = document.getElementById('desktop-cart-btn');
+      if (window.innerWidth < 768) {
+        targetEl = document.getElementById('mobile-cart-banner');
+      }
+      if (targetEl) {
+        const targetRect = targetEl.getBoundingClientRect();
+        const tx = targetRect.left + targetRect.width / 2 - clickX;
+        const ty = targetRect.top + targetRect.height / 2 - clickY;
+        const flyId = `fly-${Date.now()}-${Math.random()}`;
+        setFlyingItems(prev => [...prev, { id: flyId, x: clickX, y: clickY, tx, ty, img: product.image_url }]);
+        setTimeout(() => {
+          setFlyingItems(prev => prev.filter(item => item.id !== flyId));
+          setIsCartPopping(true);
+          setTimeout(() => setIsCartPopping(false), 400);
+        }, 800);
+      }
+    }
     
     setCart(prev => {
       const existing = prev.find(item => item.product.id === product.id);
@@ -226,7 +275,9 @@ export default function Storefront() {
       }
       return [...prev, { product, quantity: 1 }];
     });
-    setIsCartOpen(true);
+    if (window.innerWidth >= 768) {
+      setIsCartOpen(true);
+    }
   };
 
   const updateCartQty = (productId: string, qty: number) => {
@@ -530,28 +581,48 @@ export default function Storefront() {
           
           {/* Barra de Búsqueda y Selector de Zona para Móviles y Escritorio */}
           <div className="flex flex-col gap-3">
-            <div className="flex flex-col sm:flex-row gap-3">
-              {/* Buscador Gooey */}
-              <GooeyInput
-                id="search-input"
-                placeholder="Buscar productos (ej. pollo, lomo)..."
-                value={searchQuery}
-                onValueChange={setSearchQuery}
-                collapsedWidth={160}
-                expandedWidth={300}
-                expandedOffset={48}
-                className="flex-1 justify-start"
-                classNames={{
-                  trigger: "bg-[#FFFFFF] border border-[#40916C]/20 text-[#1A2421] rounded-full h-10 shadow-sm",
-                  input: "text-[#1A2421] placeholder:text-[#1A2421]/45 h-full",
-                  bubbleSurface: "bg-[#2D6A4F] text-[#FFFFFF] shadow-md border border-[#1B4332]/10"
-                }}
-              />
+            <div className="flex flex-col md:flex-row gap-3 md:items-center">
+              <div className="flex-1 flex flex-row items-center justify-between gap-3 w-full">
+                {/* Buscador Gooey */}
+                <GooeyInput
+                  id="search-input"
+                  placeholder="Buscar productos (ej. pollo, lomo)..."
+                  value={searchQuery}
+                  onValueChange={setSearchQuery}
+                  collapsedWidth={160}
+                  expandedWidth={300}
+                  expandedOffset={48}
+                  className="flex-1 justify-start"
+                  classNames={{
+                    trigger: "bg-[#FFFFFF] border border-[#40916C]/20 text-[#1A2421] rounded-full h-10 shadow-sm",
+                    input: "text-[#1A2421] placeholder:text-[#1A2421]/45 h-full",
+                    bubbleSurface: "bg-[#2D6A4F] text-[#FFFFFF] shadow-md border border-[#1B4332]/10"
+                  }}
+                />
+
+                {/* Tasas de Cambio elTOQUE */}
+                <a 
+                  href="https://eltoque.com/tasas-de-cambio-cuba"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 py-1.5 px-3 rounded-full border border-[#40916C]/10 bg-white/40 hover:bg-white/60 transition-colors shadow-xs text-[10px] text-[#1A2421]/60 font-semibold cursor-pointer max-w-xs overflow-x-auto whitespace-nowrap scrollbar-none"
+                  title="Ver tasas de cambio oficiales en elTOQUE"
+                >
+                  <span className="text-[#2D6A4F] font-bold">CUP:</span>
+                  <span>USD <strong className="text-[#1A2421]">575</strong></span>
+                  <span className="text-[#1A2421]/20">|</span>
+                  <span>EUR <strong className="text-[#1A2421]">645</strong></span>
+                  <span className="text-[#1A2421]/20">|</span>
+                  <span>MLC <strong className="text-[#1A2421]">420</strong></span>
+                  <span className="text-[#1A2421]/20">|</span>
+                  <span>Zelle <strong className="text-[#1A2421]">570</strong></span>
+                </a>
+              </div>
 
               {/* Selector de Provincia / Municipio */}
               <button
                 onClick={() => setShowZoneModal(true)}
-                className="glass-button px-4 py-2.5 flex items-center justify-between gap-2 border-[#40916C]/15 text-[#40916C] font-bold text-xs cursor-pointer min-w-[200px]"
+                className="glass-button w-full md:w-auto px-4 py-2.5 flex items-center justify-between gap-2 border-[#40916C]/15 text-[#40916C] font-bold text-xs cursor-pointer md:min-w-[200px]"
               >
                 <span className="flex items-center gap-1.5">
                   <MapPin size={14} className="text-[#40916C]" />
@@ -627,8 +698,11 @@ export default function Storefront() {
           <div className="flex justify-between items-center mt-2">
             <h2 className="text-xl font-extrabold text-[#1A2421]">Catálogo de Productos</h2>
             <button
+              id="desktop-cart-btn"
               onClick={() => setIsCartOpen(true)}
-              className="glass-button px-4 py-2.5 hidden md:flex items-center gap-2 relative border-[#40916C]/15 text-[#40916C] cursor-pointer"
+              className={`glass-button px-4 py-2.5 hidden md:flex items-center gap-2 relative border-[#40916C]/15 text-[#40916C] cursor-pointer ${
+                isCartPopping ? 'animate-cart-pop' : ''
+              }`}
             >
               <ShoppingCart size={16} />
               <span className="font-bold text-sm">Mi Carrito</span>
@@ -641,7 +715,7 @@ export default function Storefront() {
           </div>
 
           {/* Más Vendidos (Best Sellers Section) - Only shown on "Todos" category when not searching */}
-          {selectedCategory === 'Todos' && searchQuery === '' && (
+          {!isLoading && selectedCategory === 'Todos' && searchQuery === '' && (
             <Carousel
               opts={{
                 align: "start",
@@ -668,7 +742,11 @@ export default function Storefront() {
 
                     return (
                       <CarouselItem key={`best-${product.id}`} className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3">
-                        <div className="uiverse-card h-full min-h-[280px]">
+                        <div 
+                          className="uiverse-card h-full min-h-[280px]"
+                          onMouseMove={handleMouseMove}
+                          onMouseLeave={handleMouseLeave}
+                        >
                           <div className="uiverse-card__shine" />
                           <div className="uiverse-card__glow" />
                           <div className="uiverse-card__content">
@@ -709,7 +787,7 @@ export default function Storefront() {
                               </span>
                               
                               <button 
-                                onClick={() => addToCart(product)}
+                                onClick={(e) => addToCart(product, e)}
                                 disabled={remainingStock <= 0}
                                 className="uiverse-card__button"
                                 title="Añadir al carrito"
@@ -750,7 +828,16 @@ export default function Storefront() {
           
           {/* Vista Escritorio: Rejilla de Tarjetas */}
           <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-4">
-            {products
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={`skel-desk-${i}`} className="premium-card p-4 h-[300px] flex flex-col gap-3 border border-[#40916C]/10 shimmer-skeleton rounded-2xl">
+                  <div className="w-full h-[120px] bg-gray-200/50 rounded-xl" />
+                  <div className="w-3/4 h-5 bg-gray-200/50 rounded-md mt-2" />
+                  <div className="w-full h-10 bg-gray-200/50 rounded-md" />
+                  <div className="w-full h-8 bg-gray-200/50 rounded-md mt-auto" />
+                </div>
+              ))
+            ) : products
               .filter(p => {
                 const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
                 const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -762,7 +849,12 @@ export default function Storefront() {
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                 return (
-                  <div key={product.id} className="uiverse-card h-full min-h-[300px]">
+                  <div 
+                    key={product.id} 
+                    className="uiverse-card h-full min-h-[300px]"
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <div className="uiverse-card__shine" />
                     <div className="uiverse-card__glow" />
                     <div className="uiverse-card__content">
@@ -803,7 +895,7 @@ export default function Storefront() {
                         </span>
                         
                         <button 
-                          onClick={() => addToCart(product)}
+                          onClick={(e) => addToCart(product, e)}
                           disabled={remainingStock <= 0}
                           className="uiverse-card__button"
                           title="Añadir al carrito"
@@ -819,7 +911,16 @@ export default function Storefront() {
 
           {/* Vista Móvil: Diseño Estrecho de 2 Columnas para mejor aprovechamiento del ancho */}
           <div className="grid grid-cols-2 gap-3 md:hidden">
-            {products
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={`skel-mob-${i}`} className="premium-card p-3 h-[260px] flex flex-col gap-2.5 border border-[#40916C]/10 shimmer-skeleton rounded-2xl">
+                  <div className="w-full h-[90px] bg-gray-200/50 rounded-xl" />
+                  <div className="w-5/6 h-4 bg-gray-200/50 rounded-md mt-1" />
+                  <div className="w-full h-8 bg-gray-200/50 rounded-md" />
+                  <div className="w-full h-7 bg-gray-200/50 rounded-md mt-auto" />
+                </div>
+              ))
+            ) : products
               .filter(p => {
                 const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
                 const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -831,7 +932,12 @@ export default function Storefront() {
                 const remainingStock = product.stock - (inCartItem?.quantity || 0);
 
                 return (
-                  <div key={`mob-${product.id}`} className="uiverse-card h-full min-h-[260px]">
+                  <div 
+                    key={`mob-${product.id}`} 
+                    className="uiverse-card h-full min-h-[260px]"
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <div className="uiverse-card__shine" />
                     <div className="uiverse-card__glow" />
                     <div className="uiverse-card__content">
@@ -872,7 +978,7 @@ export default function Storefront() {
                         </span>
                         
                         <button 
-                          onClick={() => addToCart(product)}
+                          onClick={(e) => addToCart(product, e)}
                           disabled={remainingStock <= 0}
                           className="uiverse-card__button"
                           title="Añadir al carrito"
@@ -905,6 +1011,7 @@ export default function Storefront() {
                   <th className="py-2.5">Estado</th>
                   <th className="py-2.5">Repartidor Asignado</th>
                   <th className="py-2.5">Notas logísticas</th>
+                  <th className="py-2.5 text-right">Seguimiento</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#1A2421]/5">
@@ -945,6 +1052,18 @@ export default function Storefront() {
                     <td className="py-3 text-xs text-[#1A2421]/60 max-w-[200px] truncate" title={order.notes || order.incident_reason}>
                       {order.incident_reason ? `Fallo: ${order.incident_reason}` : (order.notes || 'Ninguna')}
                     </td>
+                    <td className="py-3 text-right">
+                      <button
+                        onClick={() => {
+                          const url = `${window.location.origin}/track/${order.id}`;
+                          navigator.clipboard.writeText(url);
+                          alert('¡Enlace de seguimiento copiado al portapapeles!');
+                        }}
+                        className="glass-button py-1 px-2.5 rounded-lg border-[#40916C]/25 text-[#2D6A4F] text-[10px] font-bold hover:bg-[#2D6A4F]/10 cursor-pointer inline-flex items-center gap-1"
+                      >
+                        Copiar Link
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -984,6 +1103,16 @@ export default function Storefront() {
                     <p><span className="font-semibold text-[#1A2421]">Recibe:</span> {order.family_name}</p>
                     <p className="truncate"><span className="font-semibold text-[#1A2421]">Dirección:</span> {order.family_address}</p>
                     {order.delivery_name && <p><span className="font-semibold text-[#1A2421]">Repartidor:</span> {order.delivery_name}</p>}
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}/track/${order.id}`;
+                        navigator.clipboard.writeText(url);
+                        alert('¡Enlace de seguimiento copiado al portapapeles!');
+                      }}
+                      className="glass-button w-full py-1.5 mt-2 rounded-xl border-[#40916C]/20 text-[#2D6A4F] text-[10px] font-bold hover:bg-[#2D6A4F]/10 cursor-pointer flex items-center justify-center gap-1"
+                    >
+                      Copiar Link de Seguimiento
+                    </button>
                   </div>
 
                   {/* Timeline Vertical */}
@@ -1058,7 +1187,7 @@ export default function Storefront() {
 
       {/* MODAL: Onboarding Familiar */}
       {showOnboarding && (
-        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-fadeIn">
           <div className="glass-panel w-full max-w-lg p-6 bg-white/95 shadow-2xl relative">
             <button 
               onClick={() => setShowOnboarding(false)}
@@ -1169,7 +1298,7 @@ export default function Storefront() {
 
       {/* MODAL: Checkout Exitoso (Simulación Stripe) */}
       {checkoutSuccess && (
-        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-fadeIn">
           <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl text-center flex flex-col items-center gap-4 border-[#2D6A4F]/30">
             <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center shadow-inner border border-green-200">
               <CheckCircle className="w-8 h-8 stroke-[2.5]" />
@@ -1204,7 +1333,7 @@ export default function Storefront() {
 
       {/* MODAL: Selector de Zona de Entrega */}
       {showZoneModal && (
-        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-[#1A2421]/30 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-fadeIn">
           <div className="glass-panel w-full max-w-md p-6 bg-white/95 shadow-2xl relative border-[#2D6A4F]/20">
             <button 
               onClick={() => setShowZoneModal(false)}
@@ -1263,7 +1392,7 @@ export default function Storefront() {
 
       {/* Cart Sidebar Panel */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-40 bg-[#1A2421]/20 backdrop-blur-xs flex justify-end animate-fadeIn">
+        <div className="fixed inset-0 z-[100] bg-[#1A2421]/20 backdrop-blur-xs flex justify-end animate-fadeIn">
           <div className="w-full max-w-md h-full bg-white/95 backdrop-blur-md border-l border-[#40916C]/10 shadow-2xl p-6 flex flex-col justify-between">
             
             {/* Header */}
@@ -1373,7 +1502,12 @@ export default function Storefront() {
 
       {/* Barra de Carrito Fija en Móvil (solo si hay items y el carrito no está abierto) */}
       {cart.length > 0 && !isCartOpen && (
-        <div className="fixed bottom-[88px] left-4 right-4 z-40 bg-white/90 backdrop-blur-md border border-[#40916C]/15 p-4 flex justify-between items-center shadow-lg rounded-3xl animate-slide-up md:hidden max-w-[420px] mx-auto">
+        <div 
+          id="mobile-cart-banner"
+          className={`fixed bottom-[88px] left-4 right-4 z-40 bg-white/90 backdrop-blur-md border border-[#40916C]/15 p-4 flex justify-between items-center shadow-lg rounded-3xl animate-slide-up md:hidden max-w-[420px] mx-auto ${
+            isCartPopping ? 'animate-cart-pop' : ''
+          }`}
+        >
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-[#40916C] uppercase tracking-wider">Tu Carrito</span>
             <span className="text-base font-extrabold text-[#1A2421]">${totalCartPrice.toFixed(2)}</span>
@@ -1391,7 +1525,7 @@ export default function Storefront() {
       {/* CHATBOT EMERGENTE: Widget de IA */}
       {isAiWidgetOpen && (
         <div 
-          className={`fixed right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[360px] h-[450px] bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-[#2D6A4F]/20 flex flex-col justify-between overflow-hidden animate-slide-up ${
+          className={`fixed right-4 sm:right-6 z-[100] w-[calc(100vw-32px)] sm:w-[360px] h-[450px] bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-[#2D6A4F]/20 flex flex-col justify-between overflow-hidden animate-slide-up ${
             cart.length > 0 && !isCartOpen 
               ? 'bottom-[164px] md:bottom-6' 
               : 'bottom-[88px] md:bottom-6'
@@ -1464,6 +1598,29 @@ export default function Storefront() {
           </form>
         </div>
       )}
+
+      {/* Portal de elementos volando hacia el carrito */}
+      {flyingItems.map(item => (
+        <div
+          key={item.id}
+          className="fixed z-50 pointer-events-none animate-fly-to-cart"
+          style={{
+            left: item.x - 20,
+            top: item.y - 20,
+            width: 40,
+            height: 40,
+            '--target-x': `${item.tx}px`,
+            '--target-y': `${item.ty}px`,
+          } as React.CSSProperties}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={item.img}
+            alt=""
+            className="w-full h-full object-cover rounded-full border-2 border-[#2D6A4F] shadow-md"
+          />
+        </div>
+      ))}
 
     </div>
   );

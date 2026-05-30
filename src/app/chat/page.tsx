@@ -453,7 +453,7 @@ export default function ChatCommerce() {
 
       {/* BOTTOM SHEET / DRAWER: Mobile Proposal Review */}
       {isMobileDrawerOpen && (
-        <div className="fixed inset-0 z-50 bg-[#1A2421]/30 backdrop-blur-xs flex items-end lg:hidden animate-fadeIn">
+        <div className="fixed inset-0 z-[100] bg-[#1A2421]/30 backdrop-blur-xs flex items-end lg:hidden animate-fadeIn">
           {/* Backdrop Click Close */}
           <div className="absolute inset-0" onClick={() => setIsMobileDrawerOpen(false)} />
           

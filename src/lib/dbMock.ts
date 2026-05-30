@@ -102,6 +102,7 @@ export const getReturnTimeForZone = (municipality: string): number => {
 };
 
 const defaultProducts: Product[] = [
+  // ==================== CARNES ====================
   {
     id: 'prod-meat-1',
     name: 'Combo de Res Premium',
@@ -124,7 +125,7 @@ const defaultProducts: Product[] = [
   },
   {
     id: 'prod-meat-3',
-    name: 'Pechuga de Pollo deshuesada',
+    name: 'Pechuga de Pollo Deshuesada',
     description: 'Pechugas de pollo frescas deshuesadas, congeladas en origen.',
     price: 18.00,
     stock: 45,
@@ -153,6 +154,57 @@ const defaultProducts: Product[] = [
     category: 'Carnes'
   },
   {
+    id: 'prod-meat-6',
+    name: 'Chorizo Criollo Ahumado',
+    description: 'Paquete de 6 unidades de chorizo ahumado artesanal, sabor criollo.',
+    price: 11.20,
+    stock: 35,
+    barcode: '740100512012',
+    image_url: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-7',
+    name: 'Chuletas de Cerdo Frescas',
+    description: 'Paquete de 4 chuletas de cerdo de corte grueso listas para asar.',
+    price: 14.80,
+    stock: 30,
+    barcode: '740100512013',
+    image_url: 'https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-8',
+    name: 'Muslos de Pollo Especial',
+    description: 'Bolsa de 5 lbs de contramuslos y muslos de pollo frescos.',
+    price: 12.00,
+    stock: 55,
+    barcode: '740100512014',
+    image_url: 'https://images.unsplash.com/photo-1587593817642-8b9a751c1f3c?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-9',
+    name: 'Carne de Cerdo Troceada',
+    description: '3 lbs de carne de cerdo limpia cortada en trozos, ideal para guisar o freír.',
+    price: 16.50,
+    stock: 30,
+    barcode: '740100512015',
+    image_url: 'https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=600&q=80',
+    category: 'Carnes'
+  },
+  {
+    id: 'prod-meat-10',
+    name: 'Salchichas de Pollo Hot Dog',
+    description: 'Paquete de 10 salchichas de pollo clásicas estilo americano.',
+    price: 5.20,
+    stock: 60,
+    barcode: '740100512016',
+    image_url: 'https://images.unsplash.com/photo-1524438418049-ab2acb7aa48f?w=600&q=80',
+    category: 'Carnes'
+  },
+  // ==================== GRANOS ====================
+  {
     id: 'prod-grain-1',
     name: 'Frijoles Negros Importados',
     description: 'Frijol negro de primera calidad, cocción rápida y sabor tradicional.',
@@ -172,6 +224,87 @@ const defaultProducts: Product[] = [
     image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
     category: 'Granos'
   },
+  {
+    id: 'prod-grain-3',
+    name: 'Frijoles Colorados Premium',
+    description: 'Frijol colorado seleccionado de grano grande, cocción tierna y rápida (Bolsa de 2 lbs).',
+    price: 3.90,
+    stock: 90,
+    barcode: '740100512017',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-4',
+    name: 'Garbanzos Extra Selección',
+    description: 'Garbanzos secos de primera calidad, importados para potajes y hummus (Bolsa de 2 lbs).',
+    price: 4.20,
+    stock: 80,
+    barcode: '740100512018',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-5',
+    name: 'Lentejas Importadas Tiernas',
+    description: 'Lenteja tierna de rápida cocción, rica en hierro y fibra (Bolsa de 2 lbs).',
+    price: 3.10,
+    stock: 110,
+    barcode: '740100512019',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-6',
+    name: 'Arroz Integral Fibra',
+    description: 'Arroz integral rico en fibra, cocción saludable y grano entero (Bolsa de 2 lbs).',
+    price: 3.50,
+    stock: 75,
+    barcode: '740100512020',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-7',
+    name: 'Chícharos Partidos Verdes',
+    description: 'Chícharo verde partido importado, ideal para sopas y cremas (Bolsa de 2 lbs).',
+    price: 2.50,
+    stock: 140,
+    barcode: '740100512021',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-8',
+    name: 'Harina de Maíz Amarilla',
+    description: 'Harina de maíz fina para tamal en cazuela y polenta criolla (Bolsa de 2 lbs).',
+    price: 2.20,
+    stock: 160,
+    barcode: '740100512022',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-9',
+    name: 'Quinoa Orgánica Blanca',
+    description: 'Superalimento quinoa blanca orgánica lavada, lista para hervir (Paquete de 500g).',
+    price: 6.80,
+    stock: 50,
+    barcode: '740100512023',
+    image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+    category: 'Granos'
+  },
+  {
+    id: 'prod-grain-10',
+    name: 'Frijol Blanco Criollo',
+    description: 'Frijoles blancos seleccionados para potajes tradicionales (Bolsa de 2 lbs).',
+    price: 3.80,
+    stock: 85,
+    barcode: '740100512024',
+    image_url: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=600&q=80',
+    category: 'Granos'
+  },
+  // ==================== LÁCTEOS ====================
   {
     id: 'prod-dairy-1',
     name: 'Queso Blanco Criollo',
@@ -193,6 +326,87 @@ const defaultProducts: Product[] = [
     category: 'Lácteos'
   },
   {
+    id: 'prod-dairy-3',
+    name: 'Queso Gouda Importado',
+    description: 'Queso Gouda joven en bloque de 1 lb, excelente fundición y sabor cremoso.',
+    price: 11.50,
+    stock: 45,
+    barcode: '740100512025',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-4',
+    name: 'Leche en Polvo Entera 1kg',
+    description: 'Leche entera instantánea de alta calidad fortificada con vitaminas.',
+    price: 14.00,
+    stock: 80,
+    barcode: '740100512026',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-5',
+    name: 'Mantequilla Anchor con Sal',
+    description: 'Mantequilla neozelandesa pura de pastoreo, barra de 227g.',
+    price: 4.80,
+    stock: 90,
+    barcode: '740100512027',
+    image_url: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-6',
+    name: 'Yogur Natural Sin Azúcar',
+    description: 'Yogur natural cremoso, sin azúcar añadida ni conservantes (Pote de 500g).',
+    price: 2.90,
+    stock: 40,
+    barcode: '740100512028',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-7',
+    name: 'Queso Crema Clásico',
+    description: 'Queso crema clásico suave para untar en pan y tostadas (Taza de 226g).',
+    price: 3.60,
+    stock: 55,
+    barcode: '740100512029',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-8',
+    name: 'Crema de Leche Repostería',
+    description: 'Nata líquida con 35% de materia grasa para repostería y salsas (Caja de 250ml).',
+    price: 4.20,
+    stock: 60,
+    barcode: '740100512030',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-9',
+    name: 'Leche Evaporada Carnation',
+    description: 'Leche evaporada Nestlé Carnation en lata de 354ml, ideal para postres.',
+    price: 2.80,
+    stock: 70,
+    barcode: '740100512031',
+    image_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80',
+    category: 'Lácteos'
+  },
+  {
+    id: 'prod-dairy-10',
+    name: 'Queso Mozzarella Rallado',
+    description: 'Queso mozzarella rallado de fácil derretimiento para pizzas y pastas (Bolsa de 1 lb).',
+    price: 6.90,
+    stock: 50,
+    barcode: '740100512032',
+    image_url: 'https://images.unsplash.com/photo-1486887396181-e090ad70a6c8?w=600&q=80',
+    category: 'Lácteos'
+  },
+  // ==================== ABARROTES ====================
+  {
     id: 'prod-grocery-1',
     name: 'Aceite de Girasol 1L',
     description: 'Aceite vegetal refinado de girasol 100% puro para cocinar.',
@@ -210,6 +424,86 @@ const defaultProducts: Product[] = [
     stock: 110,
     barcode: '740100512009',
     image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-3',
+    name: 'Azúcar Blanca Refinada',
+    description: 'Azúcar de caña refinada blanca de alta pureza (Bolsa de 2 lbs).',
+    price: 2.50,
+    stock: 130,
+    barcode: '740100512033',
+    image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-4',
+    name: 'Puré de Tomate Concentrado',
+    description: 'Puré de tomate concentrado estilo cubano para salsas y guisados (Lata de 300g).',
+    price: 1.80,
+    stock: 150,
+    barcode: '740100512034',
+    image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-5',
+    name: 'Pasta Espaguetis La Italiana',
+    description: 'Pasta de sémola de trigo duro espaguetis número 5 tradicionales (Paquete de 500g).',
+    price: 1.90,
+    stock: 160,
+    barcode: '740100512035',
+    image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-6',
+    name: 'Atún en Aceite de Girasol',
+    description: 'Lomos de atún claro en aceite vegetal de girasol (Lata de 140g).',
+    price: 2.20,
+    stock: 80,
+    barcode: '740100512036',
+    image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-7',
+    name: 'Mayonesa Real Kraft',
+    description: 'Mayonesa clásica cremosa e importada para ensaladas y untar (Frasco de 443ml).',
+    price: 4.50,
+    stock: 95,
+    barcode: '740100512037',
+    image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-8',
+    name: 'Salsa de Tomate Tradicional',
+    description: 'Salsa para pastas tradicional con hierbas italianas (Frasco de 680g).',
+    price: 3.80,
+    stock: 85,
+    barcode: '740100512038',
+    image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-9',
+    name: 'Sal de Mesa Yodada',
+    description: 'Sal de mesa refinada yodada de alta pureza para cocina (Bolsa de 1kg).',
+    price: 1.20,
+    stock: 200,
+    barcode: '740100512039',
+    image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80',
+    category: 'Abarrotes'
+  },
+  {
+    id: 'prod-grocery-10',
+    name: 'Vinagre Criollo de Caña',
+    description: 'Vinagre blanco de caña fermentado, ideal para aderezos y conservas (Botella de 750ml).',
+    price: 1.90,
+    stock: 120,
+    barcode: '740100512040',
+    image_url: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80',
     category: 'Abarrotes'
   }
 ];
@@ -699,7 +993,8 @@ export const updateDeliveryMilestone = async (
             const parts = address.split(',');
             const municipality = parts.length > 1 ? parts[parts.length - 2].trim() : 'Plaza de la Revolución';
             const mins = getReturnTimeForZone(municipality);
-            const returnTime = new Date(Date.now() + mins * 60 * 1000);
+            // Simulación acelerada para MVP: 1 segundo por cada minuto de retorno
+            const returnTime = new Date(Date.now() + mins * 1000);
 
             order.delivery_eta_return = returnTime.toISOString();
             driver.status = 'En Retorno';
@@ -748,7 +1043,8 @@ export const updateDeliveryMilestone = async (
           const parts = address.split(',');
           const municipality = parts.length > 1 ? parts[parts.length - 2].trim() : 'Plaza de la Revolución';
           const mins = getReturnTimeForZone(municipality);
-          const returnTime = new Date(Date.now() + mins * 60 * 1000);
+          // Simulación acelerada para MVP: 1 segundo por cada minuto de retorno
+          const returnTime = new Date(Date.now() + mins * 1000);
 
           orderUpdates.delivery_eta_return = returnTime.toISOString();
 
